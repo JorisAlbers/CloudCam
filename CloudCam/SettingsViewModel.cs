@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 using ReactiveUI;
@@ -20,6 +21,8 @@ namespace CloudCam
         [Reactive] public string MustacheFolder { get; set; }
         [Reactive] public string OutputFolder { get; set; }
 
+        public ReactiveCommand<Unit,Settings> Save { get; }
+
         public SettingsViewModel(SettingsSerializer settingsSerializer)
         {
             _settingsSerializer = settingsSerializer;
@@ -27,6 +30,13 @@ namespace CloudCam
             FrameFolder = _settings.FrameFolder.FullName;
             MustacheFolder = _settings.MustacheFolder.FullName;
             OutputFolder = _settings.OutputFolder.FullName;
+
+            Save = ReactiveCommand.Create<Unit, Settings>((_) =>
+            {
+                _settings = new Settings(new DirectoryInfo(FrameFolder), new DirectoryInfo(MustacheFolder),
+                    new DirectoryInfo(OutputFolder));
+                return _settings;
+            });
         }
     }
 }
