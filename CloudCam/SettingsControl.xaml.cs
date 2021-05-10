@@ -18,20 +18,19 @@ using ReactiveUI;
 namespace CloudCam
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for SettingsControl.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class SettingsControl 
     {
-        public MainWindow()
+        public SettingsControl()
         {
             InitializeComponent();
-            this.ViewModel = new MainWindowViewModel();
 
-
-            this.WhenActivated((dispose) =>
+            this.WhenActivated((d) =>
             {
-                this.Bind(ViewModel, vm => vm.SettingsViewModel, v => v.SettingsViewModelHost.ViewModel)
-                    .DisposeWith(dispose);
+                this.Bind(ViewModel, vm => vm.FrameFolder, v => v.FramesPathTextBox.Text).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.MustacheFolder, v => v.MustachesPathTextBox.Text).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.OutputFolder, v => v.OutputPathTextBox.Text).DisposeWith(d);
             });
         }
     }
