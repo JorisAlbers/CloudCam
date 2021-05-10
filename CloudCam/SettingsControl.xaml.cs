@@ -31,6 +31,7 @@ namespace CloudCam
                 this.Bind(ViewModel, vm => vm.FrameFolder, v => v.FramesPathTextBox.Text).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.MustacheFolder, v => v.MustachesPathTextBox.Text).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.OutputFolder, v => v.OutputPathTextBox.Text).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.Save, v => v.SaveButton).DisposeWith(d);
             });
         }
     }

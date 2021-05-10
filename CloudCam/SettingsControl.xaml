@@ -16,5 +16,7 @@
 
         <TextBlock Text="Path to output:" VerticalAlignment="Center"/>
         <TextBox x:Name="OutputPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
+
+        <Button Content="Save" x:Name="SaveButton" />
     </UniformGrid>
 </reactiveUi:ReactiveUserControl>
