@@ -18,7 +18,7 @@ namespace CloudCam
 
         public MainWindowViewModel()
         {
-            string rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments),
+            string rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "CloudCam");
 
             _settingsSerializer = new SettingsSerializer(new FileInfo(Path.Combine(rootFolder, "settings.json")));
