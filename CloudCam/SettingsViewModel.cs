@@ -10,33 +10,24 @@ using ReactiveUI.Fody.Helpers;
 
 namespace CloudCam
 {
-    public record Settings(DirectoryInfo FrameFolder, DirectoryInfo MustacheFolder, DirectoryInfo OutputFolder);
+    public record Settings(string FrameFolder, string MustacheFolder, string OutputFolder);
 
     public class SettingsViewModel : ReactiveObject
     {
-        private readonly SettingsSerializer _settingsSerializer;
-        private Settings _settings;
-        
         [Reactive] public string FrameFolder { get; set; }
         [Reactive] public string MustacheFolder { get; set; }
         [Reactive] public string OutputFolder { get; set; }
 
         public ReactiveCommand<Unit,Settings> Save { get; }
 
-        public SettingsViewModel(SettingsSerializer settingsSerializer)
+        public SettingsViewModel(Settings settings)
         {
-            _settingsSerializer = settingsSerializer;
-            _settings = _settingsSerializer.Load();
-            FrameFolder = _settings.FrameFolder.FullName;
-            MustacheFolder = _settings.MustacheFolder.FullName;
-            OutputFolder = _settings.OutputFolder.FullName;
+            
+            FrameFolder = settings.FrameFolder;
+            MustacheFolder = settings.MustacheFolder;
+            OutputFolder = settings.OutputFolder;
 
-            Save = ReactiveCommand.Create<Unit, Settings>((_) =>
-            {
-                _settings = new Settings(new DirectoryInfo(FrameFolder), new DirectoryInfo(MustacheFolder),
-                    new DirectoryInfo(OutputFolder));
-                return _settings;
-            });
+            Save = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder,OutputFolder));
         }
     }
 }
