@@ -10,20 +10,10 @@
                            WindowState="Normal"
                            WindowStyle="ThreeDBorderWindow">
     <Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                 <ColumnDefinition Width="*"/>
-                 <ColumnDefinition Width="Auto"/>
-                 <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <reactiveUi:ViewModelViewHost Grid.Row="1" Grid.Column="1" x:Name="ViewModelHost"/>
-
-        </Grid>
+           <reactiveUi:ViewModelViewHost x:Name="ViewModelHost"
+                                         VerticalAlignment="Stretch"
+                                         HorizontalAlignment="Stretch"
+                                         VerticalContentAlignment="Stretch"
+                                         HorizontalContentAlignment="Stretch"/>
     </Grid>
 </reactiveUi:ReactiveWindow>
