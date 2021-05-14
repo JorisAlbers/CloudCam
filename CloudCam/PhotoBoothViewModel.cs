@@ -32,12 +32,7 @@ namespace CloudCamDotNet4
                 .ToPropertyEx(this, x => x.ImageSource);
         }
 
-        public void Start()
-        {
-            
-        }
-
-        public IObservable<ImageSource> StreamVideo(Settings settings, int deviceId)
+        private IObservable<ImageSource> StreamVideo(Settings settings, int deviceId)
         {
             IScheduler scheduler = DefaultScheduler.Instance;
             return Observable.Create<ImageSource>(o =>
