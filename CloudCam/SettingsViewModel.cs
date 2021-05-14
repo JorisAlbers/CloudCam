@@ -20,7 +20,7 @@ namespace CloudCam
         [Reactive] public string MustacheFolder { get; set; }
         [Reactive] public string OutputFolder { get; set; }
 
-        public ReactiveCommand<Unit,Settings> Save { get; }
+        public ReactiveCommand<Unit,Settings> Apply { get; }
 
         public SettingsViewModel(Settings settings, List<CameraDevice> cameraDevices)
         {
@@ -30,7 +30,7 @@ namespace CloudCam
             MustacheFolder = settings.MustacheFolder;
             OutputFolder = settings.OutputFolder;
             
-            Save = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder,OutputFolder, SelectedCameraDevice.Name));
+            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder,OutputFolder, SelectedCameraDevice.Name));
         }
     }
 }

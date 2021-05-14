@@ -26,7 +26,7 @@ namespace CloudCam
             _settings = LoadSettings(_settingsSerializer, rootFolder);
 
             SettingsViewModel = new SettingsViewModel(_settings, CameraDevicesEnumerator.GetAllConnectedCameras());
-            SettingsViewModel.Save.Subscribe(x =>
+            SettingsViewModel.Apply.Subscribe(x =>
             {
                 _settings = x;
                 _settingsSerializer.Save(x);

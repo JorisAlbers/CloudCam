@@ -26,6 +26,6 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <Button Content="Save" x:Name="SaveButton" />
+        <Button Content="Apply" x:Name="ApplyButton" />
     </UniformGrid>
 </reactiveUi:ReactiveUserControl>
