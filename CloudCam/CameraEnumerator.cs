@@ -2,7 +2,7 @@
 using System.Linq;
 using DirectShowLib;
 
-namespace CloudCamDotNet4
+namespace CloudCam
 {
     public static class CameraDevicesEnumerator
     {

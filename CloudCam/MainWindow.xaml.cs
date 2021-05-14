@@ -1,7 +1,7 @@
 ﻿using System.Reactive.Disposables;
 using ReactiveUI;
 
-namespace CloudCamDotNet4
+namespace CloudCam
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -4,7 +4,7 @@ using System.Reactive;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace CloudCamDotNet4
+namespace CloudCam
 {
     public class SettingsViewModel : ReactiveObject
     {

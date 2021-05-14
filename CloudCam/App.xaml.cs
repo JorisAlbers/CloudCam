@@ -3,7 +3,7 @@ using System.Windows;
 using ReactiveUI;
 using Splat;
 
-namespace CloudCamDotNet4
+namespace CloudCam
 {
     /// <summary>
     /// Interaction logic for App.xaml

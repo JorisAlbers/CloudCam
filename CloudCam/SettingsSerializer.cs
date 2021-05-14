@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
 
-namespace CloudCamDotNet4
+namespace CloudCam
 {
     public class SettingsSerializer
     {

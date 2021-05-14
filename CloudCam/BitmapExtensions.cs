@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace CloudCamDotNet4
+namespace CloudCam
 {
     public static class BitmapExtensions
     {
