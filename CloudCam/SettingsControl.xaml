@@ -17,6 +17,15 @@
         <TextBlock Text="Path to output:" VerticalAlignment="Center"/>
         <TextBox x:Name="OutputPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
 
+        <TextBlock Text="Camera:" VerticalAlignment="Center"/>
+        <ComboBox x:Name="CameraDeviceComboBox" VerticalAlignment="Center">
+            <ComboBox.ItemTemplate>
+                <DataTemplate DataType="local:CameraDevice">
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
         <Button Content="Save" x:Name="SaveButton" />
     </UniformGrid>
 </reactiveUi:ReactiveUserControl>

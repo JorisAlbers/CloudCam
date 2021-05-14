@@ -25,8 +25,7 @@ namespace CloudCam
             _settingsSerializer = new SettingsSerializer(new FileInfo(Path.Combine(rootFolder, "settings.json")));
             _settings = LoadSettings(_settingsSerializer, rootFolder);
 
-
-            SettingsViewModel = new SettingsViewModel(_settings);
+            SettingsViewModel = new SettingsViewModel(_settings, CameraDevicesEnumerator.GetAllConnectedCameras());
             SettingsViewModel.Save.Subscribe(x =>
             {
                 _settings = x;
@@ -55,7 +54,8 @@ namespace CloudCam
         {
             return new Settings(Path.Combine(rootFolder.FullName, "Frames"),
                 Path.Combine(rootFolder.FullName, "Mustaches"),
-                Path.Combine(rootFolder.FullName, "Output"));
+                Path.Combine(rootFolder.FullName, "Output"),
+                null);
         }
     }
 }
