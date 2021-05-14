@@ -16,7 +16,6 @@ namespace CloudCam
     public class PhotoBoothViewModel : ReactiveObject
     {
         private readonly Settings _settings;
-        private readonly CameraDevice _device;
         private CancellationTokenSource _cancellationTokenSource;
         private int _frameWidth;
         private int _frameHeight;
@@ -27,8 +26,7 @@ namespace CloudCam
         public PhotoBoothViewModel(Settings settings, CameraDevice device)
         {
             _settings = settings;
-            _device = device;
-            StreamVideo(_settings,0).ObserveOn(RxApp.MainThreadScheduler)
+            StreamVideo(_settings,device.OpenCdId).ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.ImageSource);
         }
 
@@ -46,7 +44,7 @@ namespace CloudCam
 
                     if (!videoCapture.Open(deviceId))
                     {
-                        throw new ApplicationException($"Failed to open video device {_device.Name}");
+                        throw new ApplicationException($"Failed to open video device {deviceId}");
                     }
 
                     using var frame = new Mat();
