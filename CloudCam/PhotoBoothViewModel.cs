@@ -1,5 +1,8 @@
 using System;
 using System.Drawing;
+using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -19,54 +22,65 @@ namespace CloudCam
         private int _frameWidth;
         private int _frameHeight;
 
-        [Reactive] public ImageSource VideoFrame { get; set; }
-
+        [ObservableAsProperty]
+        public ImageSource ImageSource { get; }
+    
         public PhotoBoothViewModel(Settings settings, CameraDevice device)
         {
             _settings = settings;
             _device = device;
+            StreamVideo(_settings,0).ObserveOn(RxApp.MainThreadScheduler)
+                .ToPropertyEx(this, x => x.ImageSource);
         }
 
-        public async Task Start()
+        public void Start()
         {
-            _cancellationTokenSource?.Cancel();
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            
+        }
 
-            await Task.Run(async () =>
+        public IObservable<ImageSource> StreamVideo(Settings settings, int deviceId)
+        {
+            IScheduler scheduler = DefaultScheduler.Instance;
+            return Observable.Create<ImageSource>(o =>
             {
-                var videoCapture = new VideoCapture();
-                Bitmap frameAsBitmap;
-                
-
-                if (!videoCapture.Open(_device.OpenCvId))
+                var cts = new CancellationTokenSource();
+                var scheduledWork = scheduler.Schedule(() =>
                 {
-                    throw new ApplicationException($"Failed to open video device {_device.Name}");
-                }
+                    var videoCapture = new VideoCapture();
+                    Bitmap frameAsBitmap;
 
-                using var frame = new Mat();
-                while (!cancellationTokenSource.IsCancellationRequested)
-                {
-                    int ticks = Environment.TickCount;
-                    videoCapture.Read(frame);
 
-                    if (!frame.Empty())
+                    if (!videoCapture.Open(deviceId))
                     {
-                        if (_frameHeight == 0)
-                        {
-                            _frameHeight = frame.Height;
-                            _frameWidth = frame.Width;
-                        }
-
-                        // Releases the lock on first not empty frame
-                        frameAsBitmap = BitmapConverter.ToBitmap(frame);
-                        BitmapSource lastFrameBitmapImage = frameAsBitmap.ToBitmapSource();
-                        lastFrameBitmapImage.Freeze();
-                        VideoFrame = lastFrameBitmapImage;
+                        throw new ApplicationException($"Failed to open video device {_device.Name}");
                     }
 
-                    // 30 FPS
-                    await Task.Delay(33);
-                }
+                    using var frame = new Mat();
+                    while (true)
+                    {
+                        cts.Token.ThrowIfCancellationRequested();
+                        videoCapture.Read(frame);
+
+                        if (!frame.Empty())
+                        {
+                            if (_frameHeight == 0)
+                            {
+                                _frameHeight = frame.Height;
+                                _frameWidth = frame.Width;
+                            }
+
+                            // Releases the lock on first not empty frame
+                            frameAsBitmap = BitmapConverter.ToBitmap(frame);
+                            BitmapSource lastFrameBitmapImage = frameAsBitmap.ToBitmapSource();
+                            lastFrameBitmapImage.Freeze();
+                            o.OnNext(lastFrameBitmapImage);
+
+                            Thread.Sleep(100);
+                        }
+                    }
+                });
+
+                return new CompositeDisposable(scheduledWork, cts);
             });
         }
     }
