@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudCamDotNet4", "CloudCamDotNet4\CloudCamDotNet4.csproj", "{001EDE87-5E49-4712-9D70-C1D60CBD5430}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudCam", "CloudCam\CloudCam.csproj", "{001EDE87-5E49-4712-9D70-C1D60CBD5430}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
