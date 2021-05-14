@@ -4,7 +4,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using OpenCvSharp;
@@ -12,7 +11,7 @@ using OpenCvSharp.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace CloudCam
+namespace CloudCamDotNet4
 {
     public class PhotoBoothViewModel : ReactiveObject
     {
