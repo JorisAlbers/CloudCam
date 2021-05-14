@@ -22,7 +22,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <reactiveUi:ViewModelViewHost Grid.Row="1" Grid.Column="1" x:Name="SettingsViewModelHost"/>
+            <reactiveUi:ViewModelViewHost Grid.Row="1" Grid.Column="1" x:Name="ViewModelHost"/>
 
         </Grid>
     </Grid>

@@ -30,7 +30,7 @@ namespace CloudCam
 
             this.WhenActivated((dispose) =>
             {
-                this.Bind(ViewModel, vm => vm.SettingsViewModel, v => v.SettingsViewModelHost.ViewModel)
+                this.Bind(ViewModel, vm => vm.SelectedViewModel, v => v.ViewModelHost.ViewModel)
                     .DisposeWith(dispose);
             });
         }

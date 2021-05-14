@@ -15,8 +15,10 @@ namespace CloudCam
     {
         private SettingsSerializer _settingsSerializer;
         private Settings _settings;
-
-        [Reactive] public SettingsViewModel SettingsViewModel { get; set; }
+        private PhotoBoothViewModel _photoBoothViewModel;
+        private SettingsViewModel _settingsViewModel { get; set; }
+        
+        [Reactive] public ReactiveObject SelectedViewModel { get; set; }
         
         public MainWindowViewModel()
         {
@@ -25,18 +27,19 @@ namespace CloudCam
             _settingsSerializer = new SettingsSerializer(new FileInfo(Path.Combine(rootFolder, "settings.json")));
             _settings = LoadSettings(_settingsSerializer, rootFolder);
 
-            SettingsViewModel = new SettingsViewModel(_settings, CameraDevicesEnumerator.GetAllConnectedCameras());
-            SettingsViewModel.Apply.Subscribe(x =>
+            _settingsViewModel = new SettingsViewModel(_settings, CameraDevicesEnumerator.GetAllConnectedCameras());
+            _settingsViewModel.Apply.Subscribe(x =>
             {
                 _settings = x;
                 _settingsSerializer.Save(x);
             });
-            SettingsViewModel.Start.Subscribe(x =>
+            _settingsViewModel.Start.Subscribe(x =>
             {
                 _settings = x;
                 _settingsSerializer.Save(x);
+            });
 
-            });
+            SelectedViewModel = _settingsViewModel;
         }
 
         private Settings LoadSettings(SettingsSerializer settingsSerializer, string rootFolder)
