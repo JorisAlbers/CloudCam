@@ -74,7 +74,7 @@ namespace CloudCamDotNet4
                             lastFrameBitmapImage.Freeze();
                             o.OnNext(lastFrameBitmapImage);
 
-                            Thread.Sleep(100);
+                            Thread.Sleep(33);
                         }
                     }
                 });
