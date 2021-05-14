@@ -27,5 +27,6 @@
         </ComboBox>
 
         <Button Content="Apply" x:Name="ApplyButton" />
+        <Button Content="Start" x:Name="StartButton" />
     </UniformGrid>
 </reactiveUi:ReactiveUserControl>

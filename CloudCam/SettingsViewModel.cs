@@ -21,6 +21,7 @@ namespace CloudCam
         [Reactive] public string OutputFolder { get; set; }
 
         public ReactiveCommand<Unit,Settings> Apply { get; }
+        public ReactiveCommand<Unit,Settings> Start { get; }
 
         public SettingsViewModel(Settings settings, List<CameraDevice> cameraDevices)
         {
@@ -31,6 +32,7 @@ namespace CloudCam
             OutputFolder = settings.OutputFolder;
             
             Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder,OutputFolder, SelectedCameraDevice.Name));
+            Start = ReactiveCommand.Create<Unit,Settings>((_) => new Settings(FrameFolder, MustacheFolder, OutputFolder, SelectedCameraDevice.Name));
         }
     }
 }

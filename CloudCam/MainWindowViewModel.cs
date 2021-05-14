@@ -17,7 +17,7 @@ namespace CloudCam
         private Settings _settings;
 
         [Reactive] public SettingsViewModel SettingsViewModel { get; set; }
-
+        
         public MainWindowViewModel()
         {
             string rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
@@ -30,6 +30,12 @@ namespace CloudCam
             {
                 _settings = x;
                 _settingsSerializer.Save(x);
+            });
+            SettingsViewModel.Start.Subscribe(x =>
+            {
+                _settings = x;
+                _settingsSerializer.Save(x);
+
             });
         }
 
