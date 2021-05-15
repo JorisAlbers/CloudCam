@@ -53,7 +53,7 @@ namespace CloudCam
 
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
 
-            StreamVideo(_settings,device.OpenCdId).ObserveOn(RxApp.MainThreadScheduler)
+            StreamVideo(device.OpenCdId).ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.ImageSource);
         }
 
@@ -108,7 +108,7 @@ namespace CloudCam
             });
         }
 
-        private IObservable<ImageSourceWithMat> StreamVideo(Settings settings, int deviceId)
+        private IObservable<ImageSourceWithMat> StreamVideo(int deviceId)
         {
             IScheduler scheduler = DefaultScheduler.Instance;
             return Observable.Create<ImageSourceWithMat>(o =>
