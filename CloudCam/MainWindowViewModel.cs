@@ -33,8 +33,13 @@ namespace CloudCam
             {
                 _settings = x;
                 _settingsSerializer.Save(x);
+
+                var frameRepository = new ImageRepository(x.FrameFolder);
+                frameRepository.Load();
+
                 _photoBoothViewModel = new PhotoBoothViewModel(x,
-                    CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice));
+                    CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice),
+                    frameRepository);
                 SelectedViewModel = _photoBoothViewModel;
             });
 

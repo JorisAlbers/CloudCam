@@ -18,9 +18,13 @@ namespace CloudCam
     public class PhotoBoothViewModel : ReactiveObject
     {
         private readonly Settings _settings;
+        private readonly ImageRepository _frameRepository;
         private CancellationTokenSource _cancellationTokenSource;
         private int _frameWidth;
         private int _frameHeight;
+
+        //TODO move to image cache class
+        private int _currentFrameIndex;
 
         [ObservableAsProperty]
         public ImageSource ImageSource { get; }
@@ -30,13 +34,14 @@ namespace CloudCam
 
         public ReactiveCommand<bool, ImageSource> NextFrame { get; }
     
-        public PhotoBoothViewModel(Settings settings, CameraDevice device)
+        public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository)
         {
             _settings = settings;
+            _frameRepository = frameRepository;
 
             NextFrame = ReactiveCommand.CreateFromTask<bool,ImageSource>(LoadNextFrameAsync);
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
-
+           
             StreamVideo(_settings,device.OpenCdId).ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.ImageSource);
         }
@@ -45,7 +50,32 @@ namespace CloudCam
         {
             return await Task.Run(() =>
             {
-                return Frame;
+                Mat image;
+                if (forwards)
+                {
+                    _currentFrameIndex++;
+                    if (_currentFrameIndex > _frameRepository.Count -1)
+                    {
+                        _currentFrameIndex = 0;
+                    }
+
+                    image = _frameRepository[_currentFrameIndex];
+                }
+                else
+                {
+                    _currentFrameIndex--;
+                    if (_currentFrameIndex == -1)
+                    {
+                        _currentFrameIndex = _frameRepository.Count - 1;
+                    }
+
+                    image = _frameRepository[_currentFrameIndex];
+                }
+
+                var image2 = image.ToBitmap();
+                var lastFrameBitmapImage = image2.ToBitmapSourceWithAlpha();
+                lastFrameBitmapImage.Freeze();
+                return lastFrameBitmapImage;
             });
         }
 

@@ -18,10 +18,10 @@ namespace CloudCam
             
             this.WhenActivated((d) =>
             {
-                FocusManager.SetFocusedElement(this, this);
+                FocusManager.SetFocusedElement(this, this); 
                 Keyboard.Focus(this);
-                this.Bind(ViewModel, vm => vm.ImageSource, v => v.VideoImage.Source).DisposeWith(d);
-                this.Bind(ViewModel, vm => vm.Frame, v => v.FrameImage.Source).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.ImageSource, v => v.VideoImage.Source).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Frame, v => v.FrameImage.Source).DisposeWith(d);
 
                 this.Events().KeyDown
                     .Where(x => x.Key == Key.Right || x.Key == Key.Left)

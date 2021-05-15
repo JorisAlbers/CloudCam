@@ -26,6 +26,6 @@ namespace CloudCam
             _images = directoryInfo.EnumerateFiles("*.png").Select(x => x.Name).ToArray();
         }
 
-        public Mat this[int index] => Cv2.ImRead(Path.Combine(_folderPath, _images[index]));
+        public Mat this[int index] => Cv2.ImRead(Path.Combine(_folderPath, _images[index]), ImreadModes.Unchanged);
     }
 }
