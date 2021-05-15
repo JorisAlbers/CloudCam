@@ -100,9 +100,8 @@ namespace CloudCam
                     videoCapture.Read(frame);
                     _frameSize = new Size(frame.Width, frame.Height);
                     
-                    while (true)
+                    while (!cts.Token.IsCancellationRequested)
                     {
-                        cts.Token.ThrowIfCancellationRequested();
                         videoCapture.Read(frame);
 
                         if (!frame.Empty())
@@ -115,6 +114,7 @@ namespace CloudCam
                             Thread.Sleep(33);
                         }
                     }
+                    o.OnCompleted();
                 });
 
                 return new CompositeDisposable(scheduledWork, cts);
