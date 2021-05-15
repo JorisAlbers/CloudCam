@@ -12,6 +12,7 @@ using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Size = OpenCvSharp.Size;
 
 namespace CloudCam
 {
@@ -20,8 +21,8 @@ namespace CloudCam
         private readonly Settings _settings;
         private readonly ImageRepository _frameRepository;
         private CancellationTokenSource _cancellationTokenSource;
-        private int _frameWidth;
-        private int _frameHeight;
+
+        private Size _frameSize;
 
         //TODO move to image cache class
         private int _currentFrameIndex;
@@ -72,6 +73,7 @@ namespace CloudCam
                     image = _frameRepository[_currentFrameIndex];
                 }
 
+                Cv2.Resize(image, image, _frameSize);
                 var image2 = image.ToBitmap();
                 var lastFrameBitmapImage = image2.ToBitmapSourceWithAlpha();
                 lastFrameBitmapImage.Freeze();
@@ -93,7 +95,11 @@ namespace CloudCam
                         throw new ApplicationException($"Failed to open video device {deviceId}");
                     }
 
+                    // Get first frame for dimensions
                     using var frame = new Mat();
+                    videoCapture.Read(frame);
+                    _frameSize = new Size(frame.Width, frame.Height);
+                    
                     while (true)
                     {
                         cts.Token.ThrowIfCancellationRequested();
@@ -101,12 +107,6 @@ namespace CloudCam
 
                         if (!frame.Empty())
                         {
-                            if (_frameHeight == 0)
-                            {
-                                _frameHeight = frame.Height;
-                                _frameWidth = frame.Width;
-                            }
-
                             var frameAsBitmap = frame.ToBitmap();
                             BitmapSource lastFrameBitmapImage = frameAsBitmap.ToBitmapSource();
                             lastFrameBitmapImage.Freeze();
