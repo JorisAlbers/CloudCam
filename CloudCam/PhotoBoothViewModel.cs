@@ -88,9 +88,6 @@ namespace CloudCam
                 var scheduledWork = scheduler.Schedule(() =>
                 {
                     var videoCapture = new VideoCapture();
-                    Bitmap frameAsBitmap;
-
-
                     if (!videoCapture.Open(deviceId))
                     {
                         throw new ApplicationException($"Failed to open video device {deviceId}");
@@ -110,8 +107,7 @@ namespace CloudCam
                                 _frameWidth = frame.Width;
                             }
 
-                            // Releases the lock on first not empty frame
-                            frameAsBitmap = BitmapConverter.ToBitmap(frame);
+                            var frameAsBitmap = frame.ToBitmap();
                             BitmapSource lastFrameBitmapImage = frameAsBitmap.ToBitmapSource();
                             lastFrameBitmapImage.Freeze();
                             o.OnNext(lastFrameBitmapImage);
