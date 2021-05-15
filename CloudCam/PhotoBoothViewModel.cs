@@ -122,11 +122,11 @@ namespace CloudCam
                         throw new ApplicationException($"Failed to open video device {deviceId}");
                     }
 
+                    _frameSize = SetMaxResolution(videoCapture);
+                    
                     // Get first frame for dimensions
                     using var frame = new Mat();
                     videoCapture.Read(frame);
-                    _frameSize = new Size(frame.Width, frame.Height);
-                    
                     while (!cts.Token.IsCancellationRequested)
                     {
                         videoCapture.Read(frame);
@@ -146,6 +146,46 @@ namespace CloudCam
 
                 return new CompositeDisposable(scheduledWork, cts);
             });
+        }
+
+        private Size SetMaxResolution(VideoCapture videoCapture)
+        {
+            Size[] commonResolutions = new Size[]
+            {
+                new Size(160, 120),
+                new Size(176, 144),
+                new Size(320, 240),
+                new Size(352, 288),
+                new Size(640, 360),
+                new Size(640, 480),
+                new Size(800, 600),
+                new Size(960, 720),
+                new Size(1280, 720),
+                //new Size(1920, 1080),
+                //new Size(2560, 1472),
+            };
+
+            for (int i = commonResolutions.Length - 1; i >= 0; i--)
+            {
+                // First set,
+                videoCapture.Set(VideoCaptureProperties.FrameWidth, commonResolutions[i].Width);
+                videoCapture.Set(VideoCaptureProperties.FrameHeight, commonResolutions[i].Height);
+                
+                // Then check if available
+                Size actual = new Size(
+                    videoCapture.Get(VideoCaptureProperties.FrameWidth),
+                    videoCapture.Get(VideoCaptureProperties.FrameHeight));
+
+                if (actual.Equals(commonResolutions[i]))
+                {
+                    return actual;
+                }
+            }
+
+            // None available, return the current one
+            return new Size(
+                videoCapture.Get(VideoCaptureProperties.FrameWidth),
+                videoCapture.Get(VideoCaptureProperties.FrameHeight));
         }
     }
 
