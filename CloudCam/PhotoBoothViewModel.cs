@@ -20,6 +20,7 @@ namespace CloudCam
     {
         private readonly Settings _settings;
         private readonly ImageRepository _frameRepository;
+        private readonly OutputImageRepository _outputImageRepository;
         private CancellationTokenSource _cancellationTokenSource;
 
         private Size _frameSize;
@@ -30,30 +31,32 @@ namespace CloudCam
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
 
         [ObservableAsProperty]
-        public ImageSource ImageSource { get; }
+        public ImageSourceWithMat ImageSource { get; }
 
         [ObservableAsProperty]
-        public ImageSource Frame { get; }
+        public ImageSourceWithMat Frame { get; }
 
-        public ReactiveCommand<bool, ImageSource> NextFrame { get; }
+        public ReactiveCommand<bool, ImageSourceWithMat> NextFrame { get; }
 
-        public ReactiveCommand<Unit,Mat> TakePicture { get; }
+        public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
-        public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository)
+        public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository,
+            OutputImageRepository outputImageRepository)
         {
             _settings = settings;
             _frameRepository = frameRepository;
+            _outputImageRepository = outputImageRepository;
 
-            NextFrame = ReactiveCommand.CreateFromTask<bool,ImageSource>(LoadNextFrameAsync);
+            NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
-            TakePicture = ReactiveCommand.CreateFromTask<Unit, Mat>(TakePictureAsync);
+            TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
 
             StreamVideo(_settings,device.OpenCdId).ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.ImageSource);
         }
 
-        private async Task<Mat> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
+        private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
             SecondsUntilPictureIsTaken = 3;
             await Task.Delay(1000, cancellationToken);
@@ -62,13 +65,16 @@ namespace CloudCam
             SecondsUntilPictureIsTaken = 1;
             await Task.Delay(1000, cancellationToken);
             SecondsUntilPictureIsTaken = 0;
-            await Task.Delay(1000); // take picture
+            await Task.Run(() =>
+            {
+                _outputImageRepository.Save(ImageSource.Mat);
+            });
             SecondsUntilPictureIsTaken = -1;
-            return new Mat();
+            return Unit.Default;
         }
 
 
-        private async Task<ImageSource> LoadNextFrameAsync(bool forwards)
+        private async Task<ImageSourceWithMat> LoadNextFrameAsync(bool forwards)
         {
             return await Task.Run(() =>
             {
@@ -98,14 +104,14 @@ namespace CloudCam
                 var image2 = image.ToBitmap();
                 var lastFrameBitmapImage = image2.ToBitmapSourceWithAlpha();
                 lastFrameBitmapImage.Freeze();
-                return lastFrameBitmapImage;
+                return  new ImageSourceWithMat(lastFrameBitmapImage, image);
             });
         }
 
-        private IObservable<ImageSource> StreamVideo(Settings settings, int deviceId)
+        private IObservable<ImageSourceWithMat> StreamVideo(Settings settings, int deviceId)
         {
             IScheduler scheduler = DefaultScheduler.Instance;
-            return Observable.Create<ImageSource>(o =>
+            return Observable.Create<ImageSourceWithMat>(o =>
             {
                 var cts = new CancellationTokenSource();
                 var scheduledWork = scheduler.Schedule(() =>
@@ -130,7 +136,7 @@ namespace CloudCam
                             var frameAsBitmap = frame.ToBitmap();
                             BitmapSource lastFrameBitmapImage = frameAsBitmap.ToBitmapSource();
                             lastFrameBitmapImage.Freeze();
-                            o.OnNext(lastFrameBitmapImage);
+                            o.OnNext(new ImageSourceWithMat(lastFrameBitmapImage, frame));
 
                             Thread.Sleep(33);
                         }
@@ -140,6 +146,18 @@ namespace CloudCam
 
                 return new CompositeDisposable(scheduledWork, cts);
             });
+        }
+    }
+
+    public class ImageSourceWithMat
+    {
+        public ImageSource ImageSource { get; }
+        public Mat Mat { get; }
+
+        public ImageSourceWithMat(ImageSource imageSource, Mat mat)
+        {
+            ImageSource = imageSource;
+            Mat = mat;
         }
     }
 }

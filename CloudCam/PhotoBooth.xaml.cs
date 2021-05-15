@@ -17,8 +17,8 @@ namespace CloudCam
             
             this.WhenActivated((d) =>
             {
-                this.OneWayBind(ViewModel, vm => vm.ImageSource, v => v.VideoImage.Source).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.Frame, v => v.FrameImage.Source).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.ImageSource.ImageSource, v => v.VideoImage.Source).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Frame.ImageSource, v => v.FrameImage.Source).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.CountdownTextBlock.Text,
                     (seconds) =>

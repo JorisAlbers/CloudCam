@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using OpenCvSharp;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -75,9 +76,13 @@ namespace CloudCam
                 var frameRepository = new ImageRepository(x.FrameFolder);
                 frameRepository.Load();
 
+                var outputRepository = new OutputImageRepository(x.OutputFolder);
+
+
                 _photoBoothViewModel = new PhotoBoothViewModel(x,
                     CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice),
-                    frameRepository);
+                    frameRepository,
+                    outputRepository);
                 SelectedViewModel = _photoBoothViewModel;
             });
 
@@ -107,6 +112,24 @@ namespace CloudCam
                 Path.Combine(rootFolder.FullName, "Mustaches"),
                 Path.Combine(rootFolder.FullName, "Output"),
                 null);
+        }
+    }
+
+    public class OutputImageRepository
+    {
+        private readonly string _folder;
+
+        public OutputImageRepository(string folder)
+        {
+            _folder = folder;
+        }
+
+        public void Save(Mat image)
+        {
+            DateTime now = DateTime.Now;
+
+            string fileName = $"CloudCam_{now:yyyy-M-dd--H-mm-ss}.jpg";
+            Cv2.ImWrite(Path.Combine(_folder,fileName), image);
         }
     }
 
