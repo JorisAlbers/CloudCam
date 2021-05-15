@@ -28,6 +28,7 @@ namespace CloudCam
                 {
                     case Key.Right: return UserAction.MoveToNextFrame;
                     case Key.Left:  return UserAction.MoveToPreviousFrame;
+                    case Key.Space:  return UserAction.TakePicture;
                 }
 
                 return UserAction.None;
@@ -47,6 +48,10 @@ namespace CloudCam
                 else if (x == UserAction.MoveToPreviousFrame)
                 {
                     await _photoBoothViewModel.NextFrame.Execute(false);
+                }
+                else if (x == UserAction.TakePicture)
+                {
+                    await _photoBoothViewModel.TakePicture.Execute();
                 }
             });
             
@@ -110,5 +115,6 @@ namespace CloudCam
         None,
         MoveToNextFrame,
         MoveToPreviousFrame,
+        TakePicture,
     }
 }

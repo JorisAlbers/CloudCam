@@ -27,6 +27,8 @@ namespace CloudCam
         //TODO move to image cache class
         private int _currentFrameIndex;
 
+        [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
+
         [ObservableAsProperty]
         public ImageSource ImageSource { get; }
 
@@ -34,6 +36,8 @@ namespace CloudCam
         public ImageSource Frame { get; }
 
         public ReactiveCommand<bool, ImageSource> NextFrame { get; }
+
+        public ReactiveCommand<Unit,Mat> TakePicture { get; }
 
         public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository)
         {
@@ -43,9 +47,26 @@ namespace CloudCam
             NextFrame = ReactiveCommand.CreateFromTask<bool,ImageSource>(LoadNextFrameAsync);
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
+            TakePicture = ReactiveCommand.CreateFromTask<Unit, Mat>(TakePictureAsync);
+
             StreamVideo(_settings,device.OpenCdId).ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.ImageSource);
         }
+
+        private async Task<Mat> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
+        {
+            SecondsUntilPictureIsTaken = 3;
+            await Task.Delay(1000, cancellationToken);
+            SecondsUntilPictureIsTaken = 2;
+            await Task.Delay(1000, cancellationToken);
+            SecondsUntilPictureIsTaken = 1;
+            await Task.Delay(1000, cancellationToken);
+            SecondsUntilPictureIsTaken = 0;
+            await Task.Delay(1000); // take picture
+            SecondsUntilPictureIsTaken = -1;
+            return new Mat();
+        }
+
 
         private async Task<ImageSource> LoadNextFrameAsync(bool forwards)
         {

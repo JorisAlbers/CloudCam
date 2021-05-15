@@ -19,6 +19,23 @@ namespace CloudCam
             {
                 this.OneWayBind(ViewModel, vm => vm.ImageSource, v => v.VideoImage.Source).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Frame, v => v.FrameImage.Source).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.CountdownTextBlock.Text,
+                    (seconds) =>
+                    {
+                        if (seconds == -1)
+                        {
+                            return string.Empty;
+                        }
+
+                        if (seconds > 0)
+                        {
+                            return seconds.ToString();
+                        }
+
+                        return "Smile!";
+
+                    }).DisposeWith(d);
             });
         }
     }
