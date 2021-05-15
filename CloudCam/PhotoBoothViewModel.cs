@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
+using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Size = OpenCvSharp.Size;
@@ -101,10 +102,9 @@ namespace CloudCam
                 }
 
                 Cv2.Resize(image, image, _frameSize);
-                var image2 = image.ToBitmap();
-                var lastFrameBitmapImage = image2.ToBitmapSourceWithAlpha();
-                lastFrameBitmapImage.Freeze();
-                return  new ImageSourceWithMat(lastFrameBitmapImage, image);
+                var imageSource = image.ToBitmapSource();
+                imageSource.Freeze();
+                return  new ImageSourceWithMat(imageSource, image);
             });
         }
 
@@ -133,10 +133,9 @@ namespace CloudCam
 
                         if (!frame.Empty())
                         {
-                            var frameAsBitmap = frame.ToBitmap();
-                            BitmapSource lastFrameBitmapImage = frameAsBitmap.ToBitmapSource();
-                            lastFrameBitmapImage.Freeze();
-                            o.OnNext(new ImageSourceWithMat(lastFrameBitmapImage, frame));
+                            var imageSource = frame.ToBitmapSource();
+                            imageSource.Freeze();
+                            o.OnNext(new ImageSourceWithMat(imageSource, frame));
 
                             Thread.Sleep(33);
                         }
