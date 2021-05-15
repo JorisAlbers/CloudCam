@@ -1,9 +1,11 @@
 using System;
 using System.Drawing;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using OpenCvSharp;
@@ -22,12 +24,29 @@ namespace CloudCam
 
         [ObservableAsProperty]
         public ImageSource ImageSource { get; }
+
+        [ObservableAsProperty]
+        public ImageSource Frame { get; }
+
+        public ReactiveCommand<bool, ImageSource> NextFrame { get; }
     
         public PhotoBoothViewModel(Settings settings, CameraDevice device)
         {
             _settings = settings;
+
+            NextFrame = ReactiveCommand.CreateFromTask<bool,ImageSource>(LoadNextFrameAsync);
+            NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
+
             StreamVideo(_settings,device.OpenCdId).ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.ImageSource);
+        }
+
+        private async Task<ImageSource> LoadNextFrameAsync(bool forwards)
+        {
+            return await Task.Run(() =>
+            {
+                return Frame;
+            });
         }
 
         private IObservable<ImageSource> StreamVideo(Settings settings, int deviceId)
