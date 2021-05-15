@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Windows.Input;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -14,9 +17,39 @@ namespace CloudCam
         private SettingsViewModel _settingsViewModel { get; set; }
         
         [Reactive] public ReactiveObject SelectedViewModel { get; set; }
-        
+
+        public ReactiveCommand<Key, UserAction> KeyPressed { get; }
+
         public MainWindowViewModel()
         {
+            KeyPressed = ReactiveCommand.Create<Key, UserAction>((key) =>
+            {
+                switch (key)
+                {
+                    case Key.Right: return UserAction.MoveToNextFrame;
+                    case Key.Left:  return UserAction.MoveToPreviousFrame;
+                }
+
+                return UserAction.None;
+            });
+
+            KeyPressed.Where(x => x != UserAction.None).Subscribe(async x =>
+            {
+                if (_photoBoothViewModel == null)
+                {
+                    return;
+                }
+
+                if (x == UserAction.MoveToNextFrame)
+                {
+                    await _photoBoothViewModel.NextFrame.Execute(true);
+                }
+                else if (x == UserAction.MoveToPreviousFrame)
+                {
+                    await _photoBoothViewModel.NextFrame.Execute(false);
+                }
+            });
+            
             string rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "CloudCam");
             _settingsSerializer = new SettingsSerializer(new FileInfo(Path.Combine(rootFolder, "settings.json")));
@@ -70,5 +103,12 @@ namespace CloudCam
                 Path.Combine(rootFolder.FullName, "Output"),
                 null);
         }
+    }
+
+    public enum UserAction
+    {
+        None,
+        MoveToNextFrame,
+        MoveToPreviousFrame,
     }
 }

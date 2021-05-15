@@ -33,7 +33,7 @@ namespace CloudCam
         public ImageSource Frame { get; }
 
         public ReactiveCommand<bool, ImageSource> NextFrame { get; }
-    
+
         public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository)
         {
             _settings = settings;
@@ -41,7 +41,7 @@ namespace CloudCam
 
             NextFrame = ReactiveCommand.CreateFromTask<bool,ImageSource>(LoadNextFrameAsync);
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
-           
+
             StreamVideo(_settings,device.OpenCdId).ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.ImageSource);
         }

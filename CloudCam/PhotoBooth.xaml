@@ -6,8 +6,7 @@
                                 xmlns:reactiveUi="http://reactiveui.net"
                                 xmlns:cloudCamDotNet4="clr-namespace:CloudCam"
                                 mc:Ignorable="d" 
-                                d:DesignHeight="450" d:DesignWidth="800"
-                                Focusable="True">
+                                d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform"/>
         <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform"/>
