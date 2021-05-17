@@ -73,13 +73,11 @@ namespace CloudCam
             await Task.Run(() =>
             {
                 // Overlay frame on top of image
-                Bitmap img = new Bitmap(imageAsBitmap.Width, imageAsBitmap.Height);
-                using (Graphics gr = Graphics.FromImage(img))
+                using (Graphics gr = Graphics.FromImage(imageAsBitmap))
                 {
-                    gr.DrawImage(imageAsBitmap, new System.Drawing.Point(0, 0));
                     gr.DrawImage(frameAsBitmap, new System.Drawing.Point(0, 0));
                 }
-                _outputImageRepository.Save(img);
+                _outputImageRepository.Save(imageAsBitmap);
             }, cancellationToken);
             SecondsUntilPictureIsTaken = -1;
             return Unit.Default;
@@ -140,6 +138,7 @@ namespace CloudCam
                     videoCapture.Read(frame);
                     while (!cts.Token.IsCancellationRequested)
                     {
+                        int startTicks = Environment.TickCount;
                         videoCapture.Read(frame);
 
                         if (!frame.Empty())
@@ -148,7 +147,8 @@ namespace CloudCam
                             imageSource.Freeze();
                             o.OnNext(new ImageSourceWithMat(imageSource, frame));
 
-                            Thread.Sleep(33);
+                            int tickElapsed = Environment.TickCount - startTicks;
+                            Console.Out.WriteLine($"ticks elapsed {tickElapsed}. Ms elapsed {tickElapsed / TimeSpan.TicksPerMillisecond}");
                         }
                     }
                     o.OnCompleted();
