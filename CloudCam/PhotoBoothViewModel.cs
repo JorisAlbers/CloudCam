@@ -7,7 +7,6 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
@@ -66,10 +65,22 @@ namespace CloudCam
             SecondsUntilPictureIsTaken = 1;
             await Task.Delay(1000, cancellationToken);
             SecondsUntilPictureIsTaken = 0;
+            await Task.Delay(100, cancellationToken); // allow GUI to update
+            
+            Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
+            Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
+            
             await Task.Run(() =>
             {
-                _outputImageRepository.Save(ImageSource.Mat);
-            });
+                // Overlay frame on top of image
+                Bitmap img = new Bitmap(imageAsBitmap.Width, imageAsBitmap.Height);
+                using (Graphics gr = Graphics.FromImage(img))
+                {
+                    gr.DrawImage(imageAsBitmap, new System.Drawing.Point(0, 0));
+                    gr.DrawImage(frameAsBitmap, new System.Drawing.Point(0, 0));
+                }
+                _outputImageRepository.Save(img);
+            }, cancellationToken);
             SecondsUntilPictureIsTaken = -1;
             return Unit.Default;
         }

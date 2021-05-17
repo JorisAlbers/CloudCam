@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -124,12 +125,12 @@ namespace CloudCam
             _folder = folder;
         }
 
-        public void Save(Mat image)
+        public void Save(Bitmap image)
         {
             DateTime now = DateTime.Now;
 
             string fileName = $"CloudCam_{now:yyyy-M-dd--H-mm-ss}.jpg";
-            Cv2.ImWrite(Path.Combine(_folder,fileName), image);
+            image.Save(Path.Combine(_folder, fileName));
         }
     }
 
