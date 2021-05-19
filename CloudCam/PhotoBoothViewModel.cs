@@ -23,10 +23,9 @@ namespace CloudCam
         private readonly OutputImageRepository _outputImageRepository;
         private CancellationTokenSource _cancellationTokenSource;
 
-        private Size _frameSize;
-
         //TODO move to image cache class
         private int _currentFrameIndex;
+        private readonly WebcamCapture _capture;
 
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
 
@@ -52,8 +51,18 @@ namespace CloudCam
 
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
 
-            StreamVideo(device.OpenCdId).ObserveOn(RxApp.MainThreadScheduler)
-                .ToPropertyEx(this, x => x.ImageSource);
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            _capture = new WebcamCapture(device.OpenCdId);
+            _ = _capture.CaptureAsync(cancellationTokenSource.Token);
+
+            ImageSourceWithMat previousImage = null;
+
+            Observable.Interval(TimeSpan.FromMilliseconds(33)) // cap at 30 fps
+                .Select(_ => _capture.Image)
+                .Where(x => previousImage != x)
+                .Do((x) => previousImage = x)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToPropertyEx(this, x=>x.ImageSource);
         }
 
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
@@ -110,101 +119,11 @@ namespace CloudCam
                     image = _frameRepository[_currentFrameIndex];
                 }
 
-                Cv2.Resize(image, image, _frameSize);
+                Cv2.Resize(image, image, _capture.FrameSize);
                 var imageSource = image.ToBitmapSource();
                 imageSource.Freeze();
                 return  new ImageSourceWithMat(imageSource, image);
             });
-        }
-
-        private IObservable<ImageSourceWithMat> StreamVideo(int deviceId)
-        {
-            IScheduler scheduler = DefaultScheduler.Instance;
-            return Observable.Create<ImageSourceWithMat>(o =>
-            {
-                var cts = new CancellationTokenSource();
-                var scheduledWork = scheduler.Schedule(() =>
-                {
-                    var videoCapture = new VideoCapture();
-                    if (!videoCapture.Open(deviceId))
-                    {
-                        throw new ApplicationException($"Failed to open video device {deviceId}");
-                    }
-
-                    _frameSize = SetMaxResolution(videoCapture);
-                    
-                    // Get first frame for dimensions
-                    using var frame = new Mat();
-                    videoCapture.Read(frame);
-                    int startTicks = Environment.TickCount;
-                    int frames = 0;
-                    while (!cts.Token.IsCancellationRequested)
-                    {
-                        videoCapture.Read(frame);
-
-
-                        if (!frame.Empty())
-                        {
-                            var imageSource = frame.ToBitmapSource();
-                            imageSource.Freeze();
-                            o.OnNext(new ImageSourceWithMat(imageSource, frame));
-                            if (++frames % 50 == 0)
-                            {
-                                int elapsedMiliseconds = Environment.TickCount - startTicks;
-
-                                float framesPerSecond = 50.0f / (elapsedMiliseconds / 1000.0f);
-
-                                Console.Out.WriteLine($"{framesPerSecond} FPS");
-                                frames = 0;
-                                startTicks = Environment.TickCount;
-                            }
-                        }
-                    }
-                    o.OnCompleted();
-                });
-
-                return new CompositeDisposable(scheduledWork, cts);
-            });
-        }
-
-        private Size SetMaxResolution(VideoCapture videoCapture)
-        {
-            Size[] commonResolutions = new Size[]
-            {
-                new Size(160, 120),
-                new Size(176, 144),
-                new Size(320, 240),
-                new Size(352, 288),
-                new Size(640, 360),
-                new Size(640, 480),
-                new Size(800, 600),
-                new Size(960, 720),
-                new Size(1280, 720),
-                //new Size(1920, 1080),
-                //new Size(2560, 1472),
-            };
-
-            for (int i = commonResolutions.Length - 1; i >= 0; i--)
-            {
-                // First set,
-                videoCapture.Set(VideoCaptureProperties.FrameWidth, commonResolutions[i].Width);
-                videoCapture.Set(VideoCaptureProperties.FrameHeight, commonResolutions[i].Height);
-                
-                // Then check if available
-                Size actual = new Size(
-                    videoCapture.Get(VideoCaptureProperties.FrameWidth),
-                    videoCapture.Get(VideoCaptureProperties.FrameHeight));
-
-                if (actual.Equals(commonResolutions[i]))
-                {
-                    return actual;
-                }
-            }
-
-            // None available, return the current one
-            return new Size(
-                videoCapture.Get(VideoCaptureProperties.FrameWidth),
-                videoCapture.Get(VideoCaptureProperties.FrameHeight));
         }
     }
 
