@@ -136,19 +136,28 @@ namespace CloudCam
                     // Get first frame for dimensions
                     using var frame = new Mat();
                     videoCapture.Read(frame);
+                    int startTicks = Environment.TickCount;
+                    int frames = 0;
                     while (!cts.Token.IsCancellationRequested)
                     {
-                        int startTicks = Environment.TickCount;
                         videoCapture.Read(frame);
+
 
                         if (!frame.Empty())
                         {
                             var imageSource = frame.ToBitmapSource();
                             imageSource.Freeze();
                             o.OnNext(new ImageSourceWithMat(imageSource, frame));
+                            if (++frames % 50 == 0)
+                            {
+                                int elapsedMiliseconds = Environment.TickCount - startTicks;
 
-                            int tickElapsed = Environment.TickCount - startTicks;
-                            Console.Out.WriteLine($"ticks elapsed {tickElapsed}. Ms elapsed {tickElapsed / TimeSpan.TicksPerMillisecond}");
+                                float framesPerSecond = 50.0f / (elapsedMiliseconds / 1000.0f);
+
+                                Console.Out.WriteLine($"{framesPerSecond} FPS");
+                                frames = 0;
+                                startTicks = Environment.TickCount;
+                            }
                         }
                     }
                     o.OnCompleted();
