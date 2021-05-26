@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Light
 {
-    public class LedController
+    public class LedController : IDisposable
     {
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private int _numberOfPixels;
         private string _usbPort;
         const int BYTESPERPIXEL = 8;
@@ -22,6 +23,7 @@ namespace Light
         private int[] _colorBuffer;
         private byte[] _uartBuffer;
 
+
         public LedController(int numberOfPixels, string usbPort)
         {
             _numberOfPixels = numberOfPixels;
@@ -33,27 +35,32 @@ namespace Light
             
         }
 
-        public void Start()
+        public async Task StartAsync()
         {
-            using (var serialPort = new SerialPort(_usbPort, baudRate, Parity.None, 7, StopBits.One))
+            await Task.Run(() =>
             {
-                if (!serialPort.IsOpen)
-                    serialPort.Open();
-
-                //var chase = new LedEfects.ColorChase(pixelCount, 3, 6);
-
-                for (; ; )
+                using (var serialPort = new SerialPort(_usbPort, baudRate, Parity.None, 7, StopBits.One))
                 {
-                    //chase.MoveNext();
-                    //TranslateColors(chase.Current, _uartBuffer);
+                    if (!serialPort.IsOpen)
+                        serialPort.Open();
 
-                    serialPort.BaseStream.Write(_uartBuffer, 0, _uartBuffer.Length);
-                    serialPort.BaseStream.Flush();
-                    Thread.Sleep(1);
-                    if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.X)
-                        break;
+                    //var chase = new LedEfects.ColorChase(pixelCount, 3, 6);
+
+                    while (!_cancellationTokenSource.IsCancellationRequested)
+                    {
+                        //chase.MoveNext();
+                        //TranslateColors(chase.Current, _uartBuffer);
+
+                        serialPort.BaseStream.Write(_uartBuffer, 0, _uartBuffer.Length);
+                        serialPort.BaseStream.Flush();
+                        Thread.Sleep(1);
+                        if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.X)
+                            break;
+                    }
                 }
-            }
+            });
+
+            // Cleanup here
         }
 
         public void TranslateColors(int[] colors, byte[] UartData)
@@ -78,6 +85,11 @@ namespace Light
         public void Flash()
         {
             
+        }
+
+        public void Dispose()
+        {
+            _cancellationTokenSource.Cancel();
         }
     }
 }
