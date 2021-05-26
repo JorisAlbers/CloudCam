@@ -22,6 +22,7 @@ namespace Light
         };
         private int[] _colorBuffer;
         private byte[] _uartBuffer;
+        private IEnumerator<int[]> _chase;
 
 
         public LedController(int numberOfPixels, string usbPort)
@@ -30,9 +31,7 @@ namespace Light
             _usbPort = usbPort;
 
             _colorBuffer = new int[numberOfPixels];
-            _uartBuffer = new byte[numberOfPixels * BYTESPERPIXEL];
-
-            
+            _uartBuffer = new byte[numberOfPixels * BYTESPERPIXEL];   
         }
 
         public async Task StartAsync()
@@ -48,12 +47,13 @@ namespace Light
 
                     while (!_cancellationTokenSource.IsCancellationRequested)
                     {
-                        //chase.MoveNext();
-                        //TranslateColors(chase.Current, _uartBuffer);
+                        var chase = _chase;
+                        chase.MoveNext();
+                        TranslateColors(chase.Current, _uartBuffer);
 
                         serialPort.BaseStream.Write(_uartBuffer, 0, _uartBuffer.Length);
                         serialPort.BaseStream.Flush();
-                        Thread.Sleep(1);
+                        Thread.Sleep(16);
                         if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.X)
                             break;
                     }
@@ -63,7 +63,12 @@ namespace Light
             // Cleanup here
         }
 
-        public void TranslateColors(int[] colors, byte[] UartData)
+        public void StartAnimation(IEnumerator<int[]> chase)
+        {
+            _chase = chase;
+        }
+
+        private void TranslateColors(int[] colors, byte[] UartData)
         {
             for (int i = 0; i < colors.Length; i++)
             {
