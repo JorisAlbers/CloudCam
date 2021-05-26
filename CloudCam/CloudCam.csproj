@@ -127,6 +127,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ImageRepository.cs" />
+    <Compile Include="MatBuffer.cs" />
     <Compile Include="PhotoBooth.xaml.cs">
       <DependentUpon>PhotoBooth.xaml</DependentUpon>
     </Compile>
