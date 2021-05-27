@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Light.LedEfects;
+using static Light.LedEffects;
 
 namespace LightConsole
 {
@@ -12,9 +12,9 @@ namespace LightConsole
     {
         static void Main(string[] args)
         {
-            LedController ledController = new LedController(300, "COM11");
+            LedController ledController = new LedController(300, "COM11", 60);
             ledController.StartAsync();
-            ledController.StartAnimation(new ColorChase(300, 3, 6));
+            ledController.StartAnimation(new NeoPixelUsbBridge(300, 3, 6));
 
             while (true)
             {
