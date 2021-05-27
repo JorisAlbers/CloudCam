@@ -15,7 +15,7 @@ namespace Light
         private string _usbPort;
         private int _framesPerSecond;
         private int BYTESPERPIXEL = 8;
-        private int _baudRate = 3000000;
+        private int _baudRate = 2400000;
         static readonly byte[] _bitTriplet = new byte[]
         {
             0x5b, 0x1b, 0x53, 0x13,
@@ -72,7 +72,7 @@ namespace Light
         {
             for (int i = 0; i < colors.Length; i++)
             {
-                var color = colors[i];
+                var color = ~colors[i];
                 var pixOffset = i * BYTESPERPIXEL;
 
                 //only 8 permutations so no need to use a for loop

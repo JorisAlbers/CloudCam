@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace Light
 {
-    public class Flicker : IEnumerator<int[]>
+    public class Red : IEnumerator<int[]>
     {
-        private bool _areOn;
         private int[] pixels;
 
-        public Flicker(int LedCount)
+        public Red(int LedCount)
         {
             pixels = new int[LedCount];
         }
@@ -26,12 +25,12 @@ namespace Light
         {
             //Clear all the pixels
             for (int i = 0; i < pixels.Length; i++)
-                pixels[i] = _areOn ? LedEffects.RgbToInt(0, 0, 0) : LedEffects.RgbToInt(255, 255, 255);
+                pixels[i] = LedEffects.RgbToInt(255, 0, 0);
 
-            _areOn = !_areOn;
             Current = pixels;
             return true;
         }
+
 
         public void Reset()
         {

@@ -12,16 +12,41 @@ namespace LightConsole
     {
         static void Main(string[] args)
         {
-            LedController ledController = new LedController(300, "COM11", 60);
+            LedController ledController = new LedController(300, "COM12", 15);
             ledController.StartAsync();
             ledController.StartAnimation(new NeoPixelUsbBridge(300, 3, 6));
 
             while (true)
             {
                 var c = Console.ReadKey();
-                if (c.Key == ConsoleKey.F)
+                if (c.Key == ConsoleKey.Spacebar)
                 {
                     ledController.Flash();
+                }
+                else if (c.Key == ConsoleKey.D1)
+                {
+                    ledController.StartAnimation(new Clear(300));
+
+                }
+                else if (c.Key == ConsoleKey.D2)
+                {
+                    ledController.StartAnimation(new NeoPixelUsbBridge(300, 3, 30));
+                }
+                else if (c.Key == ConsoleKey.D3)
+                {
+                    ledController.StartAnimation(new Flicker(300));
+                }
+                else if (c.Key == ConsoleKey.R)
+                {
+                    ledController.StartAnimation(new Red(300));
+                }
+                else if (c.Key == ConsoleKey.G)
+                {
+                    ledController.StartAnimation(new Green(300));
+                }
+                else if (c.Key == ConsoleKey.B)
+                {
+                    ledController.StartAnimation(new Blue(300));
                 }
             }
         }

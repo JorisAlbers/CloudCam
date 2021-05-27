@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chases\Blue.cs" />
+    <Compile Include="Chases\Green.cs" />
+    <Compile Include="Chases\Red.cs" />
+    <Compile Include="Chases\Clear.cs" />
     <Compile Include="Chases\Flicker.cs" />
     <Compile Include="Chases\NeoPixelUsbBridge.cs" />
     <Compile Include="LedEffects.cs" />
