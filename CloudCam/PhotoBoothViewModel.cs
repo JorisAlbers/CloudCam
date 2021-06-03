@@ -89,9 +89,8 @@ namespace CloudCam
             SecondsUntilPictureIsTaken = 0;
             await Task.Delay(100, cancellationToken); // allow GUI to update
 
-            // TODO add using
-            Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
-            Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
+            using Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
+            using Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
             
             await Task.Run(() =>
             {
