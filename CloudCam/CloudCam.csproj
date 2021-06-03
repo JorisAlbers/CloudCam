@@ -126,6 +126,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Effect.cs" />
+    <Compile Include="IEffect.cs" />
     <Compile Include="ImageRepository.cs" />
     <Compile Include="ImageTransformer.cs" />
     <Compile Include="MatBuffer.cs" />
@@ -137,6 +139,7 @@
     </Compile>
     <Compile Include="SettingsSerializer.cs" />
     <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="TransformationSettings.cs" />
     <Compile Include="WebcamCapture.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
