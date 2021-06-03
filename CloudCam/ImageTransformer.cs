@@ -23,9 +23,13 @@ namespace CloudCam
                 {
                     IEffect effect = settings.Effect;
                     Mat currentMat = _matBuffer.GetNextForEditing(previousMat);
-                    if (effect != null && currentMat != null)
+                    if (currentMat != null)
                     {
-                        effect.Apply(currentMat);
+                        if (effect != null)
+                        {
+                            effect.Apply(currentMat);
+                        }
+                        
                         previousMat = currentMat;
                     }
                 }
