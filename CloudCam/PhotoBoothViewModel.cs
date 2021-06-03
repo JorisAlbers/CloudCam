@@ -63,15 +63,15 @@ namespace CloudCam
             _imageTransformer = new ImageTransformer(_matBuffer);
             Task t = _imageTransformer.StartAsync(transformationSettings, cancellationTokenSource.Token);
 
-            // TODO Editing class
-            // TODO display class
-            /*Mat previousMat = null;
+            
+            Mat previousMat = null;
             Observable.Interval(TimeSpan.FromMilliseconds(33)) // cap at 30 fps
-                .Select(_ => _matBuffer.GetNextForEditing(previousMat))
+                .Select(_ => _matBuffer.GetNextForDisplay(previousMat))
                 .Where(x => previousMat != x)
                 .Do((x) => previousMat = x)
+                .Select((x) => new ImageSourceWithMat(x.ToBitmapSource(), x.ToBitmap())) // TODO only convert to bitmap if photo is taken
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .ToPropertyEx(this, x=>x.ImageSource);*/
+                .ToPropertyEx(this, x=>x.ImageSource);
         }
 
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
@@ -84,9 +84,9 @@ namespace CloudCam
             await Task.Delay(1000, cancellationToken);
             SecondsUntilPictureIsTaken = 0;
             await Task.Delay(100, cancellationToken); // allow GUI to update
-            
-            Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
-            Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
+
+            Bitmap frameAsBitmap = Frame.Bitmap;
+            Bitmap imageAsBitmap = ImageSource.Bitmap;
             
             await Task.Run(() =>
             {
@@ -130,8 +130,9 @@ namespace CloudCam
 
                 Cv2.Resize(image, image, _capture.FrameSize);
                 var imageSource = image.ToBitmapSource();
+                var bitmap = image.ToBitmap();
                 imageSource.Freeze();
-                return  new ImageSourceWithMat(imageSource, image);
+                return  new ImageSourceWithMat(imageSource, bitmap);
             });
         }
     }
@@ -139,12 +140,12 @@ namespace CloudCam
     public class ImageSourceWithMat
     {
         public ImageSource ImageSource { get; }
-        public Mat Mat { get; }
+        public Bitmap Bitmap { get; }
 
-        public ImageSourceWithMat(ImageSource imageSource, Mat mat)
+        public ImageSourceWithMat(ImageSource imageSource, Bitmap bitmap)
         {
             ImageSource = imageSource;
-            Mat = mat;
+            Bitmap = bitmap;
         }
     }
 }
