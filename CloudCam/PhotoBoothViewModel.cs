@@ -155,14 +155,12 @@ namespace CloudCam
         {
             await Task.Run(() =>
             {
-                int counter = 0;
                 Mat previousMat = null;
                 while (!token.IsCancellationRequested)
                 {
                     Mat currentMat = _matBuffer.GetNextForDisplay(previousMat);
                     if (currentMat != null)
                     {
-                        Console.Out.WriteLine($"Counter = {counter++}");
                         BitmapSource imageSource = currentMat.ToBitmapSource();
                         imageSource.Freeze();
                         ImageSourceWithMat = new ImageSourceWithMat(imageSource, currentMat);
