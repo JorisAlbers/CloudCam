@@ -41,9 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Chases\Blue.cs" />
+    <Compile Include="Chases\Green.cs" />
+    <Compile Include="Chases\Red.cs" />
+    <Compile Include="Chases\Clear.cs" />
+    <Compile Include="Chases\Flicker.cs" />
+    <Compile Include="Chases\NeoPixelUsbBridge.cs" />
+    <Compile Include="LedEffects.cs" />
     <Compile Include="LedController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
