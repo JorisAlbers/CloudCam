@@ -12,6 +12,7 @@ using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Color = System.Windows.Media.Color;
 using Size = OpenCvSharp.Size;
 
 namespace CloudCam
@@ -26,6 +27,8 @@ namespace CloudCam
         //TODO move to image cache class
         private int _currentFrameIndex;
         private readonly WebcamCapture _capture;
+        private readonly MatBuffer _matBuffer;
+        private readonly ImageTransformer _imageTransformer;
 
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
 
@@ -45,6 +48,7 @@ namespace CloudCam
             _settings = settings;
             _frameRepository = frameRepository;
             _outputImageRepository = outputImageRepository;
+            _matBuffer = new MatBuffer();
 
             NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
@@ -52,17 +56,22 @@ namespace CloudCam
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
 
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            _capture = new WebcamCapture(device.OpenCdId);
+            _capture = new WebcamCapture(device.OpenCdId, _matBuffer);
             _ = _capture.CaptureAsync(cancellationTokenSource.Token);
 
-            ImageSourceWithMat previousImage = null;
+            TransformationSettings transformationSettings = new TransformationSettings();
+            _imageTransformer = new ImageTransformer(_matBuffer);
+            Task t = _imageTransformer.StartAsync(transformationSettings, cancellationTokenSource.Token);
 
+            // TODO Editing class
+            // TODO display class
+            /*Mat previousMat = null;
             Observable.Interval(TimeSpan.FromMilliseconds(33)) // cap at 30 fps
-                .Select(_ => _capture.Image)
-                .Where(x => previousImage != x)
-                .Do((x) => previousImage = x)
+                .Select(_ => _matBuffer.GetNextForEditing(previousMat))
+                .Where(x => previousMat != x)
+                .Do((x) => previousMat = x)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .ToPropertyEx(this, x=>x.ImageSource);
+                .ToPropertyEx(this, x=>x.ImageSource);*/
         }
 
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
