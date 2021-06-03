@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
@@ -29,6 +30,7 @@ namespace CloudCam
         private readonly WebcamCapture _capture;
         private readonly MatBuffer _matBuffer;
         private readonly ImageTransformer _imageTransformer;
+        private readonly ImageToDisplayImageConverter _imageToDisplayImageConverter;
 
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
 
@@ -61,15 +63,17 @@ namespace CloudCam
 
             TransformationSettings transformationSettings = new TransformationSettings();
             _imageTransformer = new ImageTransformer(_matBuffer);
-            Task t = _imageTransformer.StartAsync(transformationSettings, cancellationTokenSource.Token);
+            Task t1 = _imageTransformer.StartAsync(transformationSettings, cancellationTokenSource.Token);
 
-            
-            Mat previousMat = null;
-            Observable.Interval(TimeSpan.FromMilliseconds(33)) // cap at 30 fps
-                .Select(_ => _matBuffer.GetNextForDisplay(previousMat))
-                .Where(x => previousMat != x)
-                .Do((x) => previousMat = x)
-                .Select((x) => new ImageSourceWithMat(x.ToBitmapSource(), x.ToBitmap())) // TODO only convert to bitmap if photo is taken
+            _imageToDisplayImageConverter = new ImageToDisplayImageConverter(_matBuffer);
+            Task t2 = _imageToDisplayImageConverter.StartAsync(cancellationTokenSource.Token);
+
+            ImageSourceWithMat previous = null;
+            Observable.Interval(TimeSpan.FromMilliseconds(33))
+                .Select(_ => _imageToDisplayImageConverter.ImageSourceWithMat)
+                .WhereNotNull()
+                .Where(x=> previous != x)
+                .Do(x => previous = x)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x=>x.ImageSource);
         }
@@ -85,8 +89,9 @@ namespace CloudCam
             SecondsUntilPictureIsTaken = 0;
             await Task.Delay(100, cancellationToken); // allow GUI to update
 
-            Bitmap frameAsBitmap = Frame.Bitmap;
-            Bitmap imageAsBitmap = ImageSource.Bitmap;
+            // TODO add using
+            Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
+            Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
             
             await Task.Run(() =>
             {
@@ -130,22 +135,54 @@ namespace CloudCam
 
                 Cv2.Resize(image, image, _capture.FrameSize);
                 var imageSource = image.ToBitmapSource();
-                var bitmap = image.ToBitmap();
                 imageSource.Freeze();
-                return  new ImageSourceWithMat(imageSource, bitmap);
+                return  new ImageSourceWithMat(imageSource, image);
             });
+        }
+    }
+
+    public class ImageToDisplayImageConverter
+    {
+        private readonly MatBuffer _matBuffer;
+
+        public ImageSourceWithMat ImageSourceWithMat { get; private set; }
+
+        public ImageToDisplayImageConverter(MatBuffer matBuffer)
+        {
+            _matBuffer = matBuffer;
+        }
+
+        public async Task StartAsync(CancellationToken token)
+        {
+            await Task.Run(() =>
+            {
+                int counter = 0;
+                Mat previousMat = null;
+                while (!token.IsCancellationRequested)
+                {
+                    Mat currentMat = _matBuffer.GetNextForDisplay(previousMat);
+                    if (currentMat != null)
+                    {
+                        Console.Out.WriteLine($"Counter = {counter++}");
+                        BitmapSource imageSource = currentMat.ToBitmapSource();
+                        imageSource.Freeze();
+                        ImageSourceWithMat = new ImageSourceWithMat(imageSource, currentMat);
+                    }
+                    previousMat = currentMat;
+                }
+            }, token);
         }
     }
 
     public class ImageSourceWithMat
     {
         public ImageSource ImageSource { get; }
-        public Bitmap Bitmap { get; }
+        public Mat Mat { get; }
 
-        public ImageSourceWithMat(ImageSource imageSource, Bitmap bitmap)
+        public ImageSourceWithMat(ImageSource imageSource, Mat mat)
         {
             ImageSource = imageSource;
-            Bitmap = bitmap;
+            Mat = mat;
         }
     }
 }
