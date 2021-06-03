@@ -23,11 +23,14 @@ namespace CloudCam
 
         public Mat GetNextForCapture(Mat previous)
         {
-            Mat editing = Interlocked.Exchange(ref _readyForEditing, previous);
-            if (editing != null)
+            if (previous != null)
             {
-                // was not used for editing.
-                _readyForCapture.Add(editing);
+                Mat editing = Interlocked.Exchange(ref _readyForEditing, previous);
+                if (editing != null)
+                {
+                    // was not used for editing.
+                    _readyForCapture.Add(editing);
+                }
             }
 
             if (_readyForCapture.TryTake(out Mat mat))
@@ -35,19 +38,24 @@ namespace CloudCam
                return mat;
             }
 
+            // TODO run error instead of return previous, we are out of buffers!
             return previous;
         }
 
         public Mat GetNextForEditing(Mat previous)
         {
-            Mat display = Interlocked.Exchange(ref _readyForDisplay, previous);
-            if (display != null)
+            if (previous != null)
             {
-                // was not used for display.
-                _readyForCapture.Add(display);
+                Mat display = Interlocked.Exchange(ref _readyForDisplay, previous);
+                if (display != null && display != previous)
+                {
+                    // was not used for display.
+                    _readyForCapture.Add(display);
+                }
             }
 
-            return Interlocked.Exchange(ref _readyForEditing, null);
+            Mat mat = Interlocked.Exchange(ref _readyForEditing, null);
+            return mat;
         }
 
         public Mat GetNextForDisplay(Mat previous)
