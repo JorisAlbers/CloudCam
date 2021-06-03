@@ -129,6 +129,7 @@
     <Compile Include="Effect.cs" />
     <Compile Include="IEffect.cs" />
     <Compile Include="ImageRepository.cs" />
+    <Compile Include="ImageToDisplayImageConverter.cs" />
     <Compile Include="ImageTransformer.cs" />
     <Compile Include="MatBuffer.cs" />
     <Compile Include="PhotoBooth.xaml.cs">
