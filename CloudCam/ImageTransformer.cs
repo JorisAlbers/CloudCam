@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using OpenCvSharp;
 
 namespace CloudCam
 {
@@ -12,13 +13,24 @@ namespace CloudCam
             _matBuffer = matBuffer;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(TransformationSettings settings, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
+                Mat previousMat = null;
+
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    
+                    IEffect effect = settings.Effect;
+                    if (effect != null)
+                    {
+                        Mat currentMat = _matBuffer.GetNextForEditing(previousMat);
+                        if (currentMat != null)
+                        {
+                            effect.Apply(currentMat);
+                            previousMat = currentMat;
+                        }
+                    }
                 }
             }, cancellationToken);
         }
