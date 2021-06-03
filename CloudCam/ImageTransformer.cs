@@ -22,14 +22,11 @@ namespace CloudCam
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     IEffect effect = settings.Effect;
-                    if (effect != null)
+                    Mat currentMat = _matBuffer.GetNextForEditing(previousMat);
+                    if (effect != null && currentMat != null)
                     {
-                        Mat currentMat = _matBuffer.GetNextForEditing(previousMat);
-                        if (currentMat != null)
-                        {
-                            effect.Apply(currentMat);
-                            previousMat = currentMat;
-                        }
+                        effect.Apply(currentMat);
+                        previousMat = currentMat;
                     }
                 }
             }, cancellationToken);
