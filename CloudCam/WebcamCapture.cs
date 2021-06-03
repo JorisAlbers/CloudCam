@@ -15,14 +15,14 @@ namespace CloudCam
     public class WebcamCapture
     {
         private readonly int _camId;
+        private readonly MatBuffer _matBuffer;
 
         public Size FrameSize { get; private set; }
 
-        public ImageSourceWithMat Image { get; private set; }
-
-        public WebcamCapture(int camId)
+        public WebcamCapture(int camId, MatBuffer matBuffer)
         {
             _camId = camId;
+            _matBuffer = matBuffer;
         }
 
         public async Task CaptureAsync(CancellationToken cancellationToken)
@@ -38,30 +38,12 @@ namespace CloudCam
                 FrameSize = SetMaxResolution(videoCapture);
 
                 // Get first frame for dimensions
-                using var frame = new Mat();
+                Mat frame = _matBuffer.GetNextForCapture(null);
                 videoCapture.Read(frame);
-                int startTicks = Environment.TickCount;
-                int frames = 0;
                 while (!cancellationToken.IsCancellationRequested)
                 {
+                    frame = _matBuffer.GetNextForCapture(frame);
                     videoCapture.Read(frame);
-
-                    if (!frame.Empty())
-                    {
-                        var imageSource = frame.ToBitmapSource();
-                        imageSource.Freeze();
-                        Image = new ImageSourceWithMat(imageSource, frame);
-                        if (++frames % 50 == 0)
-                        {
-                            int elapsedMiliseconds = Environment.TickCount - startTicks;
-
-                            float framesPerSecond = 50.0f / (elapsedMiliseconds / 1000.0f);
-
-                            Console.Out.WriteLine($"{framesPerSecond} FPS");
-                            frames = 0;
-                            startTicks = Environment.TickCount;
-                        }
-                    }
                 }
 
                 videoCapture.Dispose();
