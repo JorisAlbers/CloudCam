@@ -42,6 +42,9 @@ namespace CloudCam
         [ObservableAsProperty]
         public float CameraFps { get; set; }
 
+        [ObservableAsProperty]
+        public float EditingFps { get; set; }
+
         public ReactiveCommand<bool, ImageSourceWithMat> NextFrame { get; }
 
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
@@ -81,6 +84,7 @@ namespace CloudCam
 
 
             this.WhenAnyValue(x => x._capture.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.CameraFps);
+            this.WhenAnyValue(x => x._imageTransformer.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.EditingFps);
         }
 
 
