@@ -2,7 +2,7 @@ namespace CloudCam
 {
     public class TransformationSettings
     {
-        public Effect Effect { get; set; }
+        public IEffect Effect { get; set; }
      
     }
 }
