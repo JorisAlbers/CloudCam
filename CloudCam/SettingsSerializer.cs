@@ -22,7 +22,7 @@ namespace CloudCam
         public void Save(Settings settings)
         {
             string json = JsonConvert.SerializeObject(settings);
-            using StreamWriter writer = new StreamWriter(_settingsFile.OpenWrite());
+            using StreamWriter writer = new StreamWriter(_settingsFile.Create());
             writer.Write(json);
         }
     }
