@@ -7,7 +7,7 @@ namespace CloudCam
     {
         public void Apply(Mat mat)
         {
-           CvXPhoto.OilPainting(mat,mat,10,1);
+           CvXPhoto.OilPainting(mat,mat,6,1);
         }
     }
 }
