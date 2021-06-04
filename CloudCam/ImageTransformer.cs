@@ -36,8 +36,6 @@ namespace CloudCam
                             effect.Apply(currentMat);
                         }
 
-                        previousMat = currentMat;
-
                         if (++frames > 50)
                         {
                             int elapsedMilliseconds = Environment.TickCount - startTicks;
@@ -46,6 +44,7 @@ namespace CloudCam
                             startTicks = Environment.TickCount;
                         }
                     }
+                    previousMat = currentMat;
                 }
             }, cancellationToken);
         }
