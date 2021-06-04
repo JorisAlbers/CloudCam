@@ -12,7 +12,7 @@
         <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform"/>
         <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center"
                    Foreground="White" FontSize="70"/>
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure">
             <TextBlock Foreground="Red">
                 <TextBlock Text="Camera FPS:"/>
                 <TextBlock x:Name="CameraFpsTextBlock"/>
