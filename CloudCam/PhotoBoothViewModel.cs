@@ -134,18 +134,19 @@ namespace CloudCam
             SecondsUntilPictureIsTaken = 0;
             await Task.Delay(100, cancellationToken); // allow GUI to update
 
-            using Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
             using Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
-            
-            await Task.Run(() =>
+            if (Frame != null)
             {
-                // Overlay frame on top of image
-                using (Graphics gr = Graphics.FromImage(imageAsBitmap))
+                using Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
+                await Task.Run(() =>
                 {
+                    // Overlay frame on top of image
+                    using Graphics gr = Graphics.FromImage(imageAsBitmap);
                     gr.DrawImage(frameAsBitmap, new System.Drawing.Point(0, 0));
-                }
-                _outputImageRepository.Save(imageAsBitmap);
-            }, cancellationToken);
+                }, cancellationToken);
+            }
+
+            _outputImageRepository.Save(imageAsBitmap);
             SecondsUntilPictureIsTaken = -1;
             return Unit.Default;
         }
