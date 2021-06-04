@@ -31,6 +31,8 @@ namespace CloudCam
                     case Key.Right: return UserAction.MoveToNextFrame;
                     case Key.Left:  return UserAction.MoveToPreviousFrame;
                     case Key.Space:  return UserAction.TakePicture;
+                    case Key.D: return UserAction.MoveToNextEffect;
+                    case Key.A:  return UserAction.MoveToPreviousEffect;
                 }
 
                 return UserAction.None;
@@ -43,18 +45,25 @@ namespace CloudCam
                     return;
                 }
 
-                if (x == UserAction.MoveToNextFrame)
+                switch (x)
                 {
-                    await _photoBoothViewModel.NextFrame.Execute(true);
+                    case UserAction.MoveToNextFrame:
+                        await _photoBoothViewModel.NextFrame.Execute(true);
+                        break;
+                    case UserAction.MoveToPreviousFrame:
+                        await _photoBoothViewModel.NextFrame.Execute(false);
+                        break;
+                    case UserAction.TakePicture:
+                        await _photoBoothViewModel.TakePicture.Execute();
+                        break;
+                    case UserAction.MoveToNextEffect:
+                        await _photoBoothViewModel.NextEffect.Execute(true);
+                        break;
+                    case UserAction.MoveToPreviousEffect:
+                        await _photoBoothViewModel.NextEffect.Execute(false);
+                        break;
                 }
-                else if (x == UserAction.MoveToPreviousFrame)
-                {
-                    await _photoBoothViewModel.NextFrame.Execute(false);
-                }
-                else if (x == UserAction.TakePicture)
-                {
-                    await _photoBoothViewModel.TakePicture.Execute();
-                }
+                
             });
             
             string rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
@@ -140,5 +149,7 @@ namespace CloudCam
         MoveToNextFrame,
         MoveToPreviousFrame,
         TakePicture,
+        MoveToNextEffect,
+        MoveToPreviousEffect
     }
 }

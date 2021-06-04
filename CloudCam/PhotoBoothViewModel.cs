@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Reactive;
 using System.Reactive.Concurrency;
@@ -49,8 +50,12 @@ namespace CloudCam
         public float EditingFps { get; set; }
 
         public ReactiveCommand<bool, ImageSourceWithMat> NextFrame { get; }
+        public ReactiveCommand<bool, IEffect> NextEffect { get; }
 
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
+
+        private int _effectIndex = 0;
+        private List<IEffect> _effects;
 
         public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository,
             OutputImageRepository outputImageRepository)
@@ -63,13 +68,38 @@ namespace CloudCam
             NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
+            TransformationSettings transformationSettings = new TransformationSettings();
+            _effects = new List<IEffect>
+            {
+                new OilPainting()
+            };
+            NextEffect = ReactiveCommand.Create<bool, IEffect>((b) =>
+            {
+                if (b)
+                {
+                    if (++_effectIndex > _effects.Count - 1)
+                    {
+                        _effectIndex = 0;
+                    }
+                }
+                else
+                {
+                    if (_effectIndex-- < 0)
+                    {
+                        _effectIndex = _effects.Count - 1;
+                    }
+                }
+
+                return _effects[_effectIndex];
+            });
+            NextEffect.Subscribe(x => transformationSettings.Effect = x);
+            
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
 
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
             _capture = new WebcamCapture(device.OpenCdId, _matBuffer);
             _ = _capture.CaptureAsync(cancellationTokenSource.Token);
 
-            TransformationSettings transformationSettings = new TransformationSettings();
             _imageTransformer = new ImageTransformer(_matBuffer);
             Task t1 = _imageTransformer.StartAsync(transformationSettings, cancellationTokenSource.Token);
 
