@@ -36,6 +36,8 @@ namespace CloudCam
                         return "Smile!";
 
                     }).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.CameraFps, v => v.CameraFpsTextBlock.Text).DisposeWith(d);
             });
         }
     }

@@ -39,6 +39,9 @@ namespace CloudCam
         [ObservableAsProperty]
         public ImageSourceWithMat Frame { get; }
 
+        [ObservableAsProperty]
+        public float CameraFps { get; set; }
+
         public ReactiveCommand<bool, ImageSourceWithMat> NextFrame { get; }
 
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
@@ -75,7 +78,12 @@ namespace CloudCam
                 .Do(x => previous = x)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x=>x.ImageSource);
+
+
+            this.WhenAnyValue(x => x._capture.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.CameraFps);
         }
+
+
 
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {

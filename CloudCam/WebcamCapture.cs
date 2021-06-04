@@ -9,15 +9,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace CloudCam
 {
-    public class WebcamCapture
+    public class WebcamCapture : ReactiveObject
     {
         private readonly int _camId;
         private readonly MatBuffer _matBuffer;
 
         public Size FrameSize { get; private set; }
+
+        [Reactive] public float Fps { get; private set; }
 
         public WebcamCapture(int camId, MatBuffer matBuffer)
         {
@@ -40,10 +44,19 @@ namespace CloudCam
                 // Get first frame for dimensions
                 Mat frame = _matBuffer.GetNextForCapture(null);
                 videoCapture.Read(frame);
+                int startTicks = Environment.TickCount;
+                int frames = 0;
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     frame = _matBuffer.GetNextForCapture(frame);
                     videoCapture.Read(frame);
+                    if (++frames > 50)
+                    {
+                        int elapsedMilliseconds = Environment.TickCount - startTicks;
+                        Fps = 50.0f / (elapsedMilliseconds / 1000.0f);
+                        frames = 0;
+                        startTicks = Environment.TickCount;
+                    }
                 }
 
                 videoCapture.Dispose();

@@ -12,5 +12,11 @@
         <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform"/>
         <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center"
                    Foreground="White" FontSize="70"/>
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
+            <TextBlock Foreground="Red">
+                <TextBlock Text="Camera FPS:"/>
+                <TextBlock x:Name="CameraFpsTextBlock"/>
+            </TextBlock>
+        </StackPanel>
     </Grid>
 </reactiveUi:ReactiveUserControl>
