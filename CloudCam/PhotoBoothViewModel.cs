@@ -84,7 +84,7 @@ namespace CloudCam
                 }
                 else
                 {
-                    if (_effectIndex-- < 0)
+                    if (--_effectIndex < 0)
                     {
                         _effectIndex = _effects.Count - 1;
                     }
