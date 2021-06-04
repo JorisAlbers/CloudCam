@@ -24,14 +24,20 @@ namespace CloudCam
                     AddKeyBinding(Key.Right, dispose);
                     AddKeyBinding(Key.Left, dispose);
                     AddKeyBinding(Key.Space, dispose);
+                    AddKeyBinding(Key.A, dispose);
+                    AddKeyBinding(Key.D, dispose);
                 }
             });
         }
 
         private void AddKeyBinding(Key key, CompositeDisposable d)
         {
-            KeyBinding binding = new KeyBinding(ViewModel.KeyPressed, key, ModifierKeys.None);
-            binding.CommandParameter = key;
+            KeyBinding binding = new KeyBinding
+            {
+                Command = ViewModel.KeyPressed,
+                Key = key,
+                CommandParameter = key
+            };
             InputBindings.Add(binding);
 
             d.Add(Disposable.Create(() =>
