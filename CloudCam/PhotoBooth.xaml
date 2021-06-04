@@ -17,9 +17,15 @@
                 <TextBlock Text="Camera FPS:"/>
                 <TextBlock x:Name="CameraFpsTextBlock"/>
             </TextBlock>
+
             <TextBlock Foreground="Red">
                 <TextBlock Text="Editing FPS:"/>
                 <TextBlock x:Name="EditingFpsTextBlock"/>
+            </TextBlock>
+
+            <TextBlock Foreground="Red">
+                <TextBlock Text="To display image FPS:"/>
+                <TextBlock x:Name="ToDisplayImageTextBlock"/>
             </TextBlock>
         </StackPanel>
     </Grid>

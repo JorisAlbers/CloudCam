@@ -40,7 +40,10 @@ namespace CloudCam
         public ImageSourceWithMat Frame { get; }
 
         [ObservableAsProperty]
-        public float CameraFps { get; set; }
+        public float CameraFps { get; set; }  
+        
+        [ObservableAsProperty]
+        public float ToDisplayImageFps { get; set; }
 
         [ObservableAsProperty]
         public float EditingFps { get; set; }
@@ -85,6 +88,7 @@ namespace CloudCam
 
             this.WhenAnyValue(x => x._capture.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.CameraFps);
             this.WhenAnyValue(x => x._imageTransformer.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.EditingFps);
+            this.WhenAnyValue(x => x._imageToDisplayImageConverter.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.ToDisplayImageFps);
         }
 
 
