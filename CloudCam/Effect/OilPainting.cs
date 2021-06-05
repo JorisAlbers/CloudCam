@@ -1,7 +1,7 @@
 using OpenCvSharp;
 using OpenCvSharp.XPhoto;
 
-namespace CloudCam
+namespace CloudCam.Effect
 {
     public class OilPainting : IEffect
     {

@@ -126,9 +126,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="EffectManager.cs" />
-    <Compile Include="OilPainting.cs" />
-    <Compile Include="IEffect.cs" />
+    <Compile Include="Effect\EffectManager.cs" />
+    <Compile Include="Effect\OilPainting.cs" />
+    <Compile Include="Effect\IEffect.cs" />
     <Compile Include="ImageRepository.cs" />
     <Compile Include="ImageToDisplayImageConverter.cs" />
     <Compile Include="ImageTransformer.cs" />
@@ -195,6 +195,7 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

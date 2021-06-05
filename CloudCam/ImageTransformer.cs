@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudCam.Effect;
 using OpenCvSharp;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;

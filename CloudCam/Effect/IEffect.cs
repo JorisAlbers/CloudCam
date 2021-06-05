@@ -1,6 +1,6 @@
 using OpenCvSharp;
 
-namespace CloudCam
+namespace CloudCam.Effect
 {
     public interface IEffect
     {

@@ -1,3 +1,5 @@
+using CloudCam.Effect;
+
 namespace CloudCam
 {
     public class TransformationSettings
