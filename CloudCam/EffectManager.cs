@@ -16,6 +16,7 @@ namespace CloudCam
         {
             _effects = new List<IEffect>
             {
+                null,
                 new OilPainting()
             };
         }
