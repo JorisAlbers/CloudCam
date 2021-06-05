@@ -126,6 +126,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EffectManager.cs" />
     <Compile Include="OilPainting.cs" />
     <Compile Include="IEffect.cs" />
     <Compile Include="ImageRepository.cs" />

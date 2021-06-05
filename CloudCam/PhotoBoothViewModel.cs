@@ -54,8 +54,7 @@ namespace CloudCam
 
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
-        private int _effectIndex = 0;
-        private List<IEffect> _effects;
+
 
         public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository,
             OutputImageRepository outputImageRepository)
@@ -69,28 +68,15 @@ namespace CloudCam
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
             TransformationSettings transformationSettings = new TransformationSettings();
-            _effects = new List<IEffect>
+            EffectManager effectManager = new EffectManager();
+            NextEffect = ReactiveCommand.Create<bool, IEffect>((forwards) =>
             {
-                new OilPainting()
-            };
-            NextEffect = ReactiveCommand.Create<bool, IEffect>((b) =>
-            {
-                if (b)
+                if (forwards)
                 {
-                    if (++_effectIndex > _effects.Count - 1)
-                    {
-                        _effectIndex = 0;
-                    }
-                }
-                else
-                {
-                    if (--_effectIndex < 0)
-                    {
-                        _effectIndex = _effects.Count - 1;
-                    }
+                    return effectManager.Next();
                 }
 
-                return _effects[_effectIndex];
+                return effectManager.Previous();
             });
             NextEffect.Subscribe(x => transformationSettings.Effect = x);
             
@@ -121,8 +107,7 @@ namespace CloudCam
             this.WhenAnyValue(x => x._imageToDisplayImageConverter.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.ToDisplayImageFps);
         }
 
-
-
+        
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
             SecondsUntilPictureIsTaken = 3;
