@@ -63,8 +63,8 @@ namespace CloudCam.Effect
                 mustacheWidth = x2 - x1;
                 mustacheHeight = y2 - y1;
 
-                Mat mustaceNew = new Mat();
-                Cv2.Resize(_mustache, mustaceNew, new Size(mustacheWidth, mustacheHeight),
+                Mat mustacheNew = new Mat();
+                Cv2.Resize(_mustache, mustacheNew, new Size(mustacheWidth, mustacheHeight),
                     interpolation: InterpolationFlags.Area);
 
                 Mat mask = new Mat();
@@ -82,7 +82,7 @@ namespace CloudCam.Effect
                 Cv2.BitwiseAnd(roi, roi, roiBg, maskInverse);
 
                 Mat roiFg = new Mat();
-                Cv2.BitwiseAnd(mustaceNew, mustaceNew, roiFg, mask);
+                Cv2.BitwiseAnd(mustacheNew, mustacheNew, roiFg, mask);
                 Mat d = new Mat();
                 Cv2.Add(roiBg, roiFg, d);
 
