@@ -86,12 +86,16 @@ namespace CloudCam
                 var frameRepository = new ImageRepository(x.FrameFolder);
                 frameRepository.Load();
 
+                var mustachesRepository = new ImageRepository(x.MustacheFolder);
+                mustachesRepository.Load();
+
                 var outputRepository = new OutputImageRepository(x.OutputFolder);
 
 
                 _photoBoothViewModel = new PhotoBoothViewModel(x,
                     CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice),
                     frameRepository,
+                    mustachesRepository,
                     outputRepository);
                 SelectedViewModel = _photoBoothViewModel;
             });

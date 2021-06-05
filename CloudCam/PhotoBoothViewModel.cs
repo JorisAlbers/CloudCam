@@ -23,6 +23,7 @@ namespace CloudCam
     {
         private readonly Settings _settings;
         private readonly ImageRepository _frameRepository;
+        private readonly ImageRepository _mustachesRepository;
         private readonly OutputImageRepository _outputImageRepository;
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -57,11 +58,12 @@ namespace CloudCam
 
 
 
-        public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository,
+        public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository, ImageRepository mustachesRepository,
             OutputImageRepository outputImageRepository)
         {
             _settings = settings;
             _frameRepository = frameRepository;
+            _mustachesRepository = mustachesRepository;
             _outputImageRepository = outputImageRepository;
             _matBuffer = new MatBuffer();
 
@@ -69,7 +71,7 @@ namespace CloudCam
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
             TransformationSettings transformationSettings = new TransformationSettings();
-            EffectManager effectManager = new EffectManager();
+            EffectManager effectManager = new EffectManager(@"Resources\haarcascade_frontalface_alt.xml", @"Resources\haarcascade_mcs_nose.xml", mustachesRepository);
             NextEffect = ReactiveCommand.Create<bool, IEffect>((forwards) =>
             {
                 if (forwards)

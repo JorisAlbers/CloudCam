@@ -1,20 +1,34 @@
 ﻿using System.Collections.Generic;
+using CloudCam.Detection;
+using OpenCvSharp.Dnn;
 
 namespace CloudCam.Effect
 {
     public class EffectManager
     {
+        private readonly ImageRepository _mustachesRepository;
         private int _effectIndex = 0;
         private readonly List<IEffect> _effects;
-        
+        private readonly FaceDetection _faceDetection;
+        private readonly NoseDetection _noseDetection;
 
-        public EffectManager()
+
+        public EffectManager(string faceCascadeFile, string noseCascadeFile, ImageRepository mustachesRepository)
         {
+            _mustachesRepository = mustachesRepository;
+            _faceDetection = new FaceDetection(faceCascadeFile);
+            _noseDetection = new NoseDetection(noseCascadeFile);
+
             _effects = new List<IEffect>
             {
                 null,
-                new OilPainting()
+                new OilPainting(),
             };
+
+            for (int i = 0; i < mustachesRepository.Count; i++)
+            {
+                _effects.Add(new Mustaches(mustachesRepository[i], _faceDetection, _noseDetection));
+            }
         }
 
         public IEffect Next()
