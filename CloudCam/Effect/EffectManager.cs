@@ -23,6 +23,9 @@ namespace CloudCam.Effect
             {
                 null,
                 new OilPainting(),
+#if DEBUG
+                new DebugDetection(_faceDetection, _noseDetection),
+#endif
             };
 
             for (int i = 0; i < mustachesRepository.Count; i++)
