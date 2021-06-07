@@ -27,7 +27,7 @@ namespace CloudCam.Detection
                 scaleFactor: 1.1,
                 minNeighbors: 2,
                 flags: HaarDetectionTypes.DoRoughSearch | HaarDetectionTypes.ScaleImage,
-                minSize: new Size(30, 30)
+                minSize: new Size(60, 90)
             );
         }
     }
