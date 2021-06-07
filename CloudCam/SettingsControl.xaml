@@ -27,6 +27,9 @@
             <TextBlock Text="Path to mustaches:" VerticalAlignment="Center"/>
             <TextBox x:Name="MustachesPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
 
+            <TextBlock Text="Path to hats:" VerticalAlignment="Center"/>
+            <TextBox x:Name="HatsPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
+
             <TextBlock Text="Path to output:" VerticalAlignment="Center"/>
             <TextBox x:Name="OutputPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
 

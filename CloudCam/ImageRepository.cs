@@ -13,7 +13,7 @@ namespace CloudCam
         private readonly string _folderPath;
         private string[] _images;
 
-        public int Count => _images.Length;
+        public int Count => _images?.Length ?? 0;
 
         public ImageRepository(string folderPath)
         {

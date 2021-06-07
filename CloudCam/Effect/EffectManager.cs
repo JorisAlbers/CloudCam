@@ -7,15 +7,18 @@ namespace CloudCam.Effect
     public class EffectManager
     {
         private readonly ImageRepository _mustachesRepository;
+        private readonly ImageRepository _hatsRepository;
         private int _effectIndex = 0;
         private readonly List<IEffect> _effects;
         private readonly FaceDetection _faceDetection;
         private readonly NoseDetection _noseDetection;
 
 
-        public EffectManager(string faceCascadeFile, string noseCascadeFile, ImageRepository mustachesRepository)
+        public EffectManager(string faceCascadeFile, string noseCascadeFile, ImageRepository mustachesRepository,
+            ImageRepository hatsRepository)
         {
             _mustachesRepository = mustachesRepository;
+            _hatsRepository = hatsRepository;
             _faceDetection = new FaceDetection(faceCascadeFile);
             _noseDetection = new NoseDetection(noseCascadeFile);
 
@@ -31,6 +34,11 @@ namespace CloudCam.Effect
             for (int i = 0; i < mustachesRepository.Count; i++)
             {
                 _effects.Add(new Mustaches(mustachesRepository[i], _faceDetection, _noseDetection));
+            }
+
+            for (int i = 0; i < hatsRepository.Count; i++)
+            {
+                _effects.Add(new Hats(hatsRepository[i], _faceDetection));
             }
         }
 

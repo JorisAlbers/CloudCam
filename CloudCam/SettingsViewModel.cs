@@ -12,6 +12,7 @@ namespace CloudCam
         [Reactive] public CameraDevice SelectedCameraDevice { get; set; }
         [Reactive] public string FrameFolder { get; set; }
         [Reactive] public string MustacheFolder { get; set; }
+        [Reactive] public string HatFolder { get; set; }
         [Reactive] public string OutputFolder { get; set; }
 
         public ReactiveCommand<Unit, Settings> Apply { get; }
@@ -24,9 +25,10 @@ namespace CloudCam
             FrameFolder = settings.FrameFolder;
             MustacheFolder = settings.MustacheFolder;
             OutputFolder = settings.OutputFolder;
+            HatFolder = settings.HatFolder;
 
-            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, OutputFolder, SelectedCameraDevice.Name));
-            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, OutputFolder, SelectedCameraDevice.Name));
+            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name));
+            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name));
         }
     }
 
@@ -36,11 +38,13 @@ namespace CloudCam
         public string MustacheFolder { get; }
         public string OutputFolder { get; }
         public string CameraDevice { get; }
+        public string HatFolder { get; set; }
 
-        public Settings(string frameFolder, string mustacheFolder, string outputFolder, string cameraDevice)
+        public Settings(string frameFolder, string mustacheFolder, string hatFolder, string outputFolder, string cameraDevice)
         {
             FrameFolder = frameFolder;
             MustacheFolder = mustacheFolder;
+            HatFolder = hatFolder;
             OutputFolder = outputFolder;
             CameraDevice = cameraDevice;
         }

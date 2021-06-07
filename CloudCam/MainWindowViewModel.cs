@@ -89,6 +89,9 @@ namespace CloudCam
                 var mustachesRepository = new ImageRepository(x.MustacheFolder);
                 mustachesRepository.Load();
 
+                var hatsRepository = new ImageRepository(x.HatFolder);
+                hatsRepository.Load();
+
                 var outputRepository = new OutputImageRepository(x.OutputFolder);
 
 
@@ -96,6 +99,7 @@ namespace CloudCam
                     CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice),
                     frameRepository,
                     mustachesRepository,
+                    hatsRepository,
                     outputRepository);
                 SelectedViewModel = _photoBoothViewModel;
             });
@@ -114,6 +118,7 @@ namespace CloudCam
                 // Prob. not yet initialized
                 Settings settings = GetDefaultSettings(new DirectoryInfo(rootFolder));
                 Directory.CreateDirectory(settings.MustacheFolder);
+                Directory.CreateDirectory(settings.HatFolder);
                 Directory.CreateDirectory(settings.FrameFolder);
                 Directory.CreateDirectory(settings.OutputFolder);
                 return settings;
@@ -124,6 +129,7 @@ namespace CloudCam
         {
             return new Settings(Path.Combine(rootFolder.FullName, "Frames"),
                 Path.Combine(rootFolder.FullName, "Mustaches"),
+                Path.Combine(rootFolder.FullName, "Hats"),
                 Path.Combine(rootFolder.FullName, "Output"),
                 null);
         }

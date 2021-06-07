@@ -18,7 +18,7 @@ namespace CloudCam
 
         public MatBuffer()
         {
-            _readyForCapture = new ConcurrentBag<Mat>(new Mat[] {new Mat(), new Mat(), new Mat()});
+            _readyForCapture = new ConcurrentBag<Mat>(new Mat[] {new Mat(), new Mat(), new Mat(), new Mat()});
         }
 
         public Mat GetNextForCapture(Mat previous)
