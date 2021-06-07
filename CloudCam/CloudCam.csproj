@@ -131,6 +131,7 @@
     <Compile Include="Effect\DebugDetection.cs" />
     <Compile Include="Effect\EffectManager.cs" />
     <Compile Include="Effect\Hats.cs" />
+    <Compile Include="Effect\Mustaches.cs" />
     <Compile Include="Effect\OilPainting.cs" />
     <Compile Include="Effect\IEffect.cs" />
     <Compile Include="ImageRepository.cs" />
