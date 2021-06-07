@@ -25,7 +25,7 @@ namespace CloudCam.Effect
                 Rect[] noses = _noseDetection.Detect(roiColor);
                 foreach (Rect nose in noses)
                 {
-                    mat.Rectangle(nose, Scalar.SteelBlue);
+                    roiColor.Rectangle(nose, Scalar.SteelBlue);
                 }
             }
         }
