@@ -10,8 +10,7 @@
     <Grid>
         <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform"/>
         <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform"/>
-        <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center"
-                   Foreground="White" FontSize="70"/>
+        <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure">
             <TextBlock Foreground="Red">
                 <TextBlock Text="Camera FPS:"/>
