@@ -44,19 +44,10 @@ namespace CloudCam
                 this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.FlashRectangle.Visibility,
                     (seconds) => seconds == 0 ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
 
+                this.OneWayBind(ViewModel, vm => vm.TakenImage, v => v.BlackRectangle.Visibility,
+                    (picture) => picture != null ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
+
                 this.OneWayBind(ViewModel, vm => vm.PickupLine, v => v.PickupLineTextBlock.Text).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.PickupLineTextBlock.Foreground,
-                    (seconds) =>
-                    {
-                        if (seconds > 0)
-                        {
-                            return new SolidColorBrush(Colors.White);
-                        }
-
-                        return new SolidColorBrush(Colors.Black);
-                    }).DisposeWith(d);
-
-
                 this.OneWayBind(ViewModel, vm => vm.CameraFps, v => v.CameraFpsTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.EditingFps, v => v.EditingFpsTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ToDisplayImageFps, v => v.ToDisplayImageTextBlock.Text).DisposeWith(d);

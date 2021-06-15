@@ -15,13 +15,16 @@
 
         <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
         <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
-        <Image x:Name="TakenPhotoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
+        <Grid Grid.RowSpan="2">
+            <Rectangle x:Name="BlackRectangle" Fill="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Image x:Name="TakenPhotoImage" Grid.Row="0" Stretch="Uniform" />
+        </Grid>
         <Viewbox Grid.RowSpan="2">
             <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         </Viewbox>
         <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2"/>
         <Viewbox Grid.Row="0">
-            <TextBlock x:Name="PickupLineTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+            <TextBlock x:Name="PickupLineTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="White"></TextBlock>
         </Viewbox>
 
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure" Grid.RowSpan="2">
