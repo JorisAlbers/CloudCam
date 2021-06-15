@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
@@ -21,10 +22,14 @@ namespace CloudCam
             
             this.WhenActivated((d) =>
             {
+                Random random = new Random();
                 this.OneWayBind(ViewModel, vm => vm.ImageSource.ImageSource, v => v.VideoImage.Source).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Frame.ImageSource, v => v.FrameImage.Source).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.TakenImage, v => v.TakenPhotoImage.Source).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.TakenImage, v => v.TakenPhotoImage.LayoutTransform,
+                    (_) => new RotateTransform(random.Next(-20, 20), 0.5, 0.5)).DisposeWith(d);
 
+                
                 this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.CountdownTextBlock.Text,
                     (seconds) =>
                     {
