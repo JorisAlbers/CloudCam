@@ -39,7 +39,7 @@ namespace CloudCam
         {
             if (index == -1)
             {
-                return null;
+                return new ImageSourceWithMat(null,null);
             }
 
             var image = _frameRepository[_currentFrameIndex];

@@ -47,7 +47,7 @@ namespace CloudCam
 
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
-
+        
 
         public PhotoBoothViewModel(CameraDevice device, ImageRepository frameRepository, ImageRepository mustachesRepository, ImageRepository hatsRepository,
             OutputImageRepository outputImageRepository)
@@ -112,7 +112,7 @@ namespace CloudCam
             await Task.Delay(100, cancellationToken); // allow GUI to update
 
             using Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
-            if (Frame != null)
+            if (Frame?.Mat != null)
             {
                 using Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
                 await Task.Run(() =>
