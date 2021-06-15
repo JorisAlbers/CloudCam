@@ -137,7 +137,7 @@ namespace CloudCam
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
             await Task.Delay(100, cancellationToken); // allow gui to update
             _outputImageRepository.Save(imageAsBitmap);
-            await Task.Delay(1000, cancellationToken);
+            await Task.Delay(3000, cancellationToken);
             TakenImage = null;
             PickupLine = null;
             return Unit.Default;
