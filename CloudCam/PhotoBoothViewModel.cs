@@ -19,13 +19,8 @@ namespace CloudCam
 {
     public class PhotoBoothViewModel : ReactiveObject
     {
-        private readonly Settings _settings;
-        private readonly ImageRepository _mustachesRepository;
         private readonly OutputImageRepository _outputImageRepository;
-        private CancellationTokenSource _cancellationTokenSource;
-
         private readonly WebcamCapture _capture;
-        private readonly MatBuffer _matBuffer;
         private readonly ImageTransformer _imageTransformer;
         private readonly ImageToDisplayImageConverter _imageToDisplayImageConverter;
         private readonly FrameManager _frameManager;
@@ -54,13 +49,11 @@ namespace CloudCam
 
 
 
-        public PhotoBoothViewModel(Settings settings, CameraDevice device, ImageRepository frameRepository, ImageRepository mustachesRepository, ImageRepository hatsRepository,
+        public PhotoBoothViewModel(CameraDevice device, ImageRepository frameRepository, ImageRepository mustachesRepository, ImageRepository hatsRepository,
             OutputImageRepository outputImageRepository)
         {
-            _settings = settings;
-            _mustachesRepository = mustachesRepository;
             _outputImageRepository = outputImageRepository;
-            _matBuffer = new MatBuffer();
+            MatBuffer matBuffer = new MatBuffer();
 
             _frameManager = new FrameManager(frameRepository);
             NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
@@ -82,13 +75,13 @@ namespace CloudCam
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
 
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            _capture = new WebcamCapture(device.OpenCdId, _matBuffer);
+            _capture = new WebcamCapture(device.OpenCdId, matBuffer);
             _ = _capture.CaptureAsync(cancellationTokenSource.Token);
 
-            _imageTransformer = new ImageTransformer(_matBuffer);
+            _imageTransformer = new ImageTransformer(matBuffer);
             Task t1 = _imageTransformer.StartAsync(transformationSettings, cancellationTokenSource.Token);
 
-            _imageToDisplayImageConverter = new ImageToDisplayImageConverter(_matBuffer);
+            _imageToDisplayImageConverter = new ImageToDisplayImageConverter(matBuffer);
             Task t2 = _imageToDisplayImageConverter.StartAsync(cancellationTokenSource.Token);
 
             ImageSourceWithMat previous = null;

@@ -139,6 +139,7 @@
     <Compile Include="ImageToDisplayImageConverter.cs" />
     <Compile Include="ImageTransformer.cs" />
     <Compile Include="MatBuffer.cs" />
+    <Compile Include="OutputImageRepository.cs" />
     <Compile Include="PhotoBooth.xaml.cs">
       <DependentUpon>PhotoBooth.xaml</DependentUpon>
     </Compile>
@@ -148,6 +149,7 @@
     <Compile Include="SettingsSerializer.cs" />
     <Compile Include="SettingsViewModel.cs" />
     <Compile Include="TransformationSettings.cs" />
+    <Compile Include="UserAction.cs" />
     <Compile Include="WebcamCapture.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
