@@ -11,28 +11,24 @@ using System.Windows.Media;
 using CloudCam.Effect;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
-using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Color = System.Windows.Media.Color;
-using Size = OpenCvSharp.Size;
 
 namespace CloudCam
 {
     public class PhotoBoothViewModel : ReactiveObject
     {
         private readonly Settings _settings;
-        private readonly ImageRepository _frameRepository;
         private readonly ImageRepository _mustachesRepository;
         private readonly OutputImageRepository _outputImageRepository;
         private CancellationTokenSource _cancellationTokenSource;
 
-        //TODO move to image cache class
-        private int _currentFrameIndex;
         private readonly WebcamCapture _capture;
         private readonly MatBuffer _matBuffer;
         private readonly ImageTransformer _imageTransformer;
         private readonly ImageToDisplayImageConverter _imageToDisplayImageConverter;
+        private readonly FrameManager _frameManager;
 
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
 
@@ -62,11 +58,11 @@ namespace CloudCam
             OutputImageRepository outputImageRepository)
         {
             _settings = settings;
-            _frameRepository = frameRepository;
             _mustachesRepository = mustachesRepository;
             _outputImageRepository = outputImageRepository;
             _matBuffer = new MatBuffer();
 
+            _frameManager = new FrameManager(frameRepository);
             NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
@@ -144,32 +140,12 @@ namespace CloudCam
         {
             return await Task.Run(() =>
             {
-                Mat image;
                 if (forwards)
                 {
-                    _currentFrameIndex++;
-                    if (_currentFrameIndex > _frameRepository.Count -1)
-                    {
-                        _currentFrameIndex = 0;
-                    }
-
-                    image = _frameRepository[_currentFrameIndex];
-                }
-                else
-                {
-                    _currentFrameIndex--;
-                    if (_currentFrameIndex == -1)
-                    {
-                        _currentFrameIndex = _frameRepository.Count - 1;
-                    }
-
-                    image = _frameRepository[_currentFrameIndex];
+                    return _frameManager.Next(_capture.FrameSize);
                 }
 
-                Cv2.Resize(image, image, _capture.FrameSize);
-                var imageSource = image.ToBitmapSource();
-                imageSource.Freeze();
-                return  new ImageSourceWithMat(imageSource, image);
+                return _frameManager.Previous(_capture.FrameSize);
             });
         }
     }
