@@ -1,9 +1,12 @@
-﻿using System.Reactive.Disposables;
+﻿using System.Drawing;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using ReactiveUI;
+using Color = System.Drawing.Color;
 
 namespace CloudCam
 {
@@ -34,6 +37,19 @@ namespace CloudCam
 
                 this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.FlashRectangle.Visibility,
                     (seconds) => seconds == 0 ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.PickupLine, v => v.PickupLineTextBlock.Text).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.PickupLineTextBlock.Foreground,
+                    (seconds) =>
+                    {
+                        if (seconds > 0)
+                        {
+                            return new SolidColorBrush(Colors.White);
+                        }
+
+                        return new SolidColorBrush(Colors.Black);
+                    }).DisposeWith(d);
+
 
                 this.OneWayBind(ViewModel, vm => vm.CameraFps, v => v.CameraFpsTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.EditingFps, v => v.EditingFpsTextBlock.Text).DisposeWith(d);

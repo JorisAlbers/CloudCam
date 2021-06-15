@@ -8,14 +8,22 @@
                                 mc:Ignorable="d" 
                                 d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform"/>
-        <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform"/>
-        <Viewbox>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+
+        <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
+        <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
+        <Viewbox Grid.RowSpan="2">
             <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         </Viewbox>
-        <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2"/>
+        <Viewbox Grid.Row="0">
+            <TextBlock x:Name="PickupLineTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+        </Viewbox>
 
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure" Grid.RowSpan="2">
             <TextBlock Foreground="Red">
                 <TextBlock Text="Camera FPS:"/>
                 <TextBlock x:Name="CameraFpsTextBlock"/>

@@ -20,12 +20,16 @@ namespace CloudCam
     public class PhotoBoothViewModel : ReactiveObject
     {
         private readonly OutputImageRepository _outputImageRepository;
+        private readonly List<string> _pickupLines;
         private readonly WebcamCapture _capture;
         private readonly ImageTransformer _imageTransformer;
         private readonly ImageToDisplayImageConverter _imageToDisplayImageConverter;
         private readonly FrameManager _frameManager;
+        private readonly Random _random;
 
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
+
+        [Reactive] public string PickupLine { get; set; }
 
         [ObservableAsProperty]
         public ImageSourceWithMat ImageSource { get; }
@@ -50,9 +54,11 @@ namespace CloudCam
         
 
         public PhotoBoothViewModel(CameraDevice device, ImageRepository frameRepository, ImageRepository mustachesRepository, ImageRepository hatsRepository,
-            OutputImageRepository outputImageRepository)
+            OutputImageRepository outputImageRepository, List<string> pickupLines)
         {
             _outputImageRepository = outputImageRepository;
+            _pickupLines = pickupLines;
+            _random = new Random();
             MatBuffer matBuffer = new MatBuffer();
 
             _frameManager = new FrameManager(frameRepository);
@@ -102,6 +108,7 @@ namespace CloudCam
         
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
+            PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
             SecondsUntilPictureIsTaken = 3;
             await Task.Delay(1000, cancellationToken);
             SecondsUntilPictureIsTaken = 2;
@@ -125,6 +132,7 @@ namespace CloudCam
 
             _outputImageRepository.Save(imageAsBitmap);
             SecondsUntilPictureIsTaken = -1;
+            PickupLine = null;
             return Unit.Default;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -90,12 +91,28 @@ namespace CloudCam
 
                 var outputRepository = new OutputImageRepository(x.OutputFolder);
 
+                List<string> pickupLines = new List<string>
+                {
+                    "If you flash me then I’ll flash you",
+                    "I've got you in my viewfinder.",
+                    "True love can never be photoshopped.",
+                    "Why don't you and I go into a dark room and see what develops?",
+                    "When you flash your smile, my color temperature rises.",
+                    "I'm just a photo booth, but I can picture us together.",
+                    "Lets take it slow and see how things develop.",
+                    "That kiss was great! You're really upping my shutter speed. ",
+                    "I only focus on you.",
+                    "That's not a telephoto lens in my pocket. I'm just happy to see you.",
+                };
+
 
                 _photoBoothViewModel = new PhotoBoothViewModel(CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice),
                     frameRepository,
                     mustachesRepository,
                     hatsRepository,
-                    outputRepository);
+                    outputRepository,
+                    pickupLines
+                    );
                 SelectedViewModel = _photoBoothViewModel;
             });
 
