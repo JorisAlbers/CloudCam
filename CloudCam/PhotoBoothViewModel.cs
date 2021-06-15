@@ -109,7 +109,7 @@ namespace CloudCam
             SecondsUntilPictureIsTaken = 1;
             await Task.Delay(1000, cancellationToken);
             SecondsUntilPictureIsTaken = 0;
-            await Task.Delay(100, cancellationToken); // allow GUI to update
+            await Task.Delay(500, cancellationToken); // allow camera to adjust to the flash
 
             using Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
             if (Frame?.Mat != null)
