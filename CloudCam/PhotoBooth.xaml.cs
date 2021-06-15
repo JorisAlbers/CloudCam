@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ReactiveUI;
@@ -23,19 +24,16 @@ namespace CloudCam
                 this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.CountdownTextBlock.Text,
                     (seconds) =>
                     {
-                        if (seconds == -1)
-                        {
-                            return string.Empty;
-                        }
-
                         if (seconds > 0)
                         {
                             return seconds.ToString();
                         }
 
-                        return "Smile!";
-
+                        return string.Empty;
                     }).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.FlashRectangle.Visibility,
+                    (seconds) => seconds == 0 ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.CameraFps, v => v.CameraFpsTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.EditingFps, v => v.EditingFpsTextBlock.Text).DisposeWith(d);

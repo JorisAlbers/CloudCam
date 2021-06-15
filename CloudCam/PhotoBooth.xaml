@@ -13,6 +13,8 @@
         <Viewbox>
             <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         </Viewbox>
+        <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure">
             <TextBlock Foreground="Red">
                 <TextBlock Text="Camera FPS:"/>
