@@ -15,6 +15,7 @@
 
         <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
         <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
+        <Image x:Name="TakenPhotoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
         <Viewbox Grid.RowSpan="2">
             <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         </Viewbox>

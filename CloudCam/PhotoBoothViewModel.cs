@@ -11,6 +11,7 @@ using System.Windows.Media;
 using CloudCam.Effect;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
+using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Color = System.Windows.Media.Color;
@@ -30,6 +31,8 @@ namespace CloudCam
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
 
         [Reactive] public string PickupLine { get; set; }
+
+        [Reactive] public ImageSource TakenImage { get; set; }
 
         [ObservableAsProperty]
         public ImageSourceWithMat ImageSource { get; }
@@ -108,7 +111,6 @@ namespace CloudCam
         
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
-            PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
             SecondsUntilPictureIsTaken = 3;
             await Task.Delay(1000, cancellationToken);
             SecondsUntilPictureIsTaken = 2;
@@ -130,8 +132,13 @@ namespace CloudCam
                 }, cancellationToken);
             }
 
-            _outputImageRepository.Save(imageAsBitmap);
+            TakenImage = imageAsBitmap.ToBitmapSource();
             SecondsUntilPictureIsTaken = -1;
+            PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
+            await Task.Delay(100, cancellationToken); // allow gui to update
+            _outputImageRepository.Save(imageAsBitmap);
+            await Task.Delay(1000, cancellationToken);
+            TakenImage = null;
             PickupLine = null;
             return Unit.Default;
         }
