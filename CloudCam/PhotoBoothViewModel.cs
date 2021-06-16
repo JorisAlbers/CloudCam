@@ -105,9 +105,9 @@ namespace CloudCam
                 .ToPropertyEx(this, x=>x.ImageSource);
 
 
-            this.WhenAnyValue(x => x._capture.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.CameraFps);
-            this.WhenAnyValue(x => x._imageTransformer.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.EditingFps);
-            this.WhenAnyValue(x => x._imageToDisplayImageConverter.Fps).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.ToDisplayImageFps);
+            this.WhenAnyValue(x => x._capture.Fps).Where((_)=> DebugModeActive).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.CameraFps);
+            this.WhenAnyValue(x => x._imageTransformer.Fps).Where((_) => DebugModeActive).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.EditingFps);
+            this.WhenAnyValue(x => x._imageToDisplayImageConverter.Fps).Where((_) => DebugModeActive).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.ToDisplayImageFps);
         }
 
         
