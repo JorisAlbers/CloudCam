@@ -82,7 +82,7 @@ namespace CloudCam
                 return effectManager.Previous();
             });
             NextEffect.Subscribe(x => transformationSettings.Effect = x);
-            
+
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
 
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -110,9 +110,15 @@ namespace CloudCam
             this.WhenAnyValue(x => x._imageToDisplayImageConverter.Fps).Where((_) => DebugModeActive).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.ToDisplayImageFps);
         }
 
-        
+        private int _takingPicture;
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
+            if (Interlocked.Exchange(ref _takingPicture, 1) == 1)
+            {
+                return Unit.Default;
+            }
+
+
             SecondsUntilPictureIsTaken = 3;
             await Task.Delay(1000, cancellationToken);
             SecondsUntilPictureIsTaken = 2;
@@ -142,6 +148,8 @@ namespace CloudCam
             await Task.Delay(3000, cancellationToken);
             TakenImage = null;
             PickupLine = null;
+
+            Interlocked.Exchange(ref _takingPicture, 0);
             return Unit.Default;
         }
 
