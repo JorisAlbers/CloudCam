@@ -19,13 +19,24 @@
             <MediaElement x:Name="VideoPlayer"  Source="Resources/Videos/intro_loop.mp4" MediaEnded="VideoPlayer_OnMediaEnded" LoadedBehavior="Manual"/>
             <Image x:Name="TakenPhotoImage" Grid.Row="0" Stretch="Uniform" />
         </Grid>
+        <Viewbox Grid.Row="0">
+            <Grid>
+                <TextBlock x:Name="PickupLineTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Yellow" Visibility="Visible" Text="Testje testje">
+                    <TextBlock.Effect>
+                        <DropShadowEffect
+                            ShadowDepth="0"
+                            Color="Purple"
+                            Opacity="1"
+                            BlurRadius="1"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+            </Grid>
+        </Viewbox>
         <Viewbox Grid.RowSpan="2">
             <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         </Viewbox>
         <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2"/>
-        <Viewbox Grid.Row="0">
-            <TextBlock x:Name="PickupLineTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="White"></TextBlock>
-        </Viewbox>
+        
 
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure" Grid.RowSpan="2">
             <TextBlock Foreground="Red">
