@@ -208,70 +208,70 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Resources\haarcascade_eye.xml">
+    <Content Include="Resources\Cascades\haarcascade_eye.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_eye_tree_eyeglasses.xml">
+    <Content Include="Resources\Cascades\haarcascade_eye_tree_eyeglasses.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_frontalface_alt.xml">
+    <Content Include="Resources\Cascades\haarcascade_frontalface_alt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_frontalface_alt2.xml">
+    <Content Include="Resources\Cascades\haarcascade_frontalface_alt2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_frontalface_alt_tree.xml">
+    <Content Include="Resources\Cascades\haarcascade_frontalface_alt_tree.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_frontalface_default.xml">
+    <Content Include="Resources\Cascades\haarcascade_frontalface_default.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_fullbody.xml">
+    <Content Include="Resources\Cascades\haarcascade_fullbody.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_lefteye_2splits.xml">
+    <Content Include="Resources\Cascades\haarcascade_lefteye_2splits.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_lowerbody.xml">
+    <Content Include="Resources\Cascades\haarcascade_lowerbody.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_mcs_eyepair_big.xml">
+    <Content Include="Resources\Cascades\haarcascade_mcs_eyepair_big.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_mcs_eyepair_small.xml">
+    <Content Include="Resources\Cascades\haarcascade_mcs_eyepair_small.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_mcs_leftear.xml">
+    <Content Include="Resources\Cascades\haarcascade_mcs_leftear.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_mcs_lefteye.xml">
+    <Content Include="Resources\Cascades\haarcascade_mcs_lefteye.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_mcs_mouth.xml">
+    <Content Include="Resources\Cascades\haarcascade_mcs_mouth.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_mcs_nose.xml">
+    <Content Include="Resources\Cascades\haarcascade_mcs_nose.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_mcs_rightear.xml">
+    <Content Include="Resources\Cascades\haarcascade_mcs_rightear.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_mcs_righteye.xml">
+    <Content Include="Resources\Cascades\haarcascade_mcs_righteye.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_mcs_upperbody.xml">
+    <Content Include="Resources\Cascades\haarcascade_mcs_upperbody.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_profileface.xml">
+    <Content Include="Resources\Cascades\haarcascade_profileface.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_righteye_2splits.xml">
+    <Content Include="Resources\Cascades\haarcascade_righteye_2splits.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_smile.xml">
+    <Content Include="Resources\Cascades\haarcascade_smile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\haarcascade_upperbody.xml">
+    <Content Include="Resources\Cascades\haarcascade_upperbody.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
