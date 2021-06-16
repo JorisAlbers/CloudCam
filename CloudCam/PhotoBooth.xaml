@@ -16,7 +16,7 @@
         <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
         <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
         <Grid Grid.RowSpan="2">
-            <Rectangle x:Name="BlackRectangle" Fill="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <MediaElement x:Name="VideoPlayer"  Source="Resources/Videos/intro_loop.mp4" MediaEnded="VideoPlayer_OnMediaEnded" LoadedBehavior="Manual"/>
             <Image x:Name="TakenPhotoImage" Grid.Row="0" Stretch="Uniform" />
         </Grid>
         <Viewbox Grid.RowSpan="2">
