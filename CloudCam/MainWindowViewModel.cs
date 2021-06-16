@@ -30,6 +30,7 @@ namespace CloudCam
                     case Key.Space:  return UserAction.TakePicture;
                     case Key.D: return UserAction.MoveToNextEffect;
                     case Key.A:  return UserAction.MoveToPreviousEffect;
+                    case Key.L: return UserAction.ToggleDebugMode;
                 }
 
                 return UserAction.None;
@@ -58,6 +59,9 @@ namespace CloudCam
                         break;
                     case UserAction.MoveToPreviousEffect:
                         await _photoBoothViewModel.NextEffect.Execute(false);
+                        break;
+                    case UserAction.ToggleDebugMode:
+                        _photoBoothViewModel.DebugModeActive =! _photoBoothViewModel.DebugModeActive;
                         break;
                 }
                 

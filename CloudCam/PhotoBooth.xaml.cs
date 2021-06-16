@@ -58,6 +58,9 @@ namespace CloudCam
                         
                     }).DisposeWith(d);
 
+                this.OneWayBind(ViewModel, vm => vm.DebugModeActive, v => v.DebugPanel.Visibility,
+                    (b) => b ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
+
                 this.OneWayBind(ViewModel, vm => vm.PickupLine, v => v.PickupLineTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.CameraFps, v => v.CameraFpsTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.EditingFps, v => v.EditingFpsTextBlock.Text).DisposeWith(d);

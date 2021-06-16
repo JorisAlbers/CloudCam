@@ -26,6 +26,7 @@ namespace CloudCam
                     AddKeyBinding(Key.Space, dispose);
                     AddKeyBinding(Key.A, dispose);
                     AddKeyBinding(Key.D, dispose);
+                    AddKeyBinding(Key.L, dispose);
                 }
             });
         }

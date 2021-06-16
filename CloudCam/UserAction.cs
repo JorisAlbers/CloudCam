@@ -7,6 +7,7 @@
         MoveToPreviousFrame,
         TakePicture,
         MoveToNextEffect,
-        MoveToPreviousEffect
+        MoveToPreviousEffect,
+        ToggleDebugMode,
     }
 }

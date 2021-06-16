@@ -49,6 +49,8 @@ namespace CloudCam
         [ObservableAsProperty]
         public float EditingFps { get; set; }
 
+        [Reactive] public bool DebugModeActive { get; set; }
+
         public ReactiveCommand<bool, ImageSourceWithMat> NextFrame { get; }
         public ReactiveCommand<bool, IEffect> NextEffect { get; }
 
