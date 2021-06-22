@@ -138,6 +138,7 @@
     <Compile Include="ImageRepository.cs" />
     <Compile Include="ImageToDisplayImageConverter.cs" />
     <Compile Include="ImageTransformer.cs" />
+    <Compile Include="KeyBindingViewModel.cs" />
     <Compile Include="MatBuffer.cs" />
     <Compile Include="OutputImageRepository.cs" />
     <Compile Include="PhotoBooth.xaml.cs">

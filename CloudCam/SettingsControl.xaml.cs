@@ -1,4 +1,5 @@
-﻿using System.Reactive.Disposables;
+﻿using System;
+using System.Reactive.Disposables;
 using ReactiveUI;
 
 namespace CloudCam
@@ -14,6 +15,7 @@ namespace CloudCam
 
             this.WhenActivated((d) =>
             {
+                this.WhenAnyValue(x => x.ViewModel).Subscribe(x => DataContext = x);
                 this.OneWayBind(ViewModel, vm => vm.CameraDevices, v => v.CameraDeviceComboBox.ItemsSource).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.SelectedCameraDevice, v => v.CameraDeviceComboBox.SelectedItem).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.FrameFolder, v => v.FramesPathTextBox.Text).DisposeWith(d);
