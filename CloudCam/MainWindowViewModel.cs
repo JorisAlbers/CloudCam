@@ -164,7 +164,16 @@ namespace CloudCam
                 Path.Combine(rootFolder.FullName, "Mustaches"),
                 Path.Combine(rootFolder.FullName, "Hats"),
                 Path.Combine(rootFolder.FullName, "Output"),
-                null);
+                null,
+                new KeyBindingSetting[]
+                {
+                    new KeyBindingSetting(UserAction.TakePicture, Key.Space),
+                    new KeyBindingSetting(UserAction.MoveToPreviousFrame, Key.Left),
+                    new KeyBindingSetting(UserAction.MoveToNextEffect, Key.Right),
+                    new KeyBindingSetting(UserAction.MoveToNextEffect, Key.D),
+                    new KeyBindingSetting(UserAction.MoveToPreviousEffect, Key.A),
+                    new KeyBindingSetting(UserAction.ToggleDebugMode, Key.L),
+                });
         }
     }
 }

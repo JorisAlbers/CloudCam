@@ -29,14 +29,13 @@ namespace CloudCam
             MustacheFolder = settings.MustacheFolder;
             OutputFolder = settings.OutputFolder;
             HatFolder = settings.HatFolder;
+            KeyBindingViewModels = settings.KeyBindings.Select(x => new KeyBindingViewModel(x.Action, x.Key)).ToArray();
 
-            KeyBindingViewModels = new KeyBindingViewModel[]
-            {
-                new KeyBindingViewModel(UserAction.TakePicture, Key.Space)
-            };
 
-            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name));
-            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name));
+            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name, 
+                KeyBindingViewModels.Select(x=> new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray()));
+            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name,
+                KeyBindingViewModels.Select(x => new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray()));
         }
     }
 
@@ -48,14 +47,28 @@ namespace CloudCam
         public string CameraDevice { get; }
         public string HatFolder { get; set; }
 
-        public Settings(string frameFolder, string mustacheFolder, string hatFolder, string outputFolder, string cameraDevice)
+        public KeyBindingSetting[] KeyBindings { get; set; }
+
+        public Settings(string frameFolder, string mustacheFolder, string hatFolder, string outputFolder, string cameraDevice, KeyBindingSetting[] keyBindings)
         {
             FrameFolder = frameFolder;
             MustacheFolder = mustacheFolder;
             HatFolder = hatFolder;
             OutputFolder = outputFolder;
             CameraDevice = cameraDevice;
+            KeyBindings = keyBindings;
         }
     }
 
+    public class KeyBindingSetting
+    {
+        public UserAction Action { get; set; }
+        public Key Key { get; set; }
+
+        public KeyBindingSetting(UserAction action, Key key)
+        {
+            Action = action;
+            Key = key;
+        }
+    }
 }
