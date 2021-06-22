@@ -1,5 +1,8 @@
-﻿using System.Windows.Input;
+﻿using System.Reactive;
+using System.Reactive.Linq;
+using System.Windows.Input;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace CloudCam
 {
@@ -7,12 +10,23 @@ namespace CloudCam
     {
         public UserAction Action { get; }
 
-        public string SelectedKey { get; set; }
+        [Reactive] public Key SelectedKey { get; private set; }
+        
+        public ReactiveCommand<Key,Unit> SetKeyInput { get; }
+
+        [ObservableAsProperty]
+        public string SelectedKeyAsString { get; }
 
         public KeyBindingViewModel(UserAction action, Key key)
         {
             Action = action;
-            SelectedKey = key.ToString();
+            SelectedKey = key;
+            this.WhenAnyValue(x => x.SelectedKey).Select(x => x.ToString()).ToPropertyEx(this, x=>x.SelectedKeyAsString);
+            SetKeyInput = ReactiveCommand.Create<Key, Unit>(k =>
+            {
+                SelectedKey = k;
+                return Unit.Default;
+            });
         }
     }
 }

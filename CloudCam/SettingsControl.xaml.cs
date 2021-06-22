@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Windows.Controls;
+using System.Windows.Input;
 using ReactiveUI;
 
 namespace CloudCam
@@ -25,6 +28,15 @@ namespace CloudCam
                 this.BindCommand(ViewModel, vm => vm.Apply, v => v.ApplyButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.Start, v => v.StartButton).DisposeWith(d);
             });
+        }
+
+        private void InputTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox tb = (TextBox) sender;
+            KeyBindingViewModel keyBindingViewModel = (KeyBindingViewModel) tb.DataContext;
+            keyBindingViewModel.SetKeyInput.Execute(e.Key).Subscribe();
+            tb.Text = string.Empty;
+            e.Handled = true;
         }
     }
 }

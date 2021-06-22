@@ -61,7 +61,7 @@
                     <DataGridTemplateColumn Width="*" Header="Current">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:KeyBindingViewModel">
-                                <TextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding SelectedKey}"/>
+                                <TextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding SelectedKeyAsString}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -69,7 +69,7 @@
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:KeyBindingViewModel">
-                                <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding SelectedKey}"/>
+                                <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PreviewKeyUp="InputTextBox_KeyUp" AcceptsReturn="True"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
