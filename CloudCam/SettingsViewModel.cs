@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Reactive;
 using System.Windows.Input;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -62,7 +64,10 @@ namespace CloudCam
 
     public class KeyBindingSetting
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public UserAction Action { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
         public Key Key { get; set; }
 
         public KeyBindingSetting(UserAction action, Key key)
