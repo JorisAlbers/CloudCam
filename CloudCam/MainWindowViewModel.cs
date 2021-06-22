@@ -14,6 +14,9 @@ namespace CloudCam
     public class MainWindowViewModel : ReactiveObject
     {
         private PhotoBoothViewModel _photoBoothViewModel;
+        
+        [Reactive]
+        public Dictionary<Key, UserAction> KeyToUserActionDic { get; private set; }
 
         [Reactive] public ReactiveObject SelectedViewModel { get; set; }
 
@@ -23,14 +26,9 @@ namespace CloudCam
         {
             KeyPressed = ReactiveCommand.Create<Key, UserAction>((key) =>
             {
-                switch (key)
+                if(KeyToUserActionDic != null && KeyToUserActionDic.TryGetValue(key, out UserAction value))
                 {
-                    case Key.Right: return UserAction.MoveToNextFrame;
-                    case Key.Left:  return UserAction.MoveToPreviousFrame;
-                    case Key.Space:  return UserAction.TakePicture;
-                    case Key.D: return UserAction.MoveToNextEffect;
-                    case Key.A:  return UserAction.MoveToPreviousEffect;
-                    case Key.L: return UserAction.ToggleDebugMode;
+                    return value;
                 }
 
                 return UserAction.None;
@@ -83,6 +81,8 @@ namespace CloudCam
             {
                 settings = x;
                 settingsSerializer.Save(x);
+
+                KeyToUserActionDic = settings.KeyBindings.ToDictionary(y => y.Key, y => y.Action);
 
                 var frameRepository = new ImageRepository(x.FrameFolder);
                 frameRepository.Load();
@@ -169,7 +169,7 @@ namespace CloudCam
                 {
                     new KeyBindingSetting(UserAction.TakePicture, Key.Space),
                     new KeyBindingSetting(UserAction.MoveToPreviousFrame, Key.Left),
-                    new KeyBindingSetting(UserAction.MoveToNextEffect, Key.Right),
+                    new KeyBindingSetting(UserAction.MoveToNextFrame, Key.Right),
                     new KeyBindingSetting(UserAction.MoveToNextEffect, Key.D),
                     new KeyBindingSetting(UserAction.MoveToPreviousEffect, Key.A),
                     new KeyBindingSetting(UserAction.ToggleDebugMode, Key.L),

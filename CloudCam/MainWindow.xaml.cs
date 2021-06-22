@@ -1,4 +1,5 @@
-﻿using System.Reactive.Disposables;
+﻿using System;
+using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
 
@@ -9,6 +10,8 @@ namespace CloudCam
     /// </summary>
     public partial class MainWindow
     {
+        private CompositeDisposable _keybindingsDisposable;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -19,15 +22,22 @@ namespace CloudCam
                 this.Bind(ViewModel, vm => vm.SelectedViewModel, v => v.ViewModelHost.ViewModel)
                     .DisposeWith(dispose);
 
-                if (ViewModel != null)
+                this.WhenAnyValue(x => x.ViewModel.KeyToUserActionDic).Subscribe(x =>
                 {
-                    AddKeyBinding(Key.Right, dispose);
-                    AddKeyBinding(Key.Left, dispose);
-                    AddKeyBinding(Key.Space, dispose);
-                    AddKeyBinding(Key.A, dispose);
-                    AddKeyBinding(Key.D, dispose);
-                    AddKeyBinding(Key.L, dispose);
-                }
+                    _keybindingsDisposable?.Dispose();
+                    if (x == null)
+                    {
+                        return;
+                    }
+
+                    CompositeDisposable disposable = new CompositeDisposable();
+                    foreach (var key in x.Keys)
+                    {
+                        AddKeyBinding(key, disposable);
+                    }
+
+                    _keybindingsDisposable = disposable;
+                });
             });
         }
 
