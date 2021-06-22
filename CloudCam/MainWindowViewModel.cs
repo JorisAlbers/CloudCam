@@ -170,8 +170,8 @@ namespace CloudCam
                     new KeyBindingSetting(UserAction.TakePicture, Key.Space),
                     new KeyBindingSetting(UserAction.MoveToPreviousFrame, Key.Left),
                     new KeyBindingSetting(UserAction.MoveToNextFrame, Key.Right),
-                    new KeyBindingSetting(UserAction.MoveToNextEffect, Key.D),
                     new KeyBindingSetting(UserAction.MoveToPreviousEffect, Key.A),
+                    new KeyBindingSetting(UserAction.MoveToNextEffect, Key.D),
                     new KeyBindingSetting(UserAction.ToggleDebugMode, Key.L),
                 });
         }
