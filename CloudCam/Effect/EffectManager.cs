@@ -14,12 +14,12 @@ namespace CloudCam.Effect
         private readonly NoseDetection _noseDetection;
 
 
-        public EffectManager(string faceCascadeFile, string noseCascadeFile, ImageRepository mustachesRepository,
+        public EffectManager(string caffeConfigFile, string caffeWeightFile, string noseCascadeFile, ImageRepository mustachesRepository,
             ImageRepository hatsRepository)
         {
             _mustachesRepository = mustachesRepository;
             _hatsRepository = hatsRepository;
-            _faceDetection = new FaceDetection(faceCascadeFile);
+            _faceDetection = new FaceDetection(caffeConfigFile, caffeWeightFile);
             _noseDetection = new NoseDetection(noseCascadeFile);
 
             _effects = new List<IEffect>

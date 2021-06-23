@@ -71,7 +71,7 @@ namespace CloudCam
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
             TransformationSettings transformationSettings = new TransformationSettings();
-            EffectManager effectManager = new EffectManager(@"Resources\Cascades\haarcascade_frontalface_alt.xml", @"Resources\Cascades\haarcascade_mcs_nose.xml", mustachesRepository, hatsRepository);
+            EffectManager effectManager = new EffectManager(@"Resources\Caff\deploy.prototxt", @"Resources\Caff\res10_300x300_ssd_iter_140000_fp16.caffemodel",  @"Resources\Cascades\haarcascade_mcs_nose.xml", mustachesRepository, hatsRepository);
             NextEffect = ReactiveCommand.Create<bool, IEffect>((forwards) =>
             {
                 if (forwards)
