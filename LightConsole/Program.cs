@@ -24,7 +24,7 @@ namespace LightConsole
                 var c = Console.ReadKey();
                 if (c.Key == ConsoleKey.Spacebar)
                 {
-                    ledController.StartAnimationAtFront(new Red(sidePixels));
+                    ledController.StartAnimationAtFront(new SingleColor(sidePixels, RgbToInt(255,255,255)));
                 }
                 else if (c.Key == ConsoleKey.D1)
                 {
@@ -41,15 +41,15 @@ namespace LightConsole
                 }
                 else if (c.Key == ConsoleKey.R)
                 {
-                    ledController.StartAnimationAtFront(new Red(300));
+                    ledController.StartAnimationAtFront(new SingleColor(sidePixels, RgbToInt(255, 0, 0)));
                 }
                 else if (c.Key == ConsoleKey.G)
                 {
-                    ledController.StartAnimationAtFront(new Green(300));
+                    ledController.StartAnimationAtFront(new SingleColor(sidePixels, RgbToInt(0, 255, 0)));
                 }
                 else if (c.Key == ConsoleKey.B)
                 {
-                    ledController.StartAnimationAtFront(new Blue(300));
+                    ledController.StartAnimationAtFront(new SingleColor(sidePixels, RgbToInt(0, 0, 255)));
                 }
             }
         }
