@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chases\MovingPatternDrawer.cs" />
     <Compile Include="Chases\SingleColor.cs" />
     <Compile Include="Chases\Clear.cs" />
     <Compile Include="Chases\Flicker.cs" />

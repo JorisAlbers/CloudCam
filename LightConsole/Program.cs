@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Light.Chases;
 using static Light.LedEffects;
 
 namespace LightConsole
@@ -50,6 +51,26 @@ namespace LightConsole
                 else if (c.Key == ConsoleKey.B)
                 {
                     ledController.StartAnimationAtFront(new SingleColor(sidePixels, RgbToInt(0, 0, 255)));
+                }
+                else if(c.Key == ConsoleKey.M)
+                {
+                    ledController.StartAnimationAtFront(new MovingPatternDrawer(sidePixels,
+                        new []
+                        {
+                            RgbToInt(255,0,0),
+                            RgbToInt(250,0,0),
+                            RgbToInt(240,0,0),
+                            RgbToInt(230,0,0),
+                            RgbToInt(210,0,0),
+                            RgbToInt(200,0,0),
+                            RgbToInt(180,0,0),
+                            RgbToInt(170,0,0),
+                            RgbToInt(150,0,0),
+                            RgbToInt(100,0,0),
+                            RgbToInt(60,0,0),
+                            RgbToInt(10,0,0),
+                            RgbToInt(0,0,0),
+                        }));
                 }
             }
         }
