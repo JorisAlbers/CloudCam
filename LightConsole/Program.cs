@@ -86,6 +86,19 @@ namespace LightConsole
                             RgbToInt(0,0,255),
                         }));
                 }
+                else if(c.Key == ConsoleKey.P)
+                {
+                    int[] pattern1 = Enumerable.Range(0, sidePixels).Select(_ => RgbToInt(255, 0, 0)).ToArray();
+                    int[] pattern2 = Enumerable.Range(0, sidePixels).Select(_ => RgbToInt(0, 0, 255)).ToArray();
+
+                    int[][] patterns = new int[][]
+                    {
+                        pattern1,
+                        pattern2
+                    };
+
+                    ledController.StartAnimationAtFront(new RepeatingPatternsDrawer(sidePixels, patterns));
+                }
             }
         }
     }
