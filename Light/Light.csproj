@@ -46,6 +46,7 @@
     <Compile Include="Chases\Clear.cs" />
     <Compile Include="Chases\Flicker.cs" />
     <Compile Include="Chases\NeoPixelUsbBridge.cs" />
+    <Compile Include="Chases\SlidingPatternDrawer.cs" />
     <Compile Include="LedEffects.cs" />
     <Compile Include="LedController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

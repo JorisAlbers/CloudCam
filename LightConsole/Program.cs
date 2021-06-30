@@ -72,6 +72,20 @@ namespace LightConsole
                             RgbToInt(0,0,0),
                         }));
                 }
+                else if(c.Key == ConsoleKey.S)
+                {
+                    ledController.StartAnimationAtFront(new SlidingPatternDrawer(sidePixels,
+                        new[]
+                        {
+                            RgbToInt(0,0,255),
+                            RgbToInt(0,0,255),
+                            RgbToInt(0,0,255),
+                            RgbToInt(255,255,255),
+                            RgbToInt(0,0,255),
+                            RgbToInt(0,0,255),
+                            RgbToInt(0,0,255),
+                        }));
+                }
             }
         }
     }
