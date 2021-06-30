@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Light
     {
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private int _numberOfPixels;
+        private readonly int _numberOfPixelsFront;
         private string _usbPort;
         private int _framesPerSecond;
         private int BYTESPERPIXEL = 8;
@@ -26,14 +28,17 @@ namespace Light
         private IEnumerator<int[]> _chase;
 
 
-        public LedController(int numberOfPixels, string usbPort, int framesPerSecond)
+        public LedController(int numberOfPixelsFront, int numberOfPixels, string usbPort, int framesPerSecond)
         {
             _numberOfPixels = numberOfPixels;
+            _numberOfPixelsFront = numberOfPixelsFront;
             _usbPort = usbPort;
             _framesPerSecond = framesPerSecond;
 
-            _colorBuffer = new int[numberOfPixels];
-            _uartBuffer = new byte[numberOfPixels * BYTESPERPIXEL];   
+            int totalPixels = numberOfPixels + numberOfPixelsFront;
+
+            _colorBuffer = new int[totalPixels];
+            _uartBuffer = new byte[totalPixels * BYTESPERPIXEL];   
         }
 
         public async Task StartAsync()
@@ -73,7 +78,7 @@ namespace Light
             for (int i = 0; i < colors.Length; i++)
             {
                 var color = ~colors[i];
-                var pixOffset = i * BYTESPERPIXEL;
+                var pixOffset = (_numberOfPixelsFront + i ) * BYTESPERPIXEL;
 
                 //only 8 permutations so no need to use a for loop
                 UartData[pixOffset] = _bitTriplet[(color >> 21) & 0x07];

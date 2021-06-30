@@ -12,9 +12,12 @@ namespace LightConsole
     {
         static void Main(string[] args)
         {
-            LedController ledController = new LedController(300, "COM12", 15);
+            int frontPixels = 30;
+            int sidePixels = 250;
+
+            LedController ledController = new LedController(frontPixels, sidePixels, "COM12", 15);
             ledController.StartAsync();
-            ledController.StartAnimation(new NeoPixelUsbBridge(300, 3, 6));
+            ledController.StartAnimation(new NeoPixelUsbBridge(sidePixels, 3, 6));
 
             while (true)
             {
