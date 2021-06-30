@@ -27,6 +27,9 @@ namespace Light
         private byte[] _uartBuffer;
         private IEnumerator<int[]> _chase;
 
+        private bool _shouldFlash;
+        private readonly Red _frontChase;
+
 
         public LedController(int numberOfPixelsFront, int numberOfPixels, string usbPort, int framesPerSecond)
         {
@@ -36,6 +39,8 @@ namespace Light
             _framesPerSecond = framesPerSecond;
 
             int totalPixels = numberOfPixels + numberOfPixelsFront;
+
+            _frontChase = new Red(numberOfPixelsFront);
 
             _colorBuffer = new int[totalPixels];
             _uartBuffer = new byte[totalPixels * BYTESPERPIXEL];   
@@ -54,7 +59,12 @@ namespace Light
                     {
                         var chase = _chase;
                         chase.MoveNext();
-                        TranslateColors(chase.Current, _uartBuffer);
+                        // do front
+                        var frontChase = _frontChase;
+                        frontChase.MoveNext();
+                        TranslateColors(frontChase.Current, _uartBuffer, 0);
+                        // do side
+                        TranslateColors(chase.Current, _uartBuffer, _numberOfPixelsFront);
 
                         serialPort.BaseStream.Write(_uartBuffer, 0, _uartBuffer.Length);
                         serialPort.BaseStream.Flush();
@@ -73,12 +83,13 @@ namespace Light
             _chase = chase;
         }
 
-        private void TranslateColors(int[] colors, byte[] UartData)
+        private void TranslateColors(int[] colors, byte[] UartData, int startPosition)
         {
+            // Fill in the side pixels
             for (int i = 0; i < colors.Length; i++)
             {
                 var color = ~colors[i];
-                var pixOffset = (_numberOfPixelsFront + i ) * BYTESPERPIXEL;
+                var pixOffset = (startPosition + i ) * BYTESPERPIXEL;
 
                 //only 8 permutations so no need to use a for loop
                 UartData[pixOffset] = _bitTriplet[(color >> 21) & 0x07];
@@ -92,9 +103,15 @@ namespace Light
             }
         }
 
-        public void Flash()
+
+
+
+
+        public async Task Flash(int seconds)
         {
-            
+            _shouldFlash = true;
+            await Task.Delay(seconds * 1000);
+            _shouldFlash = false;
         }
 
         public void Dispose()

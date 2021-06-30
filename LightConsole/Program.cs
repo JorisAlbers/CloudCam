@@ -24,7 +24,7 @@ namespace LightConsole
                 var c = Console.ReadKey();
                 if (c.Key == ConsoleKey.Spacebar)
                 {
-                    ledController.Flash();
+                    ledController.Flash(3);
                 }
                 else if (c.Key == ConsoleKey.D1)
                 {
