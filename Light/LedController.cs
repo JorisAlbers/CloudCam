@@ -23,13 +23,9 @@ namespace Light
             0x5b, 0x1b, 0x53, 0x13,
             0x5a, 0x1a, 0x52, 0x12
         };
-        private int[] _colorBuffer;
         private byte[] _uartBuffer;
-        private IEnumerator<int[]> _chase;
-
-        private bool _shouldFlash;
-        private readonly Red _frontChase;
-
+        private IEnumerator<int[]> _sideChase;
+        private readonly IEnumerator<int[]> _frontChase;
 
         public LedController(int numberOfPixelsFront, int numberOfPixels, string usbPort, int framesPerSecond)
         {
@@ -42,7 +38,6 @@ namespace Light
 
             _frontChase = new Red(numberOfPixelsFront);
 
-            _colorBuffer = new int[totalPixels];
             _uartBuffer = new byte[totalPixels * BYTESPERPIXEL];   
         }
 
@@ -57,14 +52,13 @@ namespace Light
 
                     while (!_cancellationTokenSource.IsCancellationRequested)
                     {
-                        var chase = _chase;
-                        chase.MoveNext();
-                        // do front
                         var frontChase = _frontChase;
                         frontChase.MoveNext();
                         TranslateColors(frontChase.Current, _uartBuffer, 0);
-                        // do side
-                        TranslateColors(chase.Current, _uartBuffer, _numberOfPixelsFront);
+
+                        var sideChase = _sideChase;
+                        sideChase.MoveNext();
+                        TranslateColors(sideChase.Current, _uartBuffer, _numberOfPixelsFront);
 
                         serialPort.BaseStream.Write(_uartBuffer, 0, _uartBuffer.Length);
                         serialPort.BaseStream.Flush();
@@ -78,9 +72,14 @@ namespace Light
             // Cleanup here
         }
 
-        public void StartAnimation(IEnumerator<int[]> chase)
+        public void StartAnimationAtFront(IEnumerator<int[]> chase)
         {
-            _chase = chase;
+            _sideChase = chase;
+        }
+
+        public void StartAnimationAtSide(IEnumerator<int[]> chase)
+        {
+            _sideChase = chase;
         }
 
         private void TranslateColors(int[] colors, byte[] UartData, int startPosition)
@@ -101,17 +100,6 @@ namespace Light
                 UartData[pixOffset + 6] = _bitTriplet[(color >> 3) & 0x07];
                 UartData[pixOffset + 7] = _bitTriplet[color & 0x07];
             }
-        }
-
-
-
-
-
-        public async Task Flash(int seconds)
-        {
-            _shouldFlash = true;
-            await Task.Delay(seconds * 1000);
-            _shouldFlash = false;
         }
 
         public void Dispose()
