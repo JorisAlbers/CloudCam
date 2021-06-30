@@ -35,9 +35,6 @@ namespace Light
             _framesPerSecond = framesPerSecond;
 
             int totalPixels = numberOfPixels + numberOfPixelsFront;
-
-            _frontChase = new Red(numberOfPixelsFront);
-
             _uartBuffer = new byte[totalPixels * BYTESPERPIXEL];   
         }
 
@@ -53,12 +50,18 @@ namespace Light
                     while (!_cancellationTokenSource.IsCancellationRequested)
                     {
                         var frontChase = _frontChase;
-                        frontChase.MoveNext();
-                        TranslateColors(frontChase.Current, _uartBuffer, 0);
+                        if (frontChase != null)
+                        {
+                            frontChase.MoveNext();
+                            TranslateColors(frontChase.Current, _uartBuffer, 0);
+                        }
 
                         var sideChase = _sideChase;
-                        sideChase.MoveNext();
-                        TranslateColors(sideChase.Current, _uartBuffer, _numberOfPixelsFront);
+                        if (sideChase != null)
+                        {
+                            sideChase.MoveNext();
+                            TranslateColors(sideChase.Current, _uartBuffer, _numberOfPixelsFront);
+                        }
 
                         serialPort.BaseStream.Write(_uartBuffer, 0, _uartBuffer.Length);
                         serialPort.BaseStream.Flush();
