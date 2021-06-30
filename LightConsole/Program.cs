@@ -28,16 +28,16 @@ namespace LightConsole
                 }
                 else if (c.Key == ConsoleKey.D1)
                 {
-                    ledController.StartAnimationAtFront(new Clear(300));
+                    ledController.StartAnimationAtFront(new Clear(sidePixels));
 
                 }
                 else if (c.Key == ConsoleKey.D2)
                 {
-                    ledController.StartAnimationAtFront(new NeoPixelUsbBridge(300, 3, 30));
+                    ledController.StartAnimationAtFront(new NeoPixelUsbBridge(sidePixels, 3, 30));
                 }
                 else if (c.Key == ConsoleKey.D3)
                 {
-                    ledController.StartAnimationAtFront(new Flicker(300));
+                    ledController.StartAnimationAtFront(new Flicker(sidePixels));
                 }
                 else if (c.Key == ConsoleKey.R)
                 {
