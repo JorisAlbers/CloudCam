@@ -14,6 +14,7 @@ namespace CloudCam.Effect
         public Hats(Mat hat, ImageSettings settings, FaceDetection faceDetection)
         {
             _hatMask = hat.ExtractChannel(3); // extract Alpha
+            Cv2.EqualizeHist(_hatMask,_hatMask );
             _hatMaskInverse = new Mat();
             Cv2.BitwiseNot(_hatMask, _hatMaskInverse);
             Cv2.CvtColor(hat, hat, ColorConversionCodes.BGRA2BGR);

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using CloudCam.Effect;
 using OpenCvSharp;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
