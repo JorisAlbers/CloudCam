@@ -53,9 +53,15 @@ namespace CloudCam.Effect
                 if (y2 > mat.Height)
                     y2 = mat.Height;
 
+
                 // Re-calculate the width and height of the hat image
                 hatWidth = x2 - x1;
                 hatHeight = y2 - y1;
+
+                if (hatWidth == 0 || hatHeight == 0)
+                {
+                    continue;
+                }
 
                 Mat hatNew = new Mat();
                 Cv2.Resize(_hat, hatNew, new Size(hatWidth, hatHeight),
