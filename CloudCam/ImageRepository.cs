@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,6 +25,6 @@ namespace CloudCam
             _images = directoryInfo.EnumerateFiles("*.png").Select(x => x.Name).ToArray();
         }
 
-        public Mat this[int index] => Cv2.ImRead(Path.Combine(_folderPath, _images[index]), ImreadModes.Unchanged);
+        public (string name, Mat image) this[int index] => (_images[index], Cv2.ImRead(Path.Combine(_folderPath, _images[index]), ImreadModes.Unchanged));
     }
 }

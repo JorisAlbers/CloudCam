@@ -33,12 +33,12 @@ namespace CloudCam.Effect
 
             for (int i = 0; i < mustachesRepository.Count; i++)
             {
-                _effects.Add(new Mustaches(mustachesRepository[i], _faceDetection, _noseDetection));
+                _effects.Add(new Mustaches(mustachesRepository[i].image, _faceDetection, _noseDetection));
             }
 
             for (int i = 0; i < hatsRepository.Count; i++)
             {
-                _effects.Add(new Hats(hatsRepository[i], _faceDetection));
+                _effects.Add(new Hats(hatsRepository[i].image, _faceDetection));
             }
         }
 

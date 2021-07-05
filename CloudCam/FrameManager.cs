@@ -42,7 +42,7 @@ namespace CloudCam
                 return new ImageSourceWithMat(null,null);
             }
 
-            var image = _frameRepository[_currentFrameIndex];
+            var image = _frameRepository[_currentFrameIndex].image;
             Cv2.Resize(image, image, size);
             var imageSource = image.ToBitmapSource();
             imageSource.Freeze();
