@@ -7,9 +7,10 @@
                            xmlns:local="clr-namespace:CloudCam"
                            mc:Ignorable="d"
                            Title="CloudCam"
-                           WindowState="Normal"
-                           WindowStyle="ThreeDBorderWindow"
-                           Background="Black">
+                           WindowState="Maximized"
+                           WindowStyle="None"
+                           Background="Black"
+>
     <Grid>
            <reactiveUi:ViewModelViewHost x:Name="ViewModelHost"
                                          VerticalAlignment="Stretch"
