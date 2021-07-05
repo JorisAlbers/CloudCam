@@ -145,6 +145,7 @@
     <Compile Include="ImageToDisplayImageConverter.cs" />
     <Compile Include="ImageTransformer.cs" />
     <Compile Include="KeyBindingViewModel.cs" />
+    <Compile Include="Light\LedAnimator.cs" />
     <Compile Include="MatBuffer.cs" />
     <Compile Include="OutputImageRepository.cs" />
     <Compile Include="PhotoBooth.xaml.cs">
@@ -219,7 +220,12 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Light\Light.csproj">
+      <Project>{7EF0C833-06C1-4C7E-972C-9DBF87A51410}</Project>
+      <Name>Light</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Cascades\haarcascade_eye.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
