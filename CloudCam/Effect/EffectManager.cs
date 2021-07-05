@@ -6,16 +6,16 @@ namespace CloudCam.Effect
 {
     public class EffectManager
     {
-        private readonly ImageRepository _mustachesRepository;
-        private readonly ImageRepository _hatsRepository;
+        private readonly EffectImageLoader _mustachesRepository;
+        private readonly EffectImageLoader _hatsRepository;
         private int _effectIndex = 0;
         private readonly List<IEffect> _effects;
         private readonly FaceDetection _faceDetection;
         private readonly NoseDetection _noseDetection;
 
 
-        public EffectManager(string caffeConfigFile, string caffeWeightFile, string noseCascadeFile, ImageRepository mustachesRepository,
-            ImageRepository hatsRepository)
+        public EffectManager(string caffeConfigFile, string caffeWeightFile, string noseCascadeFile, EffectImageLoader mustachesRepository,
+            EffectImageLoader hatsRepository)
         {
             _mustachesRepository = mustachesRepository;
             _hatsRepository = hatsRepository;
@@ -33,13 +33,31 @@ namespace CloudCam.Effect
 
             for (int i = 0; i < mustachesRepository.Count; i++)
             {
-                _effects.Add(new Mustaches(mustachesRepository[i].image, _faceDetection, _noseDetection));
+                EffectImageWithSettings settings = LoadImage(mustachesRepository[i]);
+                
+                _effects.Add(new Mustaches(settings.Image, settings.Settings, _faceDetection, _noseDetection));
             }
 
             for (int i = 0; i < hatsRepository.Count; i++)
             {
-                _effects.Add(new Hats(hatsRepository[i].image, _faceDetection));
+                EffectImageWithSettings settings = LoadImage(hatsRepository[i]);
+                _effects.Add(new Hats(settings.Image, settings.Settings, _faceDetection));
             }
+        }
+
+        private EffectImageWithSettings LoadImage(EffectImage effectImage)
+        {
+            if (effectImage is EffectImageWithSettings effectImageWithSettings)
+            {
+                return effectImageWithSettings;
+            }
+
+            return new EffectImageWithSettings(effectImage.Image, GetDefaultImageSettings());
+        }
+
+        private ImageSettings GetDefaultImageSettings()
+        {
+            return new ImageSettings(0, 0, 1);
         }
 
         public IEffect Next()

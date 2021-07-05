@@ -6,18 +6,20 @@ namespace CloudCam.Effect
     public class Mustaches : IEffect
     {
         private readonly Mat _mustache;
+        private readonly ImageSettings _settings;
         private readonly Mat _mustacheMask;
         private readonly Mat _mustacheMaskInverse;
         private readonly FaceDetection _faceDetection;
         private readonly NoseDetection _noseDetection;
 
-        public Mustaches(Mat mustache, FaceDetection faceDetection, NoseDetection noseDetection)
+        public Mustaches(Mat mustache, ImageSettings settings, FaceDetection faceDetection, NoseDetection noseDetection)
         {
             _mustacheMask = mustache.ExtractChannel(3); // extract Alpha
             _mustacheMaskInverse = new Mat();
             Cv2.BitwiseNot(_mustacheMask, _mustacheMaskInverse);
             Cv2.CvtColor(mustache, mustache, ColorConversionCodes.BGRA2BGR);
             _mustache = mustache;
+            _settings = settings;
 
             _faceDetection = faceDetection;
             _noseDetection = noseDetection;

@@ -87,10 +87,10 @@ namespace CloudCam
                 var frameRepository = new ImageRepository(x.FrameFolder);
                 frameRepository.Load();
 
-                var mustachesRepository = new ImageRepository(x.MustacheFolder);
+                var mustachesRepository = new EffectImageLoader(new ImageRepository(x.MustacheFolder), new ImageSettingsRepository(x.MustacheFolder));
                 mustachesRepository.Load();
 
-                var hatsRepository = new ImageRepository(x.HatFolder);
+                var hatsRepository = new EffectImageLoader(new ImageRepository(x.HatFolder), new ImageSettingsRepository(x.HatFolder));
                 hatsRepository.Load();
 
                 var outputRepository = new OutputImageRepository(x.OutputFolder);

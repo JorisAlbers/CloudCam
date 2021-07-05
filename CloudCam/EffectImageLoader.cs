@@ -29,5 +29,10 @@ namespace CloudCam
                 return new EffectImage(imageAndName.image);
             }
         }
+
+        public void Load()
+        {
+            _imageRepository.Load();
+        }
     }
 }

@@ -13,15 +13,16 @@ namespace CloudCam
             _folderPath = folderPath;
         }
 
-        public bool TryLoad(string imagePath, out ImageSettings settings)
+        public bool TryLoad(string imageName, out ImageSettings settings)
         {
-            if(!File.Exists(imagePath))
+            string fullName = Path.Combine(_folderPath, imageName);
+            if(!File.Exists(fullName))
             {
                 settings = null;
                 return false;
             }
 
-            string settingsPath = Path.ChangeExtension(imagePath, ".json");
+            string settingsPath = Path.ChangeExtension(fullName, ".json");
             if (!File.Exists(settingsPath))
             {
                 settings = null;

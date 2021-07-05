@@ -6,17 +6,19 @@ namespace CloudCam.Effect
     public class Hats : IEffect
     {
         private readonly Mat _hat;
+        private readonly ImageSettings _settings;
         private readonly Mat _hatMask;
         private readonly Mat _hatMaskInverse;
         private readonly FaceDetection _faceDetection;
 
-        public Hats(Mat hat, FaceDetection faceDetection)
+        public Hats(Mat hat, ImageSettings settings, FaceDetection faceDetection)
         {
             _hatMask = hat.ExtractChannel(3); // extract Alpha
             _hatMaskInverse = new Mat();
             Cv2.BitwiseNot(_hatMask, _hatMaskInverse);
             Cv2.CvtColor(hat, hat, ColorConversionCodes.BGRA2BGR);
             _hat = hat;
+            _settings = settings;
 
             _faceDetection = faceDetection;
         }
