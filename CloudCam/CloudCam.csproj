@@ -130,6 +130,9 @@
     </ApplicationDefinition>
     <Compile Include="Detection\FaceDetection.cs" />
     <Compile Include="Detection\NoseDetection.cs" />
+    <Compile Include="EffectImage.cs" />
+    <Compile Include="EffectImageLoader.cs" />
+    <Compile Include="EffectImageWithSettings.cs" />
     <Compile Include="Effect\DebugDetection.cs" />
     <Compile Include="Effect\EffectManager.cs" />
     <Compile Include="Effect\Hats.cs" />
