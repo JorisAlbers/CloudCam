@@ -28,7 +28,7 @@ namespace CloudCam.Effect
             Rect[] faces = _faceDetection.Detect(mat);
             foreach (Rect faceRect in faces)
             {
-                int hatWidth = (int)(faceRect.Width * 1.10);
+                int hatWidth = (int)(faceRect.Width * _settings.WidthRatio);
 
                 int hatHeight = hatWidth * _hat.Height / _hat.Width;
                 

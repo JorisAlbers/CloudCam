@@ -40,13 +40,13 @@ namespace CloudCam
     {
         public int X { get; }
         public int Y { get; }
-        public float Scale { get; }
+        public float WidthRatio { get; } // based on the feature we are looking at (e.g. the nose, the top of the face), how big should the effect be.
 
-        public ImageSettings(int x, int y, float scale)
+        public ImageSettings(int x, int y, float widthRatio)
         {
             X = x;
             Y = y;
-            Scale = scale;
+            WidthRatio = widthRatio;
         }
     }
 }
