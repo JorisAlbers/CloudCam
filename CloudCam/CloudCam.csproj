@@ -138,6 +138,7 @@
     <Compile Include="Effect\IEffect.cs" />
     <Compile Include="FrameManager.cs" />
     <Compile Include="ImageRepository.cs" />
+    <Compile Include="ImageSettingsRepository.cs" />
     <Compile Include="ImageToDisplayImageConverter.cs" />
     <Compile Include="ImageTransformer.cs" />
     <Compile Include="KeyBindingViewModel.cs" />
