@@ -38,7 +38,7 @@ namespace CloudCam.Effect
                 int y1 = faceRect.Top - hatHeight;
                 int y2 = faceRect.Top;
 
-                // Check for clipping
+                // Check for clipping // TODO cut image instead of resize
                 if (x1 < 0)
                     x1 = 0;
                 if (y1 < 0)
