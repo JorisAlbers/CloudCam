@@ -31,14 +31,17 @@ namespace CloudCam.Effect
                 int hatWidth = (int)(faceRect.Width * 1.10);
 
                 int hatHeight = hatWidth * _hat.Height / _hat.Width;
-
+                
                 int adjustment = (hatWidth - faceRect.Width) / 2;
                 // Center the hat on top of the face
+
+                int yAdjustment = (hatHeight / 100 )* _settings.Y;
+                int y2 = faceRect.Top + yAdjustment;
+                int y1 = y2 - hatHeight;
+
                 int x1 = faceRect.Left - adjustment;
                 int x2 = faceRect.Right + adjustment;
-                int y1 = faceRect.Top - hatHeight;
-                int y2 = faceRect.Top;
-
+     
                 // Check for clipping // TODO cut image instead of resize
                 if (x1 < 0)
                     x1 = 0;
