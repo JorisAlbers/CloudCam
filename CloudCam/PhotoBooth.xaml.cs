@@ -22,6 +22,8 @@ namespace CloudCam
             
             this.WhenActivated((d) =>
             {
+                Cursor = Cursors.None;
+
                 Random random = new Random();
                 this.OneWayBind(ViewModel, vm => vm.ImageSource.ImageSource, v => v.VideoImage.Source).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Frame.ImageSource, v => v.FrameImage.Source).DisposeWith(d);
