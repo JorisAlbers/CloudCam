@@ -41,7 +41,8 @@ namespace CloudCam.Effect
             for (int i = 0; i < hatsRepository.Count; i++)
             {
                 EffectImageWithSettings settings = LoadImage(hatsRepository[i]);
-                _effects.Add(new Hats(settings.Image, settings.Settings, _faceDetection));
+                ImageOverlayer overlayer = new ImageOverlayer(settings.Image);
+                _effects.Add(new Hats(overlayer, settings.Image.Size(), settings.Settings, _faceDetection));
             }
         }
 

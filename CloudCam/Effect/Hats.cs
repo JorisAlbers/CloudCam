@@ -5,22 +5,16 @@ namespace CloudCam.Effect
 {
     public class Hats : IEffect
     {
-        private readonly Mat _hat;
+        private readonly ImageOverlayer _imageOverlayer;
+        private readonly Size _hatSize;
         private readonly ImageSettings _settings;
-        private readonly Mat _hatMask;
-        private readonly Mat _hatMaskInverse;
         private readonly FaceDetection _faceDetection;
 
-        public Hats(Mat hat, ImageSettings settings, FaceDetection faceDetection)
+        public Hats(ImageOverlayer imageOverlayer, Size hatSize, ImageSettings settings, FaceDetection faceDetection)
         {
-            _hatMask = hat.ExtractChannel(3); // extract Alpha
-            Cv2.EqualizeHist(_hatMask,_hatMask );
-            _hatMaskInverse = new Mat();
-            Cv2.BitwiseNot(_hatMask, _hatMaskInverse);
-            Cv2.CvtColor(hat, hat, ColorConversionCodes.BGRA2BGR);
-            _hat = hat;
+            _imageOverlayer = imageOverlayer;
+            _hatSize = hatSize;
             _settings = settings;
-
             _faceDetection = faceDetection;
         }
 
@@ -31,7 +25,7 @@ namespace CloudCam.Effect
             {
                 int hatWidth = (int)(faceRect.Width * _settings.WidthRatio);
 
-                int hatHeight = hatWidth * _hat.Height / _hat.Width;
+                int hatHeight = hatWidth * _hatSize.Height / _hatSize.Width;
                 
                 int adjustment = (hatWidth - faceRect.Width) / 2;
                 // Center the hat on top of the face
@@ -63,30 +57,7 @@ namespace CloudCam.Effect
                     continue;
                 }
 
-                Mat hatNew = new Mat();
-                Cv2.Resize(_hat, hatNew, new Size(hatWidth, hatHeight),
-                    interpolation: InterpolationFlags.Area);
-
-                Mat mask = new Mat();
-                Cv2.Resize(_hatMask, mask, new Size(hatWidth, hatHeight),
-                    interpolation: InterpolationFlags.Area);
-                Mat maskInverse = new Mat();
-                Cv2.Resize(_hatMaskInverse, maskInverse, new Size(hatWidth, hatHeight),
-                    interpolation: InterpolationFlags.Area);
-
-
-                Rect rectangle = new Rect(x1, y1, x2 - x1, y2 - y1);
-
-                Mat roi = new Mat(mat, rectangle);
-                Mat roiBg = new Mat();
-                Cv2.BitwiseAnd(roi, roi, roiBg, maskInverse);
-
-                Mat roiFg = new Mat();
-                Cv2.BitwiseAnd(hatNew, hatNew, roiFg, mask);
-                Mat d = new Mat();
-                Cv2.Add(roiBg, roiFg, d);
-
-                d.CopyTo(mat.SubMat(rectangle));
+                _imageOverlayer.Overlay(mat, new Size(hatWidth, hatHeight), new Rect(x1, y1, x2 - x1, y2 - y1));
             }
         }
     }
