@@ -34,8 +34,8 @@ namespace CloudCam.Effect
             for (int i = 0; i < mustachesRepository.Count; i++)
             {
                 EffectImageWithSettings settings = LoadImage(mustachesRepository[i]);
-                
-                _effects.Add(new Mustaches(settings.Image, settings.Settings, _faceDetection, _noseDetection));
+                ImageOverlayer overlayer = new ImageOverlayer(settings.Image);
+                _effects.Add(new Mustaches(overlayer,settings.Image.Size(), settings.Settings, _faceDetection, _noseDetection));
             }
 
             for (int i = 0; i < hatsRepository.Count; i++)

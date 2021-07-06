@@ -5,20 +5,16 @@ namespace CloudCam.Effect
 {
     public class Mustaches : IEffect
     {
-        private readonly Mat _mustache;
+        private readonly ImageOverlayer _overlayer;
+        private readonly Size _mustacheSize;
         private readonly ImageSettings _settings;
-        private readonly Mat _mustacheMask;
-        private readonly Mat _mustacheMaskInverse;
         private readonly FaceDetection _faceDetection;
         private readonly NoseDetection _noseDetection;
 
-        public Mustaches(Mat mustache, ImageSettings settings, FaceDetection faceDetection, NoseDetection noseDetection)
+        public Mustaches(ImageOverlayer overlayer,Size mustacheSize, ImageSettings settings, FaceDetection faceDetection, NoseDetection noseDetection)
         {
-            _mustacheMask = mustache.ExtractChannel(3); // extract Alpha
-            _mustacheMaskInverse = new Mat();
-            Cv2.BitwiseNot(_mustacheMask, _mustacheMaskInverse);
-            Cv2.CvtColor(mustache, mustache, ColorConversionCodes.BGRA2BGR);
-            _mustache = mustache;
+            _overlayer = overlayer;
+            _mustacheSize = mustacheSize;
             _settings = settings;
 
             _faceDetection = faceDetection;
@@ -42,7 +38,7 @@ namespace CloudCam.Effect
                 Rect noseRect = noses[0];
 
                 int mustacheWidth = 3 * noseRect.Width;
-                int mustacheHeight = mustacheWidth * _mustache.Height / _mustache.Width;
+                int mustacheHeight = mustacheWidth * _mustacheSize.Height / _mustacheSize.Width;
 
 
                 // Center the hat on the bottom of the nose
@@ -65,30 +61,9 @@ namespace CloudCam.Effect
                 mustacheWidth = x2 - x1;
                 mustacheHeight = y2 - y1;
 
-                Mat mustacheNew = new Mat();
-                Cv2.Resize(_mustache, mustacheNew, new Size(mustacheWidth, mustacheHeight),
-                    interpolation: InterpolationFlags.Area);
-
-                Mat mask = new Mat();
-                Cv2.Resize(_mustacheMask, mask, new Size(mustacheWidth, mustacheHeight),
-                    interpolation: InterpolationFlags.Area);
-                Mat maskInverse = new Mat();
-                Cv2.Resize(_mustacheMaskInverse, maskInverse, new Size(mustacheWidth, mustacheHeight),
-                    interpolation: InterpolationFlags.Area);
-
-
-                Rect rectangle = new Rect(x1, y1, x2 - x1, y2 - y1);
-
-                Mat roi = new Mat(roiColor, rectangle);
-                Mat roiBg = new Mat();
-                Cv2.BitwiseAnd(roi, roi, roiBg, maskInverse);
-
-                Mat roiFg = new Mat();
-                Cv2.BitwiseAnd(mustacheNew, mustacheNew, roiFg, mask);
-                Mat d = new Mat();
-                Cv2.Add(roiBg, roiFg, d);
-
-                d.CopyTo(roiColor.SubMat(rectangle));
+                Size mustacheSize = new Size(mustacheWidth, mustacheHeight);
+                Rect rectangle = new Rect(faceRect.X + x1, faceRect.Y + y1, x2 - x1, y2 - y1);
+                _overlayer.Overlay(mat, mustacheSize, rectangle);
             }
         }
     }
