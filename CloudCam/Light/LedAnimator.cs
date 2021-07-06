@@ -8,7 +8,15 @@ using Light.Chases;
 
 namespace CloudCam.Light
 {
-    public class LedAnimator
+    public interface ILedAnimator
+    {
+        Task StartAsync();
+        Task Animate();
+        void StartFlash();
+        void EndFlash();
+    }
+
+    public class LedAnimator : ILedAnimator
     {
         private readonly int _pixelsFront;
         private readonly int _pixelsSide;
@@ -26,7 +34,7 @@ namespace CloudCam.Light
             await _ledController.StartAsync();
         }
 
-        private async Task Animate()
+        public async Task Animate()
         {
             AnimationCreator creator = new AnimationCreator(_pixelsSide);
             Random random = new Random();
@@ -44,10 +52,13 @@ namespace CloudCam.Light
             });
         }
         
-        public async Task Flash(int seconds)
+        public void StartFlash()
         {
             _ledController.StartAnimationAtFront(new SingleColor(_pixelsFront, RgbToInt(255,255,255)));
-            await Task.Delay(seconds * 1000);
+        }
+
+        public void EndFlash()
+        {
             _ledController.StartAnimationAtFront(null);
         }
 

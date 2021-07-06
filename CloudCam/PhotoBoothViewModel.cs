@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using CloudCam.Effect;
+using CloudCam.Light;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
@@ -21,6 +22,7 @@ namespace CloudCam
     public class PhotoBoothViewModel : ReactiveObject
     {
         private readonly OutputImageRepository _outputImageRepository;
+        private readonly ILedAnimator _ledAnimator;
         private readonly List<string> _pickupLines;
         private readonly WebcamCapture _capture;
         private readonly ImageTransformer _imageTransformer;
@@ -59,9 +61,10 @@ namespace CloudCam
         
 
         public PhotoBoothViewModel(CameraDevice device, ImageRepository frameRepository, EffectImageLoader mustachesRepository, EffectImageLoader hatsRepository,
-            OutputImageRepository outputImageRepository, List<string> pickupLines)
+            OutputImageRepository outputImageRepository, ILedAnimator ledAnimator, List<string> pickupLines)
         {
             _outputImageRepository = outputImageRepository;
+            _ledAnimator = ledAnimator;
             _pickupLines = pickupLines;
             _random = new Random();
             MatBuffer matBuffer = new MatBuffer();
@@ -118,6 +121,7 @@ namespace CloudCam
                 return Unit.Default;
             }
 
+            _ledAnimator.StartFlash();
 
             SecondsUntilPictureIsTaken = 3;
             await Task.Delay(1000, cancellationToken);
@@ -139,7 +143,7 @@ namespace CloudCam
                     gr.DrawImage(frameAsBitmap, new System.Drawing.Point(0, 0));
                 }, cancellationToken);
             }
-
+            _ledAnimator.EndFlash();
             TakenImage = imageAsBitmap.ToBitmapSource();
             SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];

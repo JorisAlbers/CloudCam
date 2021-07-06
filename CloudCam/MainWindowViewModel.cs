@@ -6,6 +6,8 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
 using CloudCam.Effect;
+using CloudCam.Light;
+using Light;
 using OpenCvSharp;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -96,6 +98,14 @@ namespace CloudCam
 
                 var outputRepository = new OutputImageRepository(x.OutputFolder);
 
+
+#if DEBUG
+                ILedAnimator ledAnimator = new NullLedAnimator();
+#else
+                var ledAnimator = new LedAnimator(250, 33, new LedController(250, 33, "COM12", 15));
+                ledAnimator.StartAsync();
+                ledAnimator.Animate();
+#endif
                 List<string> pickupLines = new List<string>
                 {
                     "If you flash me then I’ll flash you",
@@ -133,6 +143,7 @@ namespace CloudCam
                     mustachesRepository,
                     hatsRepository,
                     outputRepository,
+                    ledAnimator,
                     pickupLines
                     );
                 SelectedViewModel = _photoBoothViewModel;
