@@ -1,3 +1,4 @@
+using System;
 using CloudCam.Detection;
 using OpenCvSharp;
 
@@ -38,6 +39,25 @@ namespace CloudCam.Effect
             {
                 faceMat.Rectangle(eye, Scalar.Purple);
             }
+
+            if (eyes.Length > 1)
+            {
+                Rect surroundingRect = CalculateSurroundingRect(eyes[0], eyes[1]);
+                faceMat.Rectangle(surroundingRect,Scalar.BurlyWood);
+            }
+
+
+
+        }
+
+        private Rect CalculateSurroundingRect(Rect eye1, Rect eye2)
+        {
+            int x1 = Math.Min(eye1.Left, eye2.Left);
+            int x2 = Math.Max(eye1.Right, eye2.Right);
+            int y1 = Math.Min(eye1.Top, eye2.Top);
+            int y2 = Math.Max(eye1.Bottom, eye2.Bottom);
+
+            return new Rect(x1, y1, x2 - x1, y2 - y1);
         }
 
         private void DetectNose(Mat faceMat, Rect faceRect)
