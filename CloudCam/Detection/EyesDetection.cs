@@ -1,5 +1,5 @@
-﻿using System;
-using OpenCvSharp;
+﻿using OpenCvSharp;
+using System;
 
 namespace CloudCam.Detection
 {
@@ -24,8 +24,6 @@ namespace CloudCam.Detection
                 flags: HaarDetectionTypes.DoRoughSearch | HaarDetectionTypes.ScaleImage,
                 minSize: new Size(30, 30)
             );
-
-            return candidates;
 
             // We should find two eyes
 
