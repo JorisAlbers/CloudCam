@@ -136,6 +136,7 @@
     <Compile Include="Effect\EffectImageWithSettings.cs" />
     <Compile Include="Effect\DebugDetection.cs" />
     <Compile Include="Effect\EffectManager.cs" />
+    <Compile Include="Effect\Glasses.cs" />
     <Compile Include="Effect\Hats.cs" />
     <Compile Include="Effect\ImageOverlayer.cs" />
     <Compile Include="Effect\Mustaches.cs" />
