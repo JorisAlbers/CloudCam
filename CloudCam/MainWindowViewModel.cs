@@ -96,6 +96,9 @@ namespace CloudCam
                 var hatsRepository = new EffectImageLoader(new ImageRepository(x.HatFolder), new ImageSettingsRepository(x.HatFolder));
                 hatsRepository.Load();
 
+                var glassesRepository = new EffectImageLoader(new ImageRepository(x.GlassesFolder), new ImageSettingsRepository(x.GlassesFolder));
+                glassesRepository.Load();
+
                 var outputRepository = new OutputImageRepository(x.OutputFolder);
 
 
@@ -141,7 +144,8 @@ namespace CloudCam
                 _photoBoothViewModel = new PhotoBoothViewModel(CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice),
                     frameRepository,
                     mustachesRepository,
-                    hatsRepository,
+                    glassesRepository,
+                    glassesRepository,
                     outputRepository,
                     ledAnimator,
                     pickupLines
@@ -164,6 +168,7 @@ namespace CloudCam
                 Settings settings = GetDefaultSettings(new DirectoryInfo(rootFolder));
                 Directory.CreateDirectory(settings.MustacheFolder);
                 Directory.CreateDirectory(settings.HatFolder);
+                Directory.CreateDirectory(settings.GlassesFolder);
                 Directory.CreateDirectory(settings.FrameFolder);
                 Directory.CreateDirectory(settings.OutputFolder);
                 return settings;
@@ -175,6 +180,7 @@ namespace CloudCam
             return new Settings(Path.Combine(rootFolder.FullName, "Frames"),
                 Path.Combine(rootFolder.FullName, "Mustaches"),
                 Path.Combine(rootFolder.FullName, "Hats"),
+                Path.Combine(rootFolder.FullName, "Glasses"),
                 Path.Combine(rootFolder.FullName, "Output"),
                 null,
                 new KeyBindingSetting[]

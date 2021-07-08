@@ -61,6 +61,7 @@ namespace CloudCam
         
 
         public PhotoBoothViewModel(CameraDevice device, ImageRepository frameRepository, EffectImageLoader mustachesRepository, EffectImageLoader hatsRepository,
+            EffectImageLoader glassesRepository,
             OutputImageRepository outputImageRepository, ILedAnimator ledAnimator, List<string> pickupLines)
         {
             _outputImageRepository = outputImageRepository;

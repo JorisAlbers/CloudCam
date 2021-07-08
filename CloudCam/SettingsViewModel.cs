@@ -16,6 +16,7 @@ namespace CloudCam
         [Reactive] public string FrameFolder { get; set; }
         [Reactive] public string MustacheFolder { get; set; }
         [Reactive] public string HatFolder { get; set; }
+        [Reactive] public string GlassesFolder { get; set; }
         [Reactive] public string OutputFolder { get; set; }
 
         public KeyBindingViewModel[] KeyBindingViewModels { get; }
@@ -29,14 +30,15 @@ namespace CloudCam
             SelectedCameraDevice = cameraDevices.FirstOrDefault(x => x.Name == settings.CameraDevice);
             FrameFolder = settings.FrameFolder;
             MustacheFolder = settings.MustacheFolder;
+            GlassesFolder = settings.GlassesFolder;
             OutputFolder = settings.OutputFolder;
             HatFolder = settings.HatFolder;
             KeyBindingViewModels = settings.KeyBindings.Select(x => new KeyBindingViewModel(x.Action, x.Key)).ToArray();
 
 
-            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name, 
+            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder,GlassesFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name, 
                 KeyBindingViewModels.Select(x=> new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray()));
-            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name,
+            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, GlassesFolder, HatFolder,OutputFolder, SelectedCameraDevice.Name,
                 KeyBindingViewModels.Select(x => new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray()));
         }
     }
@@ -48,14 +50,16 @@ namespace CloudCam
         public string OutputFolder { get; }
         public string CameraDevice { get; }
         public string HatFolder { get; set; }
+        public string GlassesFolder { get; set; }
 
         public KeyBindingSetting[] KeyBindings { get; set; }
 
-        public Settings(string frameFolder, string mustacheFolder, string hatFolder, string outputFolder, string cameraDevice, KeyBindingSetting[] keyBindings)
+        public Settings(string frameFolder, string mustacheFolder, string hatFolder,string glassesFolder, string outputFolder, string cameraDevice, KeyBindingSetting[] keyBindings)
         {
             FrameFolder = frameFolder;
             MustacheFolder = mustacheFolder;
             HatFolder = hatFolder;
+            GlassesFolder = glassesFolder;
             OutputFolder = outputFolder;
             CameraDevice = cameraDevice;
             KeyBindings = keyBindings;

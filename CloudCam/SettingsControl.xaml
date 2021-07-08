@@ -32,6 +32,9 @@
                 <TextBlock Text="Path to hats:" VerticalAlignment="Center"/>
                 <TextBox x:Name="HatsPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
 
+                <TextBlock Text="Path to glasses:" VerticalAlignment="Center"/>
+                <TextBox x:Name="GlassesPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
+
                 <TextBlock Text="Path to output:" VerticalAlignment="Center"/>
                 <TextBox x:Name="OutputPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
 
