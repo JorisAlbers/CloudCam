@@ -42,11 +42,11 @@ namespace CloudCam.Effect
                 int glassesHeight = glassesWidth * _glassesSize.Height / _glassesSize.Width;
 
 
-                // Center the hat on the bottom of the nose
-                int x1 = surroundingRect.X - (glassesWidth / 4);
-                int x2 = surroundingRect.X + surroundingRect.Width + (glassesWidth / 4);
-                int y1 = surroundingRect.Y + surroundingRect.Height - (glassesHeight / 2);
-                int y2 = surroundingRect.Y + surroundingRect.Height + (glassesHeight / 2);
+                // Center the hat on the centre of the eyes
+                int x1 = surroundingRect.X;
+                int x2 = surroundingRect.X + surroundingRect.Width;
+                int y1 = surroundingRect.Y ;
+                int y2 = surroundingRect.Y + surroundingRect.Height;
 
                 // Check for clipping
                 if (x1 < 0)
