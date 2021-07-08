@@ -13,7 +13,11 @@
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
-        <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
+        <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2" RenderTransformOrigin="0.5,0.5">
+            <Image.RenderTransform>
+                <ScaleTransform ScaleX="-1"/>
+            </Image.RenderTransform>
+        </Image>
         <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
         <Grid Grid.RowSpan="2">
             <MediaElement x:Name="VideoPlayer"  Source="Resources/Videos/intro_loop.mp4" MediaEnded="VideoPlayer_OnMediaEnded" LoadedBehavior="Manual"/>
