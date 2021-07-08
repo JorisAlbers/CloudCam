@@ -144,7 +144,7 @@ namespace CloudCam
                 _photoBoothViewModel = new PhotoBoothViewModel(CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice),
                     frameRepository,
                     mustachesRepository,
-                    glassesRepository,
+                    hatsRepository,
                     glassesRepository,
                     outputRepository,
                     ledAnimator,

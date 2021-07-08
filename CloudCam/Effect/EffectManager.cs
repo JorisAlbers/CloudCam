@@ -8,6 +8,7 @@ namespace CloudCam.Effect
     {
         private readonly EffectImageLoader _mustachesRepository;
         private readonly EffectImageLoader _hatsRepository;
+        private readonly EffectImageLoader _glassesRepository;
         private int _effectIndex = 0;
         private readonly List<IEffect> _effects;
         private readonly FaceDetection _faceDetection;
@@ -15,11 +16,13 @@ namespace CloudCam.Effect
         private EyesDetection _eyesDetection;
 
 
-        public EffectManager(string caffeConfigFile, string caffeWeightFile, string noseCascadeFile,string eyesCascadeFile, EffectImageLoader mustachesRepository,
-            EffectImageLoader hatsRepository)
+        public EffectManager(string caffeConfigFile, string caffeWeightFile, string noseCascadeFile,
+            string eyesCascadeFile, EffectImageLoader mustachesRepository,
+            EffectImageLoader hatsRepository, EffectImageLoader glassesRepository)
         {
             _mustachesRepository = mustachesRepository;
             _hatsRepository = hatsRepository;
+            _glassesRepository = glassesRepository;
             _faceDetection = new FaceDetection(caffeConfigFile, caffeWeightFile);
             _noseDetection = new NoseDetection(noseCascadeFile);
             _eyesDetection = new EyesDetection(eyesCascadeFile);
@@ -45,6 +48,13 @@ namespace CloudCam.Effect
                 EffectImageWithSettings settings = LoadImage(hatsRepository[i]);
                 ImageOverlayer overlayer = new ImageOverlayer(settings.Image);
                 _effects.Add(new Hats(overlayer, settings.Image.Size(), settings.Settings, _faceDetection));
+            }
+
+            for (int i = 0; i < glassesRepository.Count; i++)
+            {
+                EffectImageWithSettings settings = LoadImage(glassesRepository[i]);
+                ImageOverlayer overlayer = new ImageOverlayer(settings.Image);
+                _effects.Add(new Glasses(overlayer, settings.Image.Size(), settings.Settings, _faceDetection, _eyesDetection));
             }
         }
 
