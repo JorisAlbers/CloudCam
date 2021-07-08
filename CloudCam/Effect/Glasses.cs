@@ -36,9 +36,9 @@ namespace CloudCam.Effect
                     continue;
                 }
 
-                Rect surroundingRect = CalculateSurroundingRect(eyes[0], eyes[1]);
+                Rect surroundingRect = CalculateSurroundingRect(faceRect.Width,eyes[0], eyes[1]);
                 
-                int glassesWidth = (int) (1.5 * surroundingRect.Width);
+                int glassesWidth = (int) 1.2 * surroundingRect.Width;
                 int glassesHeight = glassesWidth * _glassesSize.Height / _glassesSize.Width;
 
 
@@ -67,10 +67,10 @@ namespace CloudCam.Effect
                 _overlayer.Overlay(mat, glassesSize, rectangle);
             }
         }
-        private Rect CalculateSurroundingRect(Rect eye1, Rect eye2)
+        private Rect CalculateSurroundingRect(int faceWidth,Rect eye1, Rect eye2)
         {
-            int x1 = Math.Min(eye1.Left, eye2.Left);
-            int x2 = Math.Max(eye1.Right, eye2.Right);
+            int x1 = 0;
+            int x2 = faceWidth;
             int y1 = Math.Min(eye1.Top, eye2.Top);
             int y2 = Math.Max(eye1.Bottom, eye2.Bottom);
 
