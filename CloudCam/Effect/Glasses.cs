@@ -38,11 +38,6 @@ namespace CloudCam.Effect
 
                 Rect surroundingRect = CalculateSurroundingRect(faceRect.Width,eyes[0], eyes[1]);
                 
-                int glassesWidth = (int) 1.2 * surroundingRect.Width;
-                int glassesHeight = glassesWidth * _glassesSize.Height / _glassesSize.Width;
-
-
-                // Center the hat on the centre of the eyes
                 int x1 = surroundingRect.X;
                 int x2 = surroundingRect.X + surroundingRect.Width;
                 int y1 = surroundingRect.Y ;
@@ -59,8 +54,8 @@ namespace CloudCam.Effect
                     y2 = faceRect.Height;
 
                 // Re-calculate the width and height of the hat image
-                glassesWidth = x2 - x1;
-                glassesHeight = y2 - y1;
+                int glassesWidth = x2 - x1;
+                int glassesHeight = y2 - y1;
 
                 Size glassesSize = new Size(glassesWidth, glassesHeight);
                 Rect rectangle = new Rect(faceRect.X + x1, faceRect.Y + y1, x2 - x1, y2 - y1);
