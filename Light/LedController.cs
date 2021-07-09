@@ -66,8 +66,6 @@ namespace Light
                         serialPort.BaseStream.Write(_uartBuffer, 0, _uartBuffer.Length);
                         serialPort.BaseStream.Flush();
                         Thread.Sleep(1000 / _framesPerSecond);
-                        if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.X)
-                            break;
                     }
                 }
             });
