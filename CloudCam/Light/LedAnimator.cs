@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,31 +41,11 @@ namespace CloudCam.Light
             Random random = new Random();
             await Task.Run(async () =>
             {
-                byte[] randomBytes = new byte[3];
                 while (true)
                 {
-
                     try
                     {
-
-
-                        IEnumerator<int[]> chase;
-
-                        int mode = random.Next(0, 3);
-                        if (mode == 0)
-                        {
-                            random.NextBytes(randomBytes);
-
-                            chase = creator.CreateSlowFading(randomBytes[0], randomBytes[1], randomBytes[2]);
-                        }
-                        else if (mode == 1)
-                        {
-                            chase = creator.CreateMovingPattern(random);
-                        }
-                        else
-                        {
-                            chase = creator.CreateSlidingPatterns(random);
-                        }
+                        IEnumerator<int[]> chase = creator.CreateRandomAnimation(random);
                         _ledController.StartAnimationAtSide(chase);
 
                     }
@@ -74,13 +55,11 @@ namespace CloudCam.Light
                         Console.Out.WriteLine(e);
                     }
 
-
-
                     await Task.Delay(TimeSpan.FromMinutes(1));
                 }
             });
         }
-        
+
         public void StartFlash()
         {
             _ledController.StartAnimationAtFront(new SingleColor(_pixelsFront, RgbToInt(255,255,255)));
@@ -100,80 +79,53 @@ namespace CloudCam.Light
     public class AnimationCreator
     {
         private readonly int _pixels;
+        private Color[] _niceColors = new Color[]
+        {
+            Color.Blue,
+            Color.Aquamarine,
+            Color.BlueViolet,
+            Color.Brown,
+            Color.Orange,
+            Color.Red,
+            Color.Gold,
+            Color.RoyalBlue,
+            Color.Salmon,
+            Color.Lime,
+            Color.Firebrick
+        };
+
+
+
 
         public AnimationCreator(int pixels)
         {
             _pixels = pixels;
         }
 
-        public IEnumerator<int[]> CreateBlueSlidingPatterns()
+        public IEnumerator<int[]> CreateRandomAnimation(Random random)
         {
-            int[] pattern = new int[]
+            Color color = _niceColors[random.Next(0, _niceColors.Length)];
+            int mode = random.Next(0, 3);
+            if (mode == 0)
             {
-                LedAnimator.RgbToInt(0, 0, 255),
-                LedAnimator.RgbToInt(0,0, 200),
-                LedAnimator.RgbToInt(0,0, 150),
-                LedAnimator.RgbToInt(0,0, 100),
-                LedAnimator.RgbToInt(0,0, 50),
-                LedAnimator.RgbToInt(0, 0, 0),
-                LedAnimator.RgbToInt(0,0, 50),
-                LedAnimator.RgbToInt(0,0, 100),
-                LedAnimator.RgbToInt(0,0, 150),
-                LedAnimator.RgbToInt(0,0, 200),
-                LedAnimator.RgbToInt(0,0, 255),
-            };
-
-            return new SlidingPatternDrawer(_pixels, pattern);
-        }
-
-        public IEnumerator<int[]> CreateGreenSlidingPatterns()
-        {
-            int[] pattern = new int[]
+                 return CreateSlowFading(color);
+            }
+            if (mode == 1)
             {
-                LedAnimator.RgbToInt(0, 255, 0),
-                LedAnimator.RgbToInt(0,250, 0),
-                LedAnimator.RgbToInt(0,220, 0),
-                LedAnimator.RgbToInt(0,255, 0),
-                LedAnimator.RgbToInt(0,200, 0),
-                LedAnimator.RgbToInt(0, 0, 0),
-                LedAnimator.RgbToInt(0,50, 0),
-                LedAnimator.RgbToInt(0,100, 0),
-                LedAnimator.RgbToInt(0,150, 0),
-                LedAnimator.RgbToInt(0,200, 0),
-                LedAnimator.RgbToInt(0,255, 0),
-            };
-
-            return new SlidingPatternDrawer(_pixels, pattern);
+                return CreateMovingPattern(color);
+            }
+            return CreateSlidingPatterns(color);
         }
+        
 
-        public IEnumerator<int[]> CreateRedSlidingPatterns()
-        {
-            int[] pattern = new int[]
-            {
-                LedAnimator.RgbToInt(255, 0, 0),
-                LedAnimator.RgbToInt(200, 0, 0),
-                LedAnimator.RgbToInt(150, 0, 0),
-                LedAnimator.RgbToInt(100, 0, 0),
-                LedAnimator.RgbToInt(50, 0, 0),
-                LedAnimator.RgbToInt(0, 0, 0),
-                LedAnimator.RgbToInt(50, 0, 0),
-                LedAnimator.RgbToInt(100, 0, 0),
-                LedAnimator.RgbToInt(150, 0, 0),
-                LedAnimator.RgbToInt(200, 0, 0),
-                LedAnimator.RgbToInt(255, 0, 0),
-            };
-
-            return new SlidingPatternDrawer(_pixels, pattern);
-        }
-
-        public IEnumerator<int[]> CreateSlowFading(byte r, byte g, byte b)
+        public IEnumerator<int[]> CreateSlowFading(Color color)
         {
             // fade in steps
             // todo SIN
             int fadesteps = 100;
-            byte rStep = (byte) (r / fadesteps);
-            byte gStep = (byte) (g / fadesteps);
-            byte bStep = (byte) (b / fadesteps);
+            byte rStep = (byte) (color.R / fadesteps);
+            byte gStep = (byte) (color.G / fadesteps);
+            byte bStep = (byte) (color.B / fadesteps);
 
             List<int[]> colors = new List<int[]>();
 
@@ -190,80 +142,51 @@ namespace CloudCam.Light
             return new RepeatingPatternsDrawer(_pixels, colors.ToArray());
         }
 
-        public IEnumerator<int[]> CreateMovingPattern(Random random)
+        public IEnumerator<int[]> CreateMovingPattern(Color color)
         {
-            List<int[]> patterns = new List<int[]>();
-            patterns.Add(new int[]
-            {
-                LedAnimator.RgbToInt(0,0,0),
-                LedAnimator.RgbToInt(0,255,0),
-            });
+            List<int> pattern = new List<int>();
 
-            patterns.Add(new int[]
-            {
-                LedAnimator.RgbToInt(0,0,0),
-                LedAnimator.RgbToInt(255,0,0),
-                LedAnimator.RgbToInt(255,0,0),
-                LedAnimator.RgbToInt(255,0,0),
-                LedAnimator.RgbToInt(255,0,0),
-                LedAnimator.RgbToInt(200,0,0),
-                LedAnimator.RgbToInt(180,0,0),
-                LedAnimator.RgbToInt(100,0,0),
-                LedAnimator.RgbToInt(80,0,0),
-                LedAnimator.RgbToInt(70,0,0),
-                LedAnimator.RgbToInt(60,0,0),
-                LedAnimator.RgbToInt(50,0,0),
-                LedAnimator.RgbToInt(40,0,0),
-                LedAnimator.RgbToInt(30,0,0),
-                LedAnimator.RgbToInt(20,0,0),
-                LedAnimator.RgbToInt(0,0,0),
-            });
+            int steps = 20;
+            int redIncrement = color.R / steps;
+            int greenIncrement = color.G / steps;
+            int blueIncrement = color.B / steps;
 
-            patterns.Add(new int[]
+            pattern.Add(LedAnimator.RgbToInt(0,0,0));
+            for (int i = 1; i < steps+1; i++)
             {
-                LedAnimator.RgbToInt(0,0,0),
-                LedAnimator.RgbToInt(20,0,0),
-                LedAnimator.RgbToInt(50,0,0),
-                LedAnimator.RgbToInt(60,0,0),
-                LedAnimator.RgbToInt(70,0,0),
-                LedAnimator.RgbToInt(80,0,0),
-                LedAnimator.RgbToInt(100,0,0),
-                LedAnimator.RgbToInt(180,0,0),
-                LedAnimator.RgbToInt(200,0,0),
-                LedAnimator.RgbToInt(255,0,0),
-                LedAnimator.RgbToInt(255,0,0),
-                LedAnimator.RgbToInt(255,0,0),
-                LedAnimator.RgbToInt(255,0,0),
-                LedAnimator.RgbToInt(200,0,0),
-                LedAnimator.RgbToInt(180,0,0),
-                LedAnimator.RgbToInt(100,0,0),
-                LedAnimator.RgbToInt(80,0,0),
-                LedAnimator.RgbToInt(70,0,0),
-                LedAnimator.RgbToInt(60,0,0),
-                LedAnimator.RgbToInt(50,0,0),
-                LedAnimator.RgbToInt(40,0,0),
-                LedAnimator.RgbToInt(30,0,0),
-                LedAnimator.RgbToInt(20,0,0),
-                LedAnimator.RgbToInt(0,0,0),
-            });
-
-            return new MovingPatternDrawer(_pixels,patterns[random.Next(0,patterns.Count-1)]);
+                pattern.Add(LedAnimator.RgbToInt((byte) (i * redIncrement), (byte) (i* greenIncrement), (byte) (i* blueIncrement)));
+            }
+            for (int i = steps - 1; i >= 0; i--)
+            {
+                pattern.Add(LedAnimator.RgbToInt((byte)(i * redIncrement), (byte)(i * greenIncrement), (byte)(i * blueIncrement)));
+            }
+            pattern.Add(LedAnimator.RgbToInt(0, 0, 0));
+            
+            return new MovingPatternDrawer(_pixels, pattern.ToArray());
         }
 
-        public IEnumerator<int[]> CreateSlidingPatterns(Random random)
+        public IEnumerator<int[]> CreateSlidingPatterns(Color color)
         {
-            int mode = random.Next(0, 3);
-            if (mode == 0)
+            List<int> pattern = new List<int>();
+
+            int steps = 20;
+            int redIncrement = color.R / steps;
+            int greenIncrement = color.G / steps;
+            int blueIncrement = color.B / steps;
+
+            pattern.Add(LedAnimator.RgbToInt(0, 0, 0));
+            for (int i = 1; i < steps + 1; i++)
             {
-                return CreateRedSlidingPatterns();
+                pattern.Add(LedAnimator.RgbToInt((byte)(i * redIncrement), (byte)(i * greenIncrement), (byte)(i * blueIncrement)));
             }
 
-            if (mode == 1)
+            for (int i = steps - 1; i >= 0; i--)
             {
-                return CreateBlueSlidingPatterns();
+                pattern.Add(LedAnimator.RgbToInt((byte)(i * redIncrement), (byte)(i * greenIncrement), (byte)(i * blueIncrement)));
             }
 
-            return CreateGreenSlidingPatterns();
+            pattern.Add(LedAnimator.RgbToInt(0, 0, 0));
+            return new SlidingPatternDrawer(_pixels, pattern.ToArray());
         }
     }
 }
