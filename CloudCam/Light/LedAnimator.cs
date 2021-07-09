@@ -198,9 +198,26 @@ namespace CloudCam.Light
                 LedAnimator.RgbToInt(0,0,0),
                 LedAnimator.RgbToInt(0,255,0),
             });
+            patterns.Add(new int[]
+            {
+                LedAnimator.RgbToInt(0,0,0),
+                LedAnimator.RgbToInt(0,255,255),
+            });
+            patterns.Add(new int[]
+            {
+                LedAnimator.RgbToInt(0,0,0),
+                LedAnimator.RgbToInt(255,255,0),
+            });
 
             patterns.Add(new int[]
             {
+                LedAnimator.RgbToInt(0,0,0),
+                LedAnimator.RgbToInt(255,0,255),
+            });
+
+            patterns.Add(new int[]
+            {
+                LedAnimator.RgbToInt(0,0,0),
                 LedAnimator.RgbToInt(0,0,0),
                 LedAnimator.RgbToInt(255,0,0),
                 LedAnimator.RgbToInt(255,0,0),
@@ -216,12 +233,14 @@ namespace CloudCam.Light
                 LedAnimator.RgbToInt(40,0,0),
                 LedAnimator.RgbToInt(30,0,0),
                 LedAnimator.RgbToInt(20,0,0),
+                LedAnimator.RgbToInt(0,0,0),
                 LedAnimator.RgbToInt(0,0,0),
             });
 
             patterns.Add(new int[]
             {
                 LedAnimator.RgbToInt(0,0,0),
+                LedAnimator.RgbToInt(0,0,0),
                 LedAnimator.RgbToInt(20,0,0),
                 LedAnimator.RgbToInt(50,0,0),
                 LedAnimator.RgbToInt(60,0,0),
@@ -244,6 +263,7 @@ namespace CloudCam.Light
                 LedAnimator.RgbToInt(40,0,0),
                 LedAnimator.RgbToInt(30,0,0),
                 LedAnimator.RgbToInt(20,0,0),
+                LedAnimator.RgbToInt(0,0,0),
                 LedAnimator.RgbToInt(0,0,0),
             });
 
@@ -276,6 +296,7 @@ namespace CloudCam.Light
             int[] pattern = new int[]
             {
                 LedAnimator.RgbToInt(0, 0, 0),
+                LedAnimator.RgbToInt(0, 0, 0),
                 LedAnimator.RgbToInt(0, 0, 50),
                 LedAnimator.RgbToInt(0, 0,100),
                 LedAnimator.RgbToInt(0, 0,150),
@@ -291,6 +312,7 @@ namespace CloudCam.Light
                 LedAnimator.RgbToInt(0, 0,150),
                 LedAnimator.RgbToInt(0, 0,100),
                 LedAnimator.RgbToInt(0, 0,50),
+                LedAnimator.RgbToInt(0, 0,0),
                 LedAnimator.RgbToInt(0, 0,0),
             };
 
