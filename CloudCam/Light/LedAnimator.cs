@@ -43,7 +43,7 @@ namespace CloudCam.Light
                 byte[] randomBytes = new byte[3];
                 while (true)
                 {
-                    int mode = random.Next(0, 2);
+                    int mode = random.Next(0, 3);
                     IEnumerator<int[]> chase;
                     if (mode == 0)
                     {
@@ -51,10 +51,13 @@ namespace CloudCam.Light
 
                         chase = creator.CreateSlowFading(randomBytes[0], randomBytes[1], randomBytes[2]);
                     }
-                    else 
-                   // if (mode == 1)
+                    else if (mode == 1)
                     {
                         chase = creator.CreateMovingPattern(random);
+                    }
+                    else
+                    {
+                        chase = creator.CreateSlidingPatterns(random);
                     }
 
                     _ledController.StartAnimationAtSide(chase);
@@ -233,6 +236,26 @@ namespace CloudCam.Light
             });
 
             return new MovingPatternDrawer(_pixels,patterns[random.Next(0,patterns.Count-1)]);
+        }
+
+        public IEnumerator<int[]> CreateSlidingPatterns(Random random)
+        {
+            int mode = random.Next(0, 3);
+            if (mode == 0)
+            {
+                return CreateRedSlidingPatterns();
+            }
+
+            if (mode == 1)
+            {
+                return CreateBlueSlidingPatterns();
+            }
+
+            if (mode == 2)
+            {
+                return CreateGreenSlidingPatterns();
+            }
+
         }
     }
 }
