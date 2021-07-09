@@ -169,7 +169,7 @@ namespace CloudCam.Light
 
             for (int i = fadesteps - 1; i >= 0; i--)
             {
-                colors[i] = new[] { LedAnimator.RgbToInt((byte)(rStep * i), (byte)(gStep * i), (byte)(bStep * i)) };
+                colors[fadesteps + (fadesteps-i)] = new[] { LedAnimator.RgbToInt((byte)(rStep * i), (byte)(gStep * i), (byte)(bStep * i)) };
             }
 
             return new RepeatingPatternsDrawer(_pixels, colors);
@@ -194,7 +194,7 @@ namespace CloudCam.Light
                 LedAnimator.RgbToInt(40,0,0),
                 LedAnimator.RgbToInt(30,0,0),
                 LedAnimator.RgbToInt(20,0,0),
-                LedAnimator.RgbToInt(10,0,0),
+                LedAnimator.RgbToInt(0,0,0),
             });
 
             patterns.Add(new int[]
