@@ -63,7 +63,7 @@ namespace CloudCam.Light
                     _ledController.StartAnimationAtSide(chase);
 
 
-                    await Task.Delay(TimeSpan.FromMinutes(1));
+                    await Task.Delay(TimeSpan.FromSeconds(10));
                 }
             });
         }
@@ -251,11 +251,7 @@ namespace CloudCam.Light
                 return CreateBlueSlidingPatterns();
             }
 
-            if (mode == 2)
-            {
-                return CreateGreenSlidingPatterns();
-            }
-
+            return CreateGreenSlidingPatterns();
         }
     }
 }
