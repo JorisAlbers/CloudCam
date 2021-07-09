@@ -43,10 +43,23 @@ namespace CloudCam.Light
                 byte[] randomBytes = new byte[3];
                 while (true)
                 {
-                    random.NextBytes(randomBytes);
+                    int mode = random.Next(0, 2);
+                    IEnumerator<int[]> chase;
+                    if (mode == 0)
+                    {
+                        random.NextBytes(randomBytes);
 
-                    var chase = creator.CreateSlowFading(randomBytes[0], randomBytes[1], randomBytes[2]);
+                        chase = creator.CreateSlowFading(randomBytes[0], randomBytes[1], randomBytes[2]);
+                    }
+                    else 
+                   // if (mode == 1)
+                    {
+                        chase = creator.CreateMovingPattern(random);
+                    }
+
                     _ledController.StartAnimationAtSide(chase);
+
+
                     await Task.Delay(TimeSpan.FromMinutes(1));
                 }
             });
@@ -100,6 +113,58 @@ namespace CloudCam.Light
             }
 
             return new RepeatingPatternsDrawer(_pixels, colors);
+        }
+
+        public IEnumerator<int[]> CreateMovingPattern(Random random)
+        {
+            List<int[]> patterns = new List<int[]>();
+            patterns.Add(new int[]
+            {
+                LedAnimator.RgbToInt(255,0,0),
+                LedAnimator.RgbToInt(255,0,0),
+                LedAnimator.RgbToInt(255,0,0),
+                LedAnimator.RgbToInt(255,0,0),
+                LedAnimator.RgbToInt(200,0,0),
+                LedAnimator.RgbToInt(180,0,0),
+                LedAnimator.RgbToInt(100,0,0),
+                LedAnimator.RgbToInt(80,0,0),
+                LedAnimator.RgbToInt(70,0,0),
+                LedAnimator.RgbToInt(60,0,0),
+                LedAnimator.RgbToInt(50,0,0),
+                LedAnimator.RgbToInt(40,0,0),
+                LedAnimator.RgbToInt(30,0,0),
+                LedAnimator.RgbToInt(20,0,0),
+                LedAnimator.RgbToInt(10,0,0),
+            });
+
+            patterns.Add(new int[]
+            {
+                LedAnimator.RgbToInt(20,0,0),
+                LedAnimator.RgbToInt(50,0,0),
+                LedAnimator.RgbToInt(60,0,0),
+                LedAnimator.RgbToInt(70,0,0),
+                LedAnimator.RgbToInt(80,0,0),
+                LedAnimator.RgbToInt(100,0,0),
+                LedAnimator.RgbToInt(180,0,0),
+                LedAnimator.RgbToInt(200,0,0),
+                LedAnimator.RgbToInt(255,0,0),
+                LedAnimator.RgbToInt(255,0,0),
+                LedAnimator.RgbToInt(255,0,0),
+                LedAnimator.RgbToInt(255,0,0),
+                LedAnimator.RgbToInt(200,0,0),
+                LedAnimator.RgbToInt(180,0,0),
+                LedAnimator.RgbToInt(100,0,0),
+                LedAnimator.RgbToInt(80,0,0),
+                LedAnimator.RgbToInt(70,0,0),
+                LedAnimator.RgbToInt(60,0,0),
+                LedAnimator.RgbToInt(50,0,0),
+                LedAnimator.RgbToInt(40,0,0),
+                LedAnimator.RgbToInt(30,0,0),
+                LedAnimator.RgbToInt(20,0,0),
+                LedAnimator.RgbToInt(0,0,0),
+            });
+
+            return new MovingPatternDrawer(_pixels,patterns[random.Next(0,patterns.Count-1)]);
         }
     }
 }
