@@ -43,24 +43,37 @@ namespace CloudCam.Light
                 byte[] randomBytes = new byte[3];
                 while (true)
                 {
-                    int mode = random.Next(0, 3);
-                    IEnumerator<int[]> chase;
-                    if (mode == 0)
-                    {
-                        random.NextBytes(randomBytes);
 
-                        chase = creator.CreateSlowFading(randomBytes[0], randomBytes[1], randomBytes[2]);
-                    }
-                    else if (mode == 1)
+                    try
                     {
-                        chase = creator.CreateMovingPattern(random);
+
+
+                        IEnumerator<int[]> chase;
+
+                        int mode = random.Next(0, 3);
+                        if (mode == 0)
+                        {
+                            random.NextBytes(randomBytes);
+
+                            chase = creator.CreateSlowFading(randomBytes[0], randomBytes[1], randomBytes[2]);
+                        }
+                        else if (mode == 1)
+                        {
+                            chase = creator.CreateMovingPattern(random);
+                        }
+                        else
+                        {
+                            chase = creator.CreateSlidingPatterns(random);
+                        }
+                        _ledController.StartAnimationAtSide(chase);
+
                     }
-                    else
+                    catch (Exception e)
                     {
-                        chase = creator.CreateSlidingPatterns(random);
+                        Console.Out.WriteLine("Failed to create animation");
+                        Console.Out.WriteLine(e);
                     }
 
-                    _ledController.StartAnimationAtSide(chase);
 
 
                     await Task.Delay(TimeSpan.FromSeconds(10));
@@ -162,20 +175,19 @@ namespace CloudCam.Light
             byte gStep = (byte) (g / fadesteps);
             byte bStep = (byte) (b / fadesteps);
 
-            int[][] colors = new int[fadesteps][];
-
+            List<int[]> colors = new List<int[]>();
 
             for (int i = 0; i < fadesteps; i++)
             {
-                colors[i] = new[] {LedAnimator.RgbToInt((byte) (rStep * i), (byte) (gStep * i), (byte) (bStep * i))};
+                colors.Add(new[] {LedAnimator.RgbToInt((byte) (rStep * i), (byte) (gStep * i), (byte) (bStep * i))});
             }
 
             for (int i = fadesteps - 1; i >= 0; i--)
             {
-                colors[fadesteps + (fadesteps-i)] = new[] { LedAnimator.RgbToInt((byte)(rStep * i), (byte)(gStep * i), (byte)(bStep * i)) };
+                colors.Add(new[] { LedAnimator.RgbToInt((byte)(rStep * i), (byte)(gStep * i), (byte)(bStep * i)) });
             }
 
-            return new RepeatingPatternsDrawer(_pixels, colors);
+            return new RepeatingPatternsDrawer(_pixels, colors.ToArray());
         }
 
         public IEnumerator<int[]> CreateMovingPattern(Random random)
