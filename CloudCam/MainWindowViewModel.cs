@@ -105,7 +105,7 @@ namespace CloudCam
 #if DEBUG
                 ILedAnimator ledAnimator = new NullLedAnimator();
 #else
-                var ledAnimator = new LedAnimator(33,249, new LedController (33,249, "COM12", 60));
+                var ledAnimator = new LedAnimator(33,216, new LedController (33,216, "COM12", 60));
                 ledAnimator.StartAsync();
                 ledAnimator.Animate();
 #endif

@@ -12,7 +12,7 @@ namespace Light
     public class LedController : IDisposable
     {
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private int _numberOfPixels;
+        private int _numberOfPixelsSide;
         private readonly int _numberOfPixelsFront;
         private string _usbPort;
         private int _framesPerSecond;
@@ -27,14 +27,14 @@ namespace Light
         private IEnumerator<int[]> _sideChase;
         private IEnumerator<int[]> _frontChase;
 
-        public LedController(int numberOfPixelsFront, int numberOfPixels, string usbPort, int framesPerSecond)
+        public LedController(int numberOfPixelsFront, int numberOfPixelsSide, string usbPort, int framesPerSecond)
         {
-            _numberOfPixels = numberOfPixels;
+            _numberOfPixelsSide = numberOfPixelsSide;
             _numberOfPixelsFront = numberOfPixelsFront;
             _usbPort = usbPort;
             _framesPerSecond = framesPerSecond;
 
-            int totalPixels = numberOfPixels + numberOfPixelsFront;
+            int totalPixels = numberOfPixelsSide + numberOfPixelsFront;
             _uartBuffer = new byte[totalPixels * BYTESPERPIXEL];   
         }
 
