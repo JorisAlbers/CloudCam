@@ -252,7 +252,7 @@ namespace CloudCam.Light
 
         public IEnumerator<int[]> CreateSlidingPatterns(Random random)
         {
-            int mode = random.Next(0, 3);
+            int mode = random.Next(0, 4);
             if (mode == 0)
             {
                 return CreateRedSlidingPatterns();
@@ -263,7 +263,38 @@ namespace CloudCam.Light
                 return CreateBlueSlidingPatterns();
             }
 
+            if (mode == 2)
+            {
+                return BlueLight();
+            }
+
             return CreateGreenSlidingPatterns();
+        }
+
+        public IEnumerator<int[]> BlueLight()
+        {
+            int[] pattern = new int[]
+            {
+                LedAnimator.RgbToInt(0, 0, 0),
+                LedAnimator.RgbToInt(0, 0, 50),
+                LedAnimator.RgbToInt(0, 0,100),
+                LedAnimator.RgbToInt(0, 0,150),
+                LedAnimator.RgbToInt(0, 0,200),
+                LedAnimator.RgbToInt(0, 0,220),
+                LedAnimator.RgbToInt(0, 0,230),
+                LedAnimator.RgbToInt(0, 0,245),
+                LedAnimator.RgbToInt(255, 255,255),
+                LedAnimator.RgbToInt(0, 0,245),
+                LedAnimator.RgbToInt(0, 0,230),
+                LedAnimator.RgbToInt(0, 0,220),
+                LedAnimator.RgbToInt(0, 0,200),
+                LedAnimator.RgbToInt(0, 0,150),
+                LedAnimator.RgbToInt(0, 0,100),
+                LedAnimator.RgbToInt(0, 0,50),
+                LedAnimator.RgbToInt(0, 0,0),
+            };
+
+            return new SlidingPatternDrawer(_pixels, pattern);
         }
     }
 }
