@@ -50,6 +50,8 @@ namespace CloudCam
                 {
                     frame = _matBuffer.GetNextForCapture(frame);
                     videoCapture.Read(frame);
+                    Cv2.Flip(frame, frame, FlipMode.Y);
+
                     if (++frames > 50)
                     {
                         int elapsedMilliseconds = Environment.TickCount - startTicks;
