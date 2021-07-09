@@ -180,6 +180,13 @@ namespace CloudCam.Light
             List<int[]> patterns = new List<int[]>();
             patterns.Add(new int[]
             {
+                LedAnimator.RgbToInt(0,255,0),
+                LedAnimator.RgbToInt(0,0,0),
+            });
+
+            patterns.Add(new int[]
+            {
+                LedAnimator.RgbToInt(0,0,0),
                 LedAnimator.RgbToInt(255,0,0),
                 LedAnimator.RgbToInt(255,0,0),
                 LedAnimator.RgbToInt(255,0,0),
@@ -199,6 +206,7 @@ namespace CloudCam.Light
 
             patterns.Add(new int[]
             {
+                LedAnimator.RgbToInt(0,0,0),
                 LedAnimator.RgbToInt(20,0,0),
                 LedAnimator.RgbToInt(50,0,0),
                 LedAnimator.RgbToInt(60,0,0),
