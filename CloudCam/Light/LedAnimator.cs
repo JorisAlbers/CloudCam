@@ -59,7 +59,7 @@ namespace CloudCam.Light
 
         public void EndFlash()
         {
-            _ledController.StartAnimationAtFront(null);
+            _ledController.StartAnimationAtFront(new SingleColor(_pixelsFront, RgbToInt(0,0,0)));
         }
 
         public static int RgbToInt(byte r, byte g, byte b)
