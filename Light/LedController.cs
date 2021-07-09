@@ -25,7 +25,7 @@ namespace Light
         };
         private byte[] _uartBuffer;
         private IEnumerator<int[]> _sideChase;
-        private readonly IEnumerator<int[]> _frontChase;
+        private IEnumerator<int[]> _frontChase;
 
         public LedController(int numberOfPixelsFront, int numberOfPixels, string usbPort, int framesPerSecond)
         {
@@ -75,7 +75,7 @@ namespace Light
 
         public void StartAnimationAtFront(IEnumerator<int[]> chase)
         {
-            _sideChase = chase;
+            _frontChase = chase;
         }
 
         public void StartAnimationAtSide(IEnumerator<int[]> chase)
