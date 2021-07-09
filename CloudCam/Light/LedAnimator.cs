@@ -83,8 +83,8 @@ namespace CloudCam.Light
             // todo SIN
             int fadesteps = 100;
             byte rStep = (byte) (r / fadesteps);
-            byte gStep = (byte) (r / fadesteps);
-            byte bStep = (byte) (r / fadesteps);
+            byte gStep = (byte) (g / fadesteps);
+            byte bStep = (byte) (b / fadesteps);
 
             int[][] colors = new int[fadesteps][];
 
