@@ -11,6 +11,7 @@ namespace CloudCam
 {
     public class SettingsViewModel : ReactiveObject
     {
+        public List<int> AvailableComPorts => new List<int>(Enumerable.Range(0, 50));
         public List<CameraDevice> CameraDevices { get; }
         [Reactive] public CameraDevice SelectedCameraDevice { get; set; }
         [Reactive] public string FrameFolder { get; set; }
@@ -18,6 +19,7 @@ namespace CloudCam
         [Reactive] public string HatFolder { get; set; }
         [Reactive] public string GlassesFolder { get; set; }
         [Reactive] public string OutputFolder { get; set; }
+        [Reactive] public int ComPortLeds { get; set; }
 
         public KeyBindingViewModel[] KeyBindingViewModels { get; }
 
@@ -33,13 +35,14 @@ namespace CloudCam
             GlassesFolder = settings.GlassesFolder;
             OutputFolder = settings.OutputFolder;
             HatFolder = settings.HatFolder;
+            ComPortLeds = settings.ComPortLeds;
             KeyBindingViewModels = settings.KeyBindings.Select(x => new KeyBindingViewModel(x.Action, x.Key)).ToArray();
 
 
             Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name, 
-                KeyBindingViewModels.Select(x=> new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray()));
+                KeyBindingViewModels.Select(x=> new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds));
             Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name,
-                KeyBindingViewModels.Select(x => new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray()));
+                KeyBindingViewModels.Select(x => new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds));
         }
     }
 
@@ -52,9 +55,11 @@ namespace CloudCam
         public string HatFolder { get; set; }
         public string GlassesFolder { get; set; }
 
+        public int ComPortLeds { get; set; } = -1;
+
         public KeyBindingSetting[] KeyBindings { get; set; }
 
-        public Settings(string frameFolder, string mustacheFolder, string hatFolder,string glassesFolder, string outputFolder, string cameraDevice, KeyBindingSetting[] keyBindings)
+        public Settings(string frameFolder, string mustacheFolder, string hatFolder,string glassesFolder, string outputFolder, string cameraDevice, KeyBindingSetting[] keyBindings, int comPortLeds)
         {
             FrameFolder = frameFolder;
             MustacheFolder = mustacheFolder;
@@ -63,6 +68,7 @@ namespace CloudCam
             OutputFolder = outputFolder;
             CameraDevice = cameraDevice;
             KeyBindings = keyBindings;
+            ComPortLeds = comPortLeds;
         }
     }
 

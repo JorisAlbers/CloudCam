@@ -46,6 +46,15 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+
+                <TextBlock Text="Leds Com port:" VerticalAlignment="Center"/>
+                <ComboBox x:Name="ComPortLedsComboBox" VerticalAlignment="Center">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="local:CameraDevice">
+                            <TextBlock Text="{Binding }"></TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </UniformGrid>
 
             <DataGrid CanUserAddRows="False"
