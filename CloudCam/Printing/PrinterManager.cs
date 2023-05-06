@@ -1,14 +1,8 @@
-﻿using System.Drawing;
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using System.Drawing;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Printing;
 
 /*namespace printerTestCsharp
@@ -237,6 +231,34 @@ namespace CloudCam.Printing
                 int remainingInt = int.Parse(remaining);
                 return remainingInt;
             }
+        }
+
+        public static List<Size> GetAvailablePaperSizes(string printerName)
+        {
+            PrintDocument document = new PrintDocument();
+            document.PrinterSettings.PrinterName = printerName;
+
+            var sizes = document.PrinterSettings.PaperSizes;
+            var sizesList = new List<Size>();
+            foreach (Size paperSize in sizes)
+            {
+                sizesList.Add(paperSize);
+                Console.Out.WriteLine($"Size accepted by printer:  (w.h) {paperSize.Width} x {paperSize.Height}");
+            }
+            return sizesList;
+        }
+
+        public static List<string> GetPrinterNames()
+        {
+
+            var printerNames = PrinterSettings.InstalledPrinters;
+            var printerNamesList = new List<string>();
+
+            foreach (string printerName in printerNames)
+            {
+                printerNamesList.Add(printerName);
+            }
+            return printerNamesList;
         }
     }
 }
