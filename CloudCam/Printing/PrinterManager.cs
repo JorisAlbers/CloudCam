@@ -1,4 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Documents;
 
 namespace CloudCam.Printing
 {
@@ -28,5 +31,15 @@ namespace CloudCam.Printing
             return -1;
         }
 
+        public static List<Size> GetAvailablePaperSizes()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<string> GetPrinterNames()
+        {
+            throw new NotImplementedException();
+        }
+        
     }
 }
