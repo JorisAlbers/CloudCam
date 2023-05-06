@@ -26,6 +26,8 @@ namespace CloudCam
                 this.Bind(ViewModel, vm => vm.HatFolder, v => v.HatsPathTextBox.Text).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.GlassesFolder, v => v.GlassesPathTextBox.Text).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.OutputFolder, v => v.OutputPathTextBox.Text).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.ComPortLeds, v => v.ComPortLedsComboBox.SelectedItem).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.AvailableComPorts, v => v.ComPortLedsComboBox.ItemsSource).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.Apply, v => v.ApplyButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.Start, v => v.StartButton).DisposeWith(d);
             });

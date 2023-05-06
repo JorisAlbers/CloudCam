@@ -105,7 +105,7 @@ namespace CloudCam
 #if DEBUG
                 ILedAnimator ledAnimator = new NullLedAnimator();
 #else
-                var ledAnimator = new LedAnimator(33,216, new LedController (33,216, "COM12", 60));
+                var ledAnimator = new LedAnimator(33,216, new LedController (33,216, $"COM{settings.ComPortLeds}", 60));
                 ledAnimator.StartAsync();
                 ledAnimator.Animate();
 #endif
@@ -191,7 +191,8 @@ namespace CloudCam
                     new KeyBindingSetting(UserAction.MoveToPreviousEffect, Key.A),
                     new KeyBindingSetting(UserAction.MoveToNextEffect, Key.D),
                     new KeyBindingSetting(UserAction.ToggleDebugMode, Key.L),
-                });
+                },
+                13);
         }
     }
 }
