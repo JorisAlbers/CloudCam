@@ -18,8 +18,6 @@ namespace CloudCam
 
             SelectedPrinter = settings.SelectedPrinter;
             BackgroundImagePath = settings.BackgroundImagePath;
-
-
         }
 
         public PrinterSettings GetSettings()

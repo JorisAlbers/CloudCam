@@ -9,7 +9,6 @@ using CloudCam.Effect;
 using CloudCam.Light;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Size = System.Drawing.Size;
 
 namespace CloudCam
 {

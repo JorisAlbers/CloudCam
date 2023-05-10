@@ -48,6 +48,10 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
+
+                <TextBlock Text="Path to background image:" VerticalAlignment="Center"/>
+                <TextBox x:Name="BackgroundImagePathTextBox" MaxLines="1" VerticalAlignment="Center"/>
+
                 <TextBlock Text="Printer:" VerticalAlignment="Center"/>
                 <ComboBox x:Name="PrinterComboBox" VerticalAlignment="Center">
                     <ComboBox.ItemTemplate>
@@ -57,8 +61,6 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <TextBlock Text="Background image for printing:" VerticalAlignment="Center"/>
-                <TextBox x:Name="BackgroundImagePathTextBox" MaxLines="1" VerticalAlignment="Center"/>
 
                 <TextBlock Text="Leds Com port:" VerticalAlignment="Center"/>
                 <ComboBox x:Name="ComPortLedsComboBox" VerticalAlignment="Center">
