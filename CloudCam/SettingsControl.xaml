@@ -7,10 +7,16 @@
                                 xmlns:local="clr-namespace:CloudCam"
                                 xmlns:system="clr-namespace:System;assembly=mscorlib"
                                 mc:Ignorable="d" 
-                                d:DesignHeight="450" d:DesignWidth="800"
-                                Background="Gray"
+                                d:DesignHeight="900" d:DesignWidth="500"
                                 d:DataContext="{d:DesignInstance local:SettingsViewModel}">
     <Grid>
+
+        <Grid.Resources>
+            <Style TargetType="GroupBox" BasedOn="{StaticResource MaterialDesignGroupBox}">
+                <Setter Property="Margin" Value="0,5"></Setter>
+            </Style>
+        </Grid.Resources>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition MinWidth="300" MaxWidth="1000" Width="*"/>
@@ -22,7 +28,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+
         <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="False" x:Name="DockPanel">
+
+            <TextBlock Text="CloudCam" DockPanel.Dock="Top" Style="{StaticResource MaterialDesignHeadline4TextBlock}"/>
+
+
             <GroupBox Header="Resources" DockPanel.Dock="Top">
                 <UniformGrid Columns="1">
                     <TextBlock Text="Path to frames:" />
