@@ -13,7 +13,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition MinWidth="300" MaxWidth="1000" Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -23,85 +23,101 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="False" x:Name="DockPanel">
-            <UniformGrid Columns="2" DockPanel.Dock="Top">
-                <TextBlock Text="Path to frames:" VerticalAlignment="Center"/>
-                <TextBox x:Name="FramesPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
+            <GroupBox Header="Resources" DockPanel.Dock="Top">
+                <UniformGrid Columns="1">
+                    <TextBlock Text="Path to frames:" />
+                    <TextBox x:Name="FramesPathTextBox" MaxLines="1" />
 
-                <TextBlock Text="Path to mustaches:" VerticalAlignment="Center"/>
-                <TextBox x:Name="MustachesPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
+                    <TextBlock Text="Path to mustaches:" />
+                    <TextBox x:Name="MustachesPathTextBox" MaxLines="1" />
 
-                <TextBlock Text="Path to hats:" VerticalAlignment="Center"/>
-                <TextBox x:Name="HatsPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
+                    <TextBlock Text="Path to hats:" />
+                    <TextBox x:Name="HatsPathTextBox" MaxLines="1" />
 
-                <TextBlock Text="Path to glasses:" VerticalAlignment="Center"/>
-                <TextBox x:Name="GlassesPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
+                    <TextBlock Text="Path to glasses:" />
+                    <TextBox x:Name="GlassesPathTextBox" MaxLines="1" />
 
-                <TextBlock Text="Path to output:" VerticalAlignment="Center"/>
-                <TextBox x:Name="OutputPathTextBox" MaxLines="1" VerticalAlignment="Center"/>
+                    <TextBlock Text="Path to output:" />
+                    <TextBox x:Name="OutputPathTextBox" MaxLines="1" />
+                </UniformGrid>
+            </GroupBox>
 
-                <TextBlock Text="Camera:" VerticalAlignment="Center"/>
-                <ComboBox x:Name="CameraDeviceComboBox" VerticalAlignment="Center">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="local:CameraDevice">
-                            <TextBlock Text="{Binding Name}"></TextBlock>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+            <GroupBox Header="Printing" DockPanel.Dock="Top">
+                <UniformGrid Columns="1">
+                    <TextBlock Text="Path to background image:" />
+                    <TextBox x:Name="BackgroundImagePathTextBox" MaxLines="1" />
 
-
-                <TextBlock Text="Path to background image:" VerticalAlignment="Center"/>
-                <TextBox x:Name="BackgroundImagePathTextBox" MaxLines="1" VerticalAlignment="Center"/>
-
-                <TextBlock Text="Printer:" VerticalAlignment="Center"/>
-                <ComboBox x:Name="PrinterComboBox" VerticalAlignment="Center">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type system:String}">
-                            <TextBlock Text="{Binding }"></TextBlock>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                    <TextBlock Text="Printer:" />
+                    <ComboBox x:Name="PrinterComboBox" >
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type system:String}">
+                                    <TextBlock Text="{Binding }"></TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </UniformGrid>
+            </GroupBox>
 
 
-                <TextBlock Text="Leds Com port:" VerticalAlignment="Center"/>
-                <ComboBox x:Name="ComPortLedsComboBox" VerticalAlignment="Center">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="local:CameraDevice">
-                            <TextBlock Text="{Binding }"></TextBlock>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </UniformGrid>
-
-            <DataGrid CanUserAddRows="False"
-                      CanUserSortColumns="False"
-                      AutoGenerateColumns="False"
-                      CanUserResizeColumns="False"
-                      ItemsSource="{Binding KeyBindingViewModels}"
-                      DockPanel.Dock="Top"
-                      HeadersVisibility="Column"
-                      HorizontalAlignment="Stretch"
-                      Width="{Binding ElementName=DockPanel, Path=ActualWidth}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Key" 
-                                        Binding="{Binding Action}" 
-                                        Width="*"/>
-                    <DataGridTemplateColumn Width="*" Header="Current">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate DataType="local:KeyBindingViewModel">
-                                <TextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding SelectedKeyAsString}"/>
+            <GroupBox Header="Camera" DockPanel.Dock="Top">
+                <UniformGrid Columns="1">
+                    <TextBlock Text="Camera:" />
+                    <ComboBox x:Name="CameraDeviceComboBox" >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="local:CameraDevice">
+                                <TextBlock Text="{Binding Name}"></TextBlock>
                             </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </UniformGrid>
+            </GroupBox>
 
-                    <DataGridTemplateColumn Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate DataType="local:KeyBindingViewModel">
-                                <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PreviewKeyUp="InputTextBox_KeyUp" AcceptsReturn="True"/>
+            <GroupBox Header="Leds" DockPanel.Dock="Top">
+                <UniformGrid Columns="1">
+                    <TextBlock Text="Leds Com port:" />
+                    <ComboBox x:Name="ComPortLedsComboBox" >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="local:CameraDevice">
+                                <TextBlock Text="{Binding }"></TextBlock>
                             </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </UniformGrid>
+            </GroupBox>
+
+            <GroupBox Header="Key bindings" DockPanel.Dock="Top">
+                <DataGrid CanUserAddRows="False"
+                          CanUserSortColumns="False"
+                          AutoGenerateColumns="False"
+                          CanUserResizeColumns="False"
+                          ItemsSource="{Binding KeyBindingViewModels}"
+                          DockPanel.Dock="Top"
+                          HeadersVisibility="Column"
+                          HorizontalAlignment="Stretch"
+                          Width="{Binding ElementName=DockPanel, Path=ActualWidth}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Key" 
+                                            Binding="{Binding Action}" 
+                                            Width="*"/>
+                        <DataGridTemplateColumn Width="*" Header="Current">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate DataType="local:KeyBindingViewModel">
+                                    <TextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding SelectedKeyAsString}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate DataType="local:KeyBindingViewModel">
+                                    <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PreviewKeyUp="InputTextBox_KeyUp" AcceptsReturn="True"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+       
             
 
             <UniformGrid Columns="2" DockPanel.Dock="Bottom">
