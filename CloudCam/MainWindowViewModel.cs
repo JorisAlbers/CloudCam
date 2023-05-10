@@ -136,6 +136,21 @@ namespace CloudCam
                     "I want to live life with you to the fullest resolution (300 dpi)",
                     "I wish I had an Eyedropper to capture the color of your eyes",
                     "I'll make your clothes 0% opacity",
+                    "Are you a memory card? Because my heart can't contain all the images of you.",
+                    "Are you a camera lens? Because every time I look at you, I focus.",
+                    "You must be a polaroid, because you make every moment instantaneously better.",
+                    "Do you believe in love at first sight, or should I take another picture of you?",
+                    "I must be a camera, because I can't seem to capture anyone's attention but yours.",
+                    "Are you a camera flash? Because you just illuminated my world.",
+                    "You're like a perfectly framed shot—picture-perfect from every angle.",
+                    "Are you a tripod? Because I want to stabilize our relationship.",
+                    "I'm like a zoom lens—I can't help but zoom in on you.",
+                    "Are you a photography studio? Because I want to capture our love in every setting.",
+                    "They say a picture is worth a thousand words, but with you, it's worth a million smiles.",
+                    "You're so picture-worthy, even National Geographic would want to feature you.",
+                    "If photography were illegal, you'd definitely be my partner in crime.",
+                    "I must be a darkroom, because I can't develop feelings for anyone but you.",
+                    "Are you a camera strap? Because you're the perfect accessory to my life.",
                 };
 
 

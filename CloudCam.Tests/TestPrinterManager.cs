@@ -22,5 +22,19 @@ namespace CloudCam.Tests
             printerManager.Initialize();
             printerManager.Print(bitmap);
         }
+
+
+        [Test]
+
+        public void BTest()
+        {
+            /*string printerName = "myPrinter";
+            string imagePath = @"C:\testImage.png";
+            var bitmap = new Bitmap(Image.FromFile(imagePath));
+
+            var printerManager = new PrinterManager(printerName);
+            printerManager.Initialize();
+            printerManager.Print(bitmap);*/
+        }
     }
 }
