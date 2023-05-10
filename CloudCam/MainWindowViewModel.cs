@@ -7,10 +7,9 @@ using System.Reactive.Linq;
 using System.Windows.Input;
 using CloudCam.Effect;
 using CloudCam.Light;
-using Light;
-using OpenCvSharp;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Size = System.Drawing.Size;
 
 namespace CloudCam
 {
@@ -192,7 +191,8 @@ namespace CloudCam
                     new KeyBindingSetting(UserAction.MoveToNextEffect, Key.D),
                     new KeyBindingSetting(UserAction.ToggleDebugMode, Key.L),
                 },
-                13);
+                13,
+                new PrinterSettings(null, null));
         }
     }
 }

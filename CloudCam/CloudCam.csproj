@@ -155,6 +155,7 @@
     <Compile Include="PhotoBooth.xaml.cs">
       <DependentUpon>PhotoBooth.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PrinterSettingsViewModel.cs" />
     <Compile Include="Printing\PrinterManager.cs" />
     <Compile Include="SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>

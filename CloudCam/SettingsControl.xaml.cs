@@ -3,6 +3,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CloudCam.Printing;
 using ReactiveUI;
 
 namespace CloudCam
@@ -28,6 +29,13 @@ namespace CloudCam
                 this.Bind(ViewModel, vm => vm.OutputFolder, v => v.OutputPathTextBox.Text).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.ComPortLeds, v => v.ComPortLedsComboBox.SelectedItem).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.AvailableComPorts, v => v.ComPortLedsComboBox.ItemsSource).DisposeWith(d);
+
+                // printer settings
+                this.OneWayBind(ViewModel, vm => vm.PrinterSettingsViewModel.AvailablePrinters, v => v.PrinterComboBox.ItemsSource).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.PrinterSettingsViewModel.SelectedPrinter, v => v.PrinterComboBox.SelectedItem).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.PrinterSettingsViewModel.BackgroundImagePath, v => v.BackgroundImagePathTextBox.Text).DisposeWith(d);
+
+                // commands
                 this.BindCommand(ViewModel, vm => vm.Apply, v => v.ApplyButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.Start, v => v.StartButton).DisposeWith(d);
             });

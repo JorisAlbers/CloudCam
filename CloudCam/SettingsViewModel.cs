@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Reactive;
 using System.Windows.Input;
@@ -23,6 +25,8 @@ namespace CloudCam
 
         public KeyBindingViewModel[] KeyBindingViewModels { get; }
 
+        public PrinterSettingsViewModel PrinterSettingsViewModel { get; }
+
         public ReactiveCommand<Unit, Settings> Apply { get; }
         public ReactiveCommand<Unit, Settings> Start { get; }
 
@@ -37,12 +41,13 @@ namespace CloudCam
             HatFolder = settings.HatFolder;
             ComPortLeds = settings.ComPortLeds;
             KeyBindingViewModels = settings.KeyBindings.Select(x => new KeyBindingViewModel(x.Action, x.Key)).ToArray();
+            PrinterSettingsViewModel = new PrinterSettingsViewModel(settings.PrinterSettings);
 
 
             Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name, 
-                KeyBindingViewModels.Select(x=> new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds));
+                KeyBindingViewModels.Select(x=> new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds, PrinterSettingsViewModel.GetSettings()));
             Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name,
-                KeyBindingViewModels.Select(x => new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds));
+                KeyBindingViewModels.Select(x => new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds, PrinterSettingsViewModel.GetSettings()));
         }
     }
 
@@ -59,7 +64,9 @@ namespace CloudCam
 
         public KeyBindingSetting[] KeyBindings { get; set; }
 
-        public Settings(string frameFolder, string mustacheFolder, string hatFolder,string glassesFolder, string outputFolder, string cameraDevice, KeyBindingSetting[] keyBindings, int comPortLeds)
+        public PrinterSettings PrinterSettings { get; set; }
+
+        public Settings(string frameFolder, string mustacheFolder, string hatFolder,string glassesFolder, string outputFolder, string cameraDevice, KeyBindingSetting[] keyBindings, int comPortLeds, PrinterSettings printerSettings)
         {
             FrameFolder = frameFolder;
             MustacheFolder = mustacheFolder;
@@ -69,6 +76,7 @@ namespace CloudCam
             CameraDevice = cameraDevice;
             KeyBindings = keyBindings;
             ComPortLeds = comPortLeds;
+            PrinterSettings = printerSettings;
         }
     }
 
@@ -85,5 +93,19 @@ namespace CloudCam
             Action = action;
             Key = key;
         }
+    }
+
+    public class PrinterSettings
+    {
+        public string SelectedPrinter { get; set; }
+
+        public string BackgroundImagePath { get; set; }
+
+        public PrinterSettings(string selectedPrinter, string backgroundImagePath)
+        {
+            SelectedPrinter = selectedPrinter;
+            BackgroundImagePath = backgroundImagePath;
+        }
+
     }
 }

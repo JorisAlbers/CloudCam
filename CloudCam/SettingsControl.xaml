@@ -5,6 +5,7 @@
                                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                                 xmlns:reactiveUi="http://reactiveui.net"
                                 xmlns:local="clr-namespace:CloudCam"
+                                xmlns:system="clr-namespace:System;assembly=mscorlib"
                                 mc:Ignorable="d" 
                                 d:DesignHeight="450" d:DesignWidth="800"
                                 Background="Gray"
@@ -46,6 +47,18 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+
+                <TextBlock Text="Printer:" VerticalAlignment="Center"/>
+                <ComboBox x:Name="PrinterComboBox" VerticalAlignment="Center">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type system:String}">
+                            <TextBlock Text="{Binding }"></TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBlock Text="Background image for printing:" VerticalAlignment="Center"/>
+                <TextBox x:Name="BackgroundImagePathTextBox" MaxLines="1" VerticalAlignment="Center"/>
 
                 <TextBlock Text="Leds Com port:" VerticalAlignment="Center"/>
                 <ComboBox x:Name="ComPortLedsComboBox" VerticalAlignment="Center">
