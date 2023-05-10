@@ -251,7 +251,7 @@ namespace CloudCam.Printing
         public static List<string> GetPrinterNames()
         {
 
-            var printerNames = PrinterSettings.InstalledPrinters;
+            var printerNames = System.Drawing.Printing.PrinterSettings.InstalledPrinters;
             var printerNamesList = new List<string>();
 
             foreach (string printerName in printerNames)
