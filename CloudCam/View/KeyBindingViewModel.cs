@@ -4,7 +4,7 @@ using System.Windows.Input;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace CloudCam
+namespace CloudCam.View
 {
     public class KeyBindingViewModel : ReactiveObject
     {

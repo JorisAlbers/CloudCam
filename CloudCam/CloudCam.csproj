@@ -157,7 +157,7 @@
     <Compile Include="ImageSettingsRepository.cs" />
     <Compile Include="ImageToDisplayImageConverter.cs" />
     <Compile Include="ImageTransformer.cs" />
-    <Compile Include="KeyBindingViewModel.cs" />
+    <Compile Include="View\KeyBindingViewModel.cs" />
     <Compile Include="Light\LedAnimator.cs" />
     <Compile Include="MatBuffer.cs" />
     <Compile Include="NullLedAnimator.cs" />
@@ -171,7 +171,7 @@
       <DependentUpon>SettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingsSerializer.cs" />
-    <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="View\SettingsViewModel.cs" />
     <Compile Include="TransformationSettings.cs" />
     <Compile Include="UserAction.cs" />
     <Compile Include="WebcamCapture.cs" />

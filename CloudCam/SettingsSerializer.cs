@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using CloudCam.View;
 using Newtonsoft.Json;
 
 namespace CloudCam
