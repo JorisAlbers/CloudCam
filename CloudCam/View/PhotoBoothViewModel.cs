@@ -56,6 +56,8 @@ namespace CloudCam.View
 
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
+        [Reactive] public PictureMode PictureMode { get; set; }
+
         
 
         public PhotoBoothViewModel(CameraDevice device, ImageRepository frameRepository, EffectImageLoader mustachesRepository, EffectImageLoader hatsRepository,
@@ -119,7 +121,24 @@ namespace CloudCam.View
             {
                 return Unit.Default;
             }
+            
+            switch (PictureMode)
+            {
+                case PictureMode.OneAtATime:
+                    await TakeOnePicture(cancellationToken);
+                    break;
+                case PictureMode.ThreeOnBackground:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
+            Interlocked.Exchange(ref _takingPicture, 0);
+            return Unit.Default;
+        }
+
+        private async Task TakeOnePicture(CancellationToken cancellationToken)
+        {
             _ledAnimator.StartFlash();
 
             SecondsUntilPictureIsTaken = 3;
@@ -151,9 +170,6 @@ namespace CloudCam.View
             await Task.Delay(3000, cancellationToken);
             TakenImage = null;
             PickupLine = null;
-
-            Interlocked.Exchange(ref _takingPicture, 0);
-            return Unit.Default;
         }
 
 
@@ -182,4 +198,11 @@ namespace CloudCam.View
             Mat = mat;
         }
     }
+
+    public enum PictureMode
+    {
+        OneAtATime,
+        ThreeOnBackground,
+    }
+
 }
