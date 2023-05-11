@@ -1,4 +1,4 @@
-﻿<reactiveUi:ReactiveWindow x:TypeArguments="local:MainWindowViewModel" x:Class="CloudCam.MainWindow"
+﻿<reactiveUi:ReactiveWindow x:TypeArguments="view:MainWindowViewModel" x:Class="CloudCam.View.MainWindow"
                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,6 +10,7 @@
                            WindowState="Maximized"
                            WindowStyle="None"
                            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                           xmlns:view="clr-namespace:CloudCam.View"
                            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                            TextElement.FontWeight="Regular"
                            TextElement.FontSize="13"

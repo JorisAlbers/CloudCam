@@ -162,12 +162,12 @@
     <Compile Include="MatBuffer.cs" />
     <Compile Include="NullLedAnimator.cs" />
     <Compile Include="OutputImageRepository.cs" />
-    <Compile Include="PhotoBooth.xaml.cs">
+    <Compile Include="View\PhotoBooth.xaml.cs">
       <DependentUpon>PhotoBooth.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PrinterSettingsViewModel.cs" />
+    <Compile Include="View\PrinterSettingsViewModel.cs" />
     <Compile Include="Printing\PrinterManager.cs" />
-    <Compile Include="SettingsControl.xaml.cs">
+    <Compile Include="View\SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingsSerializer.cs" />
@@ -175,7 +175,7 @@
     <Compile Include="TransformationSettings.cs" />
     <Compile Include="UserAction.cs" />
     <Compile Include="WebcamCapture.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -185,22 +185,22 @@
     </Compile>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CameraEnumerator.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PhotoBooth.xaml">
+    <Page Include="View\PhotoBooth.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingsControl.xaml">
+    <Page Include="View\SettingsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="PhotoBoothViewModel.cs" />
+    <Compile Include="View\MainWindowViewModel.cs" />
+    <Compile Include="View\PhotoBoothViewModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

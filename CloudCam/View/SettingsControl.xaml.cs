@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ReactiveUI;
 
-namespace CloudCam
+namespace CloudCam.View
 {
     /// <summary>
     /// Interaction logic for SettingsControl.xaml

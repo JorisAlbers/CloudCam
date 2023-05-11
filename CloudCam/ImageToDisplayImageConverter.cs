@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using CloudCam.View;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using ReactiveUI;

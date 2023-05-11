@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
 using CloudCam.Effect;
@@ -10,7 +9,7 @@ using CloudCam.Light;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace CloudCam
+namespace CloudCam.View
 {
     public class MainWindowViewModel : ReactiveObject
     {

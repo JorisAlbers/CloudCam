@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reactive;
-using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +15,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Color = System.Windows.Media.Color;
 
-namespace CloudCam
+namespace CloudCam.View
 {
     public class PhotoBoothViewModel : ReactiveObject
     {

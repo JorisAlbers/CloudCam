@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reactive;
 using System.Windows.Input;
+using CloudCam.View;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using ReactiveUI;

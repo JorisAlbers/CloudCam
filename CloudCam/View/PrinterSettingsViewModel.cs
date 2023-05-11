@@ -3,7 +3,7 @@ using System.Drawing;
 using CloudCam.Printing;
 using ReactiveUI.Fody.Helpers;
 
-namespace CloudCam
+namespace CloudCam.View
 {
     public class PrinterSettingsViewModel
     {

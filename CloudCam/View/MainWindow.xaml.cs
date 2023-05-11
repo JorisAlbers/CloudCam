@@ -3,7 +3,7 @@ using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
 
-namespace CloudCam
+namespace CloudCam.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

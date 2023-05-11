@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Drawing;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ReactiveUI;
 using Color = System.Drawing.Color;
 
-namespace CloudCam
+namespace CloudCam.View
 {
     /// <summary>
     /// Interaction logic for PhotoBooth.xaml
