@@ -15,6 +15,8 @@ namespace CloudCam
 
         public void Save(Bitmap image)
         {
+            Directory.CreateDirectory(_folder);
+
             DateTime now = DateTime.Now;
 
             string fileName = $"CloudCam_{now:yyyy-M-dd--H-mm-ss}.jpg";
