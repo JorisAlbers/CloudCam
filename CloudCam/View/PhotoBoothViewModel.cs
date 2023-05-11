@@ -27,6 +27,9 @@ namespace CloudCam.View
         private readonly ImageToDisplayImageConverter _imageToDisplayImageConverter;
         private readonly FrameManager _frameManager;
         private readonly Random _random;
+        private readonly Bitmap[] _takenImages;
+        private readonly ImageSource[] _takenImageSources;
+        private int _takenImageCounter;
 
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
 
@@ -56,7 +59,7 @@ namespace CloudCam.View
 
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
-        [Reactive] public PictureMode PictureMode { get; set; }
+        [Reactive] public PictureMode PictureMode { get; set; } = PictureMode.ThreeOnBackground;
 
         
         public PhotoBoothViewModel(CameraDevice device, ImageRepository frameRepository, EffectImageLoader mustachesRepository, EffectImageLoader hatsRepository,
@@ -67,6 +70,8 @@ namespace CloudCam.View
             _ledAnimator = ledAnimator;
             _pickupLines = pickupLines;
             _random = new Random();
+            _takenImages = new Bitmap[3];
+            _takenImageSources = new ImageSource[3];
             MatBuffer matBuffer = new MatBuffer();
 
             _frameManager = new FrameManager(frameRepository);
@@ -127,6 +132,7 @@ namespace CloudCam.View
                     await TakeOnePicture(cancellationToken);
                     break;
                 case PictureMode.ThreeOnBackground:
+                    await TakeThreePicturesOnBackground(cancellationToken);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -136,31 +142,11 @@ namespace CloudCam.View
             return Unit.Default;
         }
 
+
+
         private async Task TakeOnePicture(CancellationToken cancellationToken)
         {
-            _ledAnimator.StartFlash();
-
-            SecondsUntilPictureIsTaken = 3;
-            await Task.Delay(1000, cancellationToken);
-            SecondsUntilPictureIsTaken = 2;
-            await Task.Delay(1000, cancellationToken);
-            SecondsUntilPictureIsTaken = 1;
-            await Task.Delay(1000, cancellationToken);
-            SecondsUntilPictureIsTaken = 0;
-            await Task.Delay(500, cancellationToken); // allow camera to adjust to the flash
-
-            using Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
-            if (Frame?.Mat != null)
-            {
-                using Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
-                await Task.Run(() =>
-                {
-                    // Overlay frame on top of image
-                    using Graphics gr = Graphics.FromImage(imageAsBitmap);
-                    gr.DrawImage(frameAsBitmap, new System.Drawing.Point(0, 0));
-                }, cancellationToken);
-            }
-            _ledAnimator.EndFlash();
+            var imageAsBitmap = await TakeImage(cancellationToken);
             TakenImage = imageAsBitmap.ToBitmapSource();
             SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
@@ -170,6 +156,46 @@ namespace CloudCam.View
             TakenImage = null;
             PickupLine = null;
         }
+
+        
+        private async Task TakeThreePicturesOnBackground(CancellationToken cancellationToken)
+        {
+            var imageAsBitmap = await TakeImage(cancellationToken);
+            var imageAsImageSource = imageAsBitmap.ToBitmapSource();
+            TakenImage = imageAsImageSource;
+            SecondsUntilPictureIsTaken = -1;
+            PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
+            await Task.Delay(100, cancellationToken); // allow gui to update
+            _outputImageRepository.Save(imageAsBitmap);
+            await Task.Delay(3000, cancellationToken);
+
+            _takenImages[_takenImageCounter] = imageAsBitmap;
+            _takenImageSources[_takenImageCounter] = TakenImage;
+            if (++_takenImageCounter == 3)
+            {
+                // at the end.
+                PickupLine = null;
+                TakenImage = _takenImageSources[2];
+                await Task.Delay(1000);
+                TakenImage = _takenImageSources[1];
+                await Task.Delay(1000);
+                TakenImage = _takenImageSources[0];
+                await Task.Delay(1000);
+                // TODO : print on background image and show that instead.
+                // TODO print the background image
+                TakenImage = null;
+
+                _takenImageCounter = 0;
+                return;
+            }
+            
+            TakenImage = null;
+            PickupLine = $"{3 - _takenImageCounter} to go!";
+            await Task.Delay(2000, cancellationToken);
+            PickupLine = null;
+            await TakeThreePicturesOnBackground(cancellationToken);
+        }
+
 
 
         private async Task<ImageSourceWithMat> LoadNextFrameAsync(bool forwards)
@@ -183,6 +209,34 @@ namespace CloudCam.View
 
                 return _frameManager.Previous(_capture.FrameSize);
             });
+        }
+
+        private async Task<Bitmap> TakeImage(CancellationToken cancellationToken)
+        {
+            _ledAnimator.StartFlash();
+
+            SecondsUntilPictureIsTaken = 3;
+            await Task.Delay(1000, cancellationToken);
+            SecondsUntilPictureIsTaken = 2;
+            await Task.Delay(1000, cancellationToken);
+            SecondsUntilPictureIsTaken = 1;
+            await Task.Delay(1000, cancellationToken);
+            SecondsUntilPictureIsTaken = 0;
+            await Task.Delay(500, cancellationToken); // allow camera to adjust to the flash
+
+            var imageAsBitmap = ImageSource.Mat.ToBitmap();
+            if (Frame?.Mat != null)
+            {
+                using Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
+                await Task.Run(() =>
+                {
+                    // Overlay frame on top of image
+                    using Graphics gr = Graphics.FromImage(imageAsBitmap);
+                    gr.DrawImage(frameAsBitmap, new System.Drawing.Point(0, 0));
+                }, cancellationToken);
+            }
+            _ledAnimator.EndFlash();
+            return imageAsBitmap;
         }
     }
 
