@@ -59,7 +59,6 @@ namespace CloudCam.View
         [Reactive] public PictureMode PictureMode { get; set; }
 
         
-
         public PhotoBoothViewModel(CameraDevice device, ImageRepository frameRepository, EffectImageLoader mustachesRepository, EffectImageLoader hatsRepository,
             EffectImageLoader glassesRepository,
             OutputImageRepository outputImageRepository, ILedAnimator ledAnimator, List<string> pickupLines)
