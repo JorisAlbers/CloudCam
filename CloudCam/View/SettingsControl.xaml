@@ -6,7 +6,7 @@
                                 xmlns:reactiveUi="http://reactiveui.net"
                                 xmlns:local="clr-namespace:CloudCam"
                                 xmlns:system="clr-namespace:System;assembly=mscorlib"
-                                xmlns:view="clr-namespace:CloudCam.View"
+                                xmlns:view="clr-namespace:CloudCam.View" xmlns:FolderBrowserDialog="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                                 mc:Ignorable="d" 
                                 d:DesignHeight="900" d:DesignWidth="500"
                                 d:DataContext="{d:DesignInstance view:SettingsViewModel}">
@@ -38,19 +38,45 @@
             <GroupBox Header="Resources" DockPanel.Dock="Top">
                 <UniformGrid Columns="1">
                     <TextBlock Text="Path to frames:" />
-                    <TextBox x:Name="FramesPathTextBox" MaxLines="1" />
+                    <Grid Height="32">
+                        <TextBox x:Name="FramesPathTextBox" MaxLines="1" />
+                        <Button x:Name="SelectFrameFolderButton" HorizontalAlignment="Right">
+                            <materialDesign:PackIcon Kind="Folder" />
+                        </Button>
+                    </Grid>
+
 
                     <TextBlock Text="Path to mustaches:" />
-                    <TextBox x:Name="MustachesPathTextBox" MaxLines="1" />
+                    <Grid Height="32">
+                        <TextBox x:Name="MustachesPathTextBox" MaxLines="1" />
+                        <Button x:Name="SelectMustacheFolderButton" HorizontalAlignment="Right">
+                            <materialDesign:PackIcon Kind="Folder" />
+                        </Button>
+                    </Grid>
 
                     <TextBlock Text="Path to hats:" />
-                    <TextBox x:Name="HatsPathTextBox" MaxLines="1" />
+                    <Grid Height="32">
+                        <TextBox x:Name="HatsPathTextBox" MaxLines="1" />
+                        <Button x:Name="SelectHatFolderButton" HorizontalAlignment="Right">
+                            <materialDesign:PackIcon Kind="Folder" />
+                        </Button>
+                    </Grid>
 
                     <TextBlock Text="Path to glasses:" />
-                    <TextBox x:Name="GlassesPathTextBox" MaxLines="1" />
+                    <Grid Height="32">
+                        <TextBox x:Name="GlassesPathTextBox" MaxLines="1" />
+                        <Button x:Name="SelectGlassesFolderButton" HorizontalAlignment="Right">
+                            <materialDesign:PackIcon Kind="Folder" />
+                        </Button>
+                    </Grid>
 
                     <TextBlock Text="Path to output:" />
-                    <TextBox x:Name="OutputPathTextBox" MaxLines="1" />
+                    <Grid Height="32">
+                        <TextBox x:Name="OutputPathTextBox" MaxLines="1" />
+                        <Button x:Name="SelectOutputFolderButton" HorizontalAlignment="Right">
+                            <materialDesign:PackIcon Kind="Folder" />
+                        </Button>
+                    </Grid>
                 </UniformGrid>
             </GroupBox>
 
@@ -61,11 +87,11 @@
 
                     <TextBlock Text="Printer:" />
                     <ComboBox x:Name="PrinterComboBox" >
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate DataType="{x:Type system:String}">
-                                    <TextBlock Text="{Binding }"></TextBlock>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type system:String}">
+                                <TextBlock Text="{Binding }"></TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
                 </UniformGrid>
             </GroupBox>
@@ -129,20 +155,20 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
-       
-            
+
+
 
             <UniformGrid Columns="2" DockPanel.Dock="Bottom">
                 <Button  Content="Apply" x:Name="ApplyButton" />
                 <Button Content="Start" x:Name="StartButton" />
             </UniformGrid>
-           
+
         </DockPanel>
-        
+
 
 
     </Grid>
 
 
-  
+
 </reactiveUi:ReactiveUserControl>

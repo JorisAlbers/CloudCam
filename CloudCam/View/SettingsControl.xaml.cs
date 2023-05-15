@@ -20,6 +20,7 @@ namespace CloudCam.View
                 this.WhenAnyValue(x => x.ViewModel).Subscribe(x => DataContext = x);
                 this.OneWayBind(ViewModel, vm => vm.CameraDevices, v => v.CameraDeviceComboBox.ItemsSource).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.SelectedCameraDevice, v => v.CameraDeviceComboBox.SelectedItem).DisposeWith(d);
+                // select folder with all the frames
                 this.Bind(ViewModel, vm => vm.FrameFolder, v => v.FramesPathTextBox.Text).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.MustacheFolder, v => v.MustachesPathTextBox.Text).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.HatFolder, v => v.HatsPathTextBox.Text).DisposeWith(d);
@@ -34,6 +35,12 @@ namespace CloudCam.View
                 this.Bind(ViewModel, vm => vm.PrinterSettingsViewModel.BackgroundImagePath, v => v.BackgroundImagePathTextBox.Text).DisposeWith(d);
 
                 // commands
+                this.BindCommand(ViewModel, vm => vm.SelectFrameFolder, v => v.SelectFrameFolderButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.SelectMustacheFolder, v => v.SelectMustacheFolderButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.SelectHatFolder, v => v.SelectHatFolderButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.SelectGlassesFolder, v => v.SelectGlassesFolderButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.SelectOutputFolder, v => v.SelectOutputFolderButton).DisposeWith(d);
+
                 this.BindCommand(ViewModel, vm => vm.Apply, v => v.ApplyButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.Start, v => v.StartButton).DisposeWith(d);
             });
