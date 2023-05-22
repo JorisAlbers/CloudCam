@@ -157,6 +157,7 @@
     <Compile Include="ImageSettingsRepository.cs" />
     <Compile Include="ImageToDisplayImageConverter.cs" />
     <Compile Include="ImageTransformer.cs" />
+    <Compile Include="View\ImageCollageCreator.cs" />
     <Compile Include="View\KeyBindingViewModel.cs" />
     <Compile Include="Light\LedAnimator.cs" />
     <Compile Include="MatBuffer.cs" />

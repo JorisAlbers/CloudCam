@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using CloudCam.Effect;
 using CloudCam.Light;
+using CloudCam.Printing;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Color = System.Windows.Media.Color;
+using Point = System.Drawing.Point;
 
 namespace CloudCam.View
 {
@@ -22,6 +24,8 @@ namespace CloudCam.View
         private readonly OutputImageRepository _outputImageRepository;
         private readonly ILedAnimator _ledAnimator;
         private readonly List<string> _pickupLines;
+        private readonly PrinterManager _printerManager;
+        private readonly ImageCollageCreator _imageCollageCreator;
         private readonly WebcamCapture _capture;
         private readonly ImageTransformer _imageTransformer;
         private readonly ImageToDisplayImageConverter _imageToDisplayImageConverter;
@@ -30,6 +34,7 @@ namespace CloudCam.View
         private readonly Bitmap[] _takenImages;
         private readonly ImageSource[] _takenImageSources;
         private int _takenImageCounter;
+        private int _takingPicture;
 
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
 
@@ -62,13 +67,22 @@ namespace CloudCam.View
         [Reactive] public PictureMode PictureMode { get; set; } = PictureMode.ThreeOnBackground;
 
         
-        public PhotoBoothViewModel(CameraDevice device, ImageRepository frameRepository, EffectImageLoader mustachesRepository, EffectImageLoader hatsRepository,
+        public PhotoBoothViewModel(CameraDevice device, 
+            ImageRepository frameRepository, 
+            EffectImageLoader mustachesRepository, 
+            EffectImageLoader hatsRepository,
             EffectImageLoader glassesRepository,
-            OutputImageRepository outputImageRepository, ILedAnimator ledAnimator, List<string> pickupLines)
+            OutputImageRepository outputImageRepository, 
+            ILedAnimator ledAnimator, 
+            List<string> pickupLines,
+            PrinterManager printerManager,
+            ImageCollageCreator imageCollageCreator)
         {
             _outputImageRepository = outputImageRepository;
             _ledAnimator = ledAnimator;
             _pickupLines = pickupLines;
+            _printerManager = printerManager;
+            _imageCollageCreator = imageCollageCreator;
             _random = new Random();
             _takenImages = new Bitmap[3];
             _takenImageSources = new ImageSource[3];
@@ -118,7 +132,8 @@ namespace CloudCam.View
             this.WhenAnyValue(x => x._imageToDisplayImageConverter.Fps).Where((_) => DebugModeActive).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.ToDisplayImageFps);
         }
 
-        private int _takingPicture;
+
+
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
             if (Interlocked.Exchange(ref _takingPicture, 1) == 1)
@@ -169,6 +184,8 @@ namespace CloudCam.View
             _outputImageRepository.Save(imageAsBitmap);
             await Task.Delay(3000, cancellationToken);
 
+            // TODO overlay frame on image, resize too.
+
             _takenImages[_takenImageCounter] = imageAsBitmap;
             _takenImageSources[_takenImageCounter] = TakenImage;
             if (++_takenImageCounter == 3)
@@ -181,8 +198,10 @@ namespace CloudCam.View
                 await Task.Delay(1000);
                 TakenImage = _takenImageSources[0];
                 await Task.Delay(1000);
-                // TODO : print on background image and show that instead.
-                // TODO print the background image
+
+                Bitmap toPrint = await _imageCollageCreator.Create(_takenImages, cancellationToken);
+                _printerManager.Print(toPrint);
+
                 TakenImage = null;
 
                 _takenImageCounter = 0;
@@ -195,9 +214,7 @@ namespace CloudCam.View
             PickupLine = null;
             await TakeThreePicturesOnBackground(cancellationToken);
         }
-
-
-
+        
         private async Task<ImageSourceWithMat> LoadNextFrameAsync(bool forwards)
         {
             return await Task.Run(() =>

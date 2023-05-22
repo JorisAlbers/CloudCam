@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Input;
 using CloudCam.Effect;
 using CloudCam.Light;
+using CloudCam.Printing;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace CloudCam.View
 {
@@ -152,6 +155,32 @@ namespace CloudCam.View
                     "Are you a camera strap? Because you're the perfect accessory to my life.",
                 };
 
+                PrinterManager printerManager = null;
+                ImageCollageCreator imageCollageCreator = null;
+
+                if (!String.IsNullOrWhiteSpace(settings.PrinterSettings.SelectedPrinter))
+                {
+                    printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
+
+                    int widthPerImage = 100;
+                    int heightPerImage = 200;
+                    int upperHeightMargin = 50;
+                    int imageHeightMargin = 30;
+                    int widthMargin = 30;
+
+                    var rectangles = new Rectangle[]
+                    {
+                        new Rectangle(widthMargin, upperHeightMargin, widthPerImage, heightPerImage),
+                        new Rectangle(widthMargin, upperHeightMargin + imageHeightMargin * 1 + heightPerImage * 1,
+                            widthPerImage * 1, heightPerImage),
+                        new Rectangle(widthMargin, upperHeightMargin + imageHeightMargin * 2 + heightPerImage * 2,
+                            widthPerImage * 2, heightPerImage),
+                    };
+
+
+
+                    imageCollageCreator = new ImageCollageCreator((Bitmap)Image.FromFile(settings.PrinterSettings.BackgroundImagePath), rectangles);
+                }
 
                 _photoBoothViewModel = new PhotoBoothViewModel(CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice),
                     frameRepository,
@@ -160,8 +189,9 @@ namespace CloudCam.View
                     glassesRepository,
                     outputRepository,
                     ledAnimator,
-                    pickupLines
-                    );
+                    pickupLines,
+                    printerManager,
+                    imageCollageCreator);
                 SelectedViewModel = _photoBoothViewModel;
             });
 
