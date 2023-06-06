@@ -160,8 +160,11 @@ namespace CloudCam.View
 
                 if (!String.IsNullOrWhiteSpace(settings.PrinterSettings.SelectedPrinter))
                 {
-                    //printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
+#if DEBUG
                     printerManager = new NullPrinterManager();
+#else
+                    printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
+#endif
 
                     var imageSize = new Rectangle(0, 0, 211, 615); // TODO convert inch to pixels per inch!
                     
@@ -185,11 +188,7 @@ namespace CloudCam.View
 
                         rectangles[i] = new Rectangle(x, y, widthAvailable, (int)heightPerImage);
                     }
-
-
-
-
-
+                    
                     imageCollageCreator = new ImageCollageCreator((Bitmap)Image.FromFile(settings.PrinterSettings.BackgroundImagePath), rectangles);
                 }
 
