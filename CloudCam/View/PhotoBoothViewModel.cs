@@ -24,7 +24,7 @@ namespace CloudCam.View
         private readonly OutputImageRepository _outputImageRepository;
         private readonly ILedAnimator _ledAnimator;
         private readonly List<string> _pickupLines;
-        private readonly PrinterManager _printerManager;
+        private readonly IPrinterManager _printerManager;
         private readonly ImageCollageCreator _imageCollageCreator;
         private readonly WebcamCapture _capture;
         private readonly ImageTransformer _imageTransformer;
@@ -75,7 +75,7 @@ namespace CloudCam.View
             OutputImageRepository outputImageRepository, 
             ILedAnimator ledAnimator, 
             List<string> pickupLines,
-            PrinterManager printerManager,
+            IPrinterManager printerManager,
             ImageCollageCreator imageCollageCreator)
         {
             _outputImageRepository = outputImageRepository;
@@ -181,8 +181,7 @@ namespace CloudCam.View
             SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
             await Task.Delay(100, cancellationToken); // allow gui to update
-            _outputImageRepository.Save(imageAsBitmap);
-            await Task.Delay(3000, cancellationToken);
+
 
             // TODO overlay frame on image, resize too.
 
@@ -201,6 +200,7 @@ namespace CloudCam.View
 
                 Bitmap toPrint = await _imageCollageCreator.Create(_takenImages, cancellationToken);
                 _printerManager.Print(toPrint);
+                _outputImageRepository.Save(toPrint);
 
                 TakenImage = null;
 

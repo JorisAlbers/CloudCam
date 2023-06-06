@@ -80,26 +80,26 @@ namespace CloudCam.View
                 settings = x;
                 settingsSerializer.Save(x);
             });
-            settingsViewModel.Start.Subscribe(x =>
+            settingsViewModel.Start.Subscribe(settingsToUse =>
             {
-                settings = x;
-                settingsSerializer.Save(x);
+                settings = settingsToUse;
+                settingsSerializer.Save(settingsToUse);
 
                 KeyToUserActionDic = settings.KeyBindings.ToDictionary(y => y.Key, y => y.Action);
 
-                var frameRepository = new ImageRepository(x.FrameFolder);
+                var frameRepository = new ImageRepository(settingsToUse.FrameFolder);
                 frameRepository.Load();
 
-                var mustachesRepository = new EffectImageLoader(new ImageRepository(x.MustacheFolder), new ImageSettingsRepository(x.MustacheFolder));
+                var mustachesRepository = new EffectImageLoader(new ImageRepository(settingsToUse.MustacheFolder), new ImageSettingsRepository(settingsToUse.MustacheFolder));
                 mustachesRepository.Load();
 
-                var hatsRepository = new EffectImageLoader(new ImageRepository(x.HatFolder), new ImageSettingsRepository(x.HatFolder));
+                var hatsRepository = new EffectImageLoader(new ImageRepository(settingsToUse.HatFolder), new ImageSettingsRepository(settingsToUse.HatFolder));
                 hatsRepository.Load();
 
-                var glassesRepository = new EffectImageLoader(new ImageRepository(x.GlassesFolder), new ImageSettingsRepository(x.GlassesFolder));
+                var glassesRepository = new EffectImageLoader(new ImageRepository(settingsToUse.GlassesFolder), new ImageSettingsRepository(settingsToUse.GlassesFolder));
                 glassesRepository.Load();
 
-                var outputRepository = new OutputImageRepository(x.OutputFolder);
+                var outputRepository = new OutputImageRepository(settingsToUse.OutputFolder);
 
 
 #if DEBUG
@@ -155,34 +155,45 @@ namespace CloudCam.View
                     "Are you a camera strap? Because you're the perfect accessory to my life.",
                 };
 
-                PrinterManager printerManager = null;
+                IPrinterManager printerManager = null;
                 ImageCollageCreator imageCollageCreator = null;
 
                 if (!String.IsNullOrWhiteSpace(settings.PrinterSettings.SelectedPrinter))
                 {
-                    printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
+                    //printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
+                    printerManager = new NullPrinterManager();
 
-                    int widthPerImage = 100;
-                    int heightPerImage = 200;
-                    int upperHeightMargin = 50;
-                    int imageHeightMargin = 30;
-                    int widthMargin = 30;
+                    var imageSize = new Rectangle(0, 0, 211, 615); // TODO convert inch to pixels per inch!
+                    
+                    double topAndBottomMargin = 50;
+                    double leftAndRightMargin = 10;
+                    double marginBetweenImages = 10;
+                    int numberOfImages = 3;
 
-                    var rectangles = new Rectangle[]
+                    double heightAvailable = imageSize.Height - topAndBottomMargin * 2 - marginBetweenImages * (numberOfImages - 1);
+                    double heightPerImage = heightAvailable / numberOfImages;
+
+                    int widthAvailable = (int)(imageSize.Width - leftAndRightMargin * 2);
+
+                    var rectangles = new Rectangle[numberOfImages];
+
+                    for (int i = 0; i < numberOfImages; i++)
                     {
-                        new Rectangle(widthMargin, upperHeightMargin, widthPerImage, heightPerImage),
-                        new Rectangle(widthMargin, upperHeightMargin + imageHeightMargin * 1 + heightPerImage * 1,
-                            widthPerImage * 1, heightPerImage),
-                        new Rectangle(widthMargin, upperHeightMargin + imageHeightMargin * 2 + heightPerImage * 2,
-                            widthPerImage * 2, heightPerImage),
-                    };
+                        int x = (int)leftAndRightMargin;
+                        int y = (int)(topAndBottomMargin + i * heightPerImage + i * marginBetweenImages);
+
+
+                        rectangles[i] = new Rectangle(x, y, widthAvailable, (int)heightPerImage);
+                    }
+
+
 
 
 
                     imageCollageCreator = new ImageCollageCreator((Bitmap)Image.FromFile(settings.PrinterSettings.BackgroundImagePath), rectangles);
                 }
 
-                _photoBoothViewModel = new PhotoBoothViewModel(CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == x.CameraDevice),
+                _photoBoothViewModel = new PhotoBoothViewModel(CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == settingsToUse.CameraDevice),
                     frameRepository,
                     mustachesRepository,
                     hatsRepository,

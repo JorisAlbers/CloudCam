@@ -157,6 +157,8 @@
     <Compile Include="ImageSettingsRepository.cs" />
     <Compile Include="ImageToDisplayImageConverter.cs" />
     <Compile Include="ImageTransformer.cs" />
+    <Compile Include="Printing\IPrinterManager.cs" />
+    <Compile Include="Printing\NullPrinterManager.cs" />
     <Compile Include="View\ImageCollageCreator.cs" />
     <Compile Include="View\KeyBindingViewModel.cs" />
     <Compile Include="Light\LedAnimator.cs" />
@@ -221,6 +223,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\Backgrounds\test_background.png" />
     <Content Include="Resources\Caff\deploy.prototxt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
