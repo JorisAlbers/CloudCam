@@ -151,7 +151,7 @@ using System.Printing;
 
 namespace CloudCam.Printing
 {
-    public class PrinterManager
+    public class PrinterManager : IPrinterManager
     {
         private readonly string _printerName;
 
