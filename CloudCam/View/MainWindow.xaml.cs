@@ -22,6 +22,9 @@ namespace CloudCam.View
                 this.Bind(ViewModel, vm => vm.SelectedViewModel, v => v.ViewModelHost.ViewModel)
                     .DisposeWith(dispose);
 
+                this.Bind(ViewModel, vm=> vm.ErrorViewModel, y=> y.ErrorControlViewModelHost.ViewModel)
+                    .DisposeWith(dispose);
+
                 this.WhenAnyValue(x => x.ViewModel.KeyToUserActionDic).Subscribe(x =>
                 {
                     _keybindingsDisposable?.Dispose();

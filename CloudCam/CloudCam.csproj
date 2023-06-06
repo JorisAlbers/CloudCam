@@ -152,6 +152,7 @@
     <Compile Include="Effect\Mustaches.cs" />
     <Compile Include="Effect\OilPainting.cs" />
     <Compile Include="Effect\IEffect.cs" />
+    <Compile Include="ErrorViewModel.cs" />
     <Compile Include="FrameManager.cs" />
     <Compile Include="ImageRepository.cs" />
     <Compile Include="ImageSettingsRepository.cs" />
@@ -159,6 +160,9 @@
     <Compile Include="ImageTransformer.cs" />
     <Compile Include="Printing\IPrinterManager.cs" />
     <Compile Include="Printing\NullPrinterManager.cs" />
+    <Compile Include="View\ErrorControl.xaml.cs">
+      <DependentUpon>ErrorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ImageCollageCreator.cs" />
     <Compile Include="View\KeyBindingViewModel.cs" />
     <Compile Include="Light\LedAnimator.cs" />
@@ -178,6 +182,10 @@
     <Compile Include="TransformationSettings.cs" />
     <Compile Include="UserAction.cs" />
     <Compile Include="WebcamCapture.cs" />
+    <Page Include="View\ErrorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -23,10 +23,16 @@ namespace CloudCam.View
 
         [Reactive] public ReactiveObject SelectedViewModel { get; set; }
 
+        [Reactive] public ErrorViewModel ErrorViewModel { get; set; }
+     
+
         public ReactiveCommand<Key, UserAction> KeyPressed { get; }
 
         public MainWindowViewModel()
         {
+            ErrorViewModel = new ErrorViewModel();
+            ErrorViewModel.SetError("Test error long sentence bla bla dotnet is a cool language");
+
             KeyPressed = ReactiveCommand.Create<Key, UserAction>((key) =>
             {
                 if(KeyToUserActionDic != null && KeyToUserActionDic.TryGetValue(key, out UserAction value))

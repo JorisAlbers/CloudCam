@@ -19,10 +19,19 @@
                            Background="{DynamicResource MaterialDesignPaper}"
                            FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-           <reactiveUi:ViewModelViewHost x:Name="ViewModelHost"
-                                         VerticalAlignment="Stretch"
-                                         HorizontalAlignment="Stretch"
-                                         VerticalContentAlignment="Stretch"
-                                         HorizontalContentAlignment="Stretch"/>
+        <reactiveUi:ViewModelViewHost x:Name="ViewModelHost"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalContentAlignment="Stretch"
+                                      HorizontalContentAlignment="Stretch"/>
+
+
+
+        <reactiveUi:ViewModelViewHost x:Name="ErrorControlViewModelHost"
+                                      VerticalAlignment="Bottom"
+                                      HorizontalAlignment="Right"
+                                      VerticalContentAlignment="Bottom"
+                                      HorizontalContentAlignment="Right"/>
+        
     </Grid>
 </reactiveUi:ReactiveWindow>
