@@ -82,6 +82,7 @@ namespace CloudCam.View
             });
             settingsViewModel.Start.Subscribe(settingsToUse =>
             {
+
                 settings = settingsToUse;
                 settingsSerializer.Save(settingsToUse);
 
@@ -100,8 +101,7 @@ namespace CloudCam.View
                 glassesRepository.Load();
 
                 var outputRepository = new OutputImageRepository(settingsToUse.OutputFolder);
-
-
+                
 #if DEBUG
                 ILedAnimator ledAnimator = new NullLedAnimator();
 #else
@@ -109,88 +109,8 @@ namespace CloudCam.View
                 ledAnimator.StartAsync();
                 ledAnimator.Animate();
 #endif
-                List<string> pickupLines = new List<string>
-                {
-                    "If you flash me then I’ll flash you",
-                    "I've got you in my viewfinder",
-                    "True love can never be photoshopped",
-                    "Why don't you and I go into a dark room and see what develops?",
-                    "When you flash your smile, my color temperature rises",
-                    "I'm just a photo booth, but I can picture us together",
-                    "Lets take it slow and see how things develop",
-                    "That kiss was great! You're really upping my shutter speed",
-                    "I only focus on you",
-                    "That's not a telephoto lens in my pocket. I'm just happy to see you",
-                    "I have to check if my camera is on auto focus because you are making everything else out-of-focus",
-                    "I had to make my aperture smaller because you are gorgeously bright",
-                    "Lets get our macro on and get in there nice and close",
-                    "Come back to my place and I’ll shoot you with my Canon",
-                    "I’m setting my focus on you",
-                    "I left most of my gear at home but I did bring my 200mm",
-                    "Was your daddy Ansel Adams? Because you’re a natural beauty",
-                    "What say we go into a dark room and see what develops?",
-                    "A portrait of you will need no photoshop at all",
-                    "Before you were mine, everything was grayscale, but now I see the world in CMYK",
-                    "Futura generations will speak of our romance",
-                    "Hey girl you shine so bright I need to change my ISO to 100",
-                    "I am a nudity photo booth, would you like to be my model for the night?",
-                    "I like to be touched...and re-touched",
-                    "I want to live life with you to the fullest resolution (300 dpi)",
-                    "I wish I had an Eyedropper to capture the color of your eyes",
-                    "I'll make your clothes 0% opacity",
-                    "Are you a memory card? Because my heart can't contain all the images of you.",
-                    "Are you a camera lens? Because every time I look at you, I focus.",
-                    "You must be a polaroid, because you make every moment instantaneously better.",
-                    "Do you believe in love at first sight, or should I take another picture of you?",
-                    "I must be a camera, because I can't seem to capture anyone's attention but yours.",
-                    "Are you a camera flash? Because you just illuminated my world.",
-                    "You're like a perfectly framed shot—picture-perfect from every angle.",
-                    "Are you a tripod? Because I want to stabilize our relationship.",
-                    "I'm like a zoom lens—I can't help but zoom in on you.",
-                    "Are you a photography studio? Because I want to capture our love in every setting.",
-                    "They say a picture is worth a thousand words, but with you, it's worth a million smiles.",
-                    "You're so picture-worthy, even National Geographic would want to feature you.",
-                    "If photography were illegal, you'd definitely be my partner in crime.",
-                    "I must be a darkroom, because I can't develop feelings for anyone but you.",
-                    "Are you a camera strap? Because you're the perfect accessory to my life.",
-                };
 
-                IPrinterManager printerManager = null;
-                ImageCollageCreator imageCollageCreator = null;
-
-                if (!String.IsNullOrWhiteSpace(settings.PrinterSettings.SelectedPrinter))
-                {
-#if DEBUG
-                    printerManager = new NullPrinterManager();
-#else
-                    printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
-#endif
-
-                    var imageSize = new Rectangle(0, 0, 211, 615); // TODO convert inch to pixels per inch!
-                    
-                    double topAndBottomMargin = 50;
-                    double leftAndRightMargin = 10;
-                    double marginBetweenImages = 10;
-                    int numberOfImages = 3;
-
-                    double heightAvailable = imageSize.Height - topAndBottomMargin * 2 - marginBetweenImages * (numberOfImages - 1);
-                    double heightPerImage = heightAvailable / numberOfImages;
-
-                    int widthAvailable = (int)(imageSize.Width - leftAndRightMargin * 2);
-
-                    var rectangles = new Rectangle[numberOfImages];
-
-                    for (int i = 0; i < numberOfImages; i++)
-                    {
-                        int x = (int)leftAndRightMargin;
-                        int y = (int)(topAndBottomMargin + i * heightPerImage + i * marginBetweenImages);
-
-
-                        rectangles[i] = new Rectangle(x, y, widthAvailable, (int)heightPerImage);
-                    }
-                    
-                    imageCollageCreator = new ImageCollageCreator((Bitmap)Image.FromFile(settings.PrinterSettings.BackgroundImagePath), rectangles);
-                }
+                var printerManager = SetupForWhenAPrinterIsConnected(settings, out var imageCollageCreator);
 
                 _photoBoothViewModel = new PhotoBoothViewModel(CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == settingsToUse.CameraDevice),
                     frameRepository,
@@ -199,13 +119,107 @@ namespace CloudCam.View
                     glassesRepository,
                     outputRepository,
                     ledAnimator,
-                    pickupLines,
+                    GetPickupLines(),
                     printerManager,
                     imageCollageCreator);
                 SelectedViewModel = _photoBoothViewModel;
             });
 
             SelectedViewModel = settingsViewModel;
+        }
+
+        private static IPrinterManager SetupForWhenAPrinterIsConnected(Settings settings,
+            out ImageCollageCreator imageCollageCreator)
+        {
+            IPrinterManager printerManager = null;
+            imageCollageCreator = null;
+
+            if (!String.IsNullOrWhiteSpace(settings.PrinterSettings.SelectedPrinter))
+            {
+#if DEBUG
+                printerManager = new NullPrinterManager();
+#else
+                    printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
+#endif
+
+                var imageSize = new Rectangle(0, 0, 211, 615); // TODO convert inch to pixels per inch!
+
+                double topAndBottomMargin = 50;
+                double leftAndRightMargin = 10;
+                double marginBetweenImages = 10;
+                int numberOfImages = 3;
+
+                double heightAvailable = imageSize.Height - topAndBottomMargin * 2 - marginBetweenImages * (numberOfImages - 1);
+                double heightPerImage = heightAvailable / numberOfImages;
+
+                int widthAvailable = (int)(imageSize.Width - leftAndRightMargin * 2);
+
+                var rectangles = new Rectangle[numberOfImages];
+
+                for (int i = 0; i < numberOfImages; i++)
+                {
+                    int x = (int)leftAndRightMargin;
+                    int y = (int)(topAndBottomMargin + i * heightPerImage + i * marginBetweenImages);
+
+
+                    rectangles[i] = new Rectangle(x, y, widthAvailable, (int)heightPerImage);
+                }
+
+                imageCollageCreator =
+                    new ImageCollageCreator((Bitmap)Image.FromFile(settings.PrinterSettings.BackgroundImagePath), rectangles);
+            }
+
+            return printerManager;
+        }
+
+        private static List<string> GetPickupLines()
+        {
+            List<string> pickupLines = new List<string>
+            {
+                "If you flash me then I’ll flash you",
+                "I've got you in my viewfinder",
+                "True love can never be photoshopped",
+                "Why don't you and I go into a dark room and see what develops?",
+                "When you flash your smile, my color temperature rises",
+                "I'm just a photo booth, but I can picture us together",
+                "Lets take it slow and see how things develop",
+                "That kiss was great! You're really upping my shutter speed",
+                "I only focus on you",
+                "That's not a telephoto lens in my pocket. I'm just happy to see you",
+                "I have to check if my camera is on auto focus because you are making everything else out-of-focus",
+                "I had to make my aperture smaller because you are gorgeously bright",
+                "Lets get our macro on and get in there nice and close",
+                "Come back to my place and I’ll shoot you with my Canon",
+                "I’m setting my focus on you",
+                "I left most of my gear at home but I did bring my 200mm",
+                "Was your daddy Ansel Adams? Because you’re a natural beauty",
+                "What say we go into a dark room and see what develops?",
+                "A portrait of you will need no photoshop at all",
+                "Before you were mine, everything was grayscale, but now I see the world in CMYK",
+                "Futura generations will speak of our romance",
+                "Hey girl you shine so bright I need to change my ISO to 100",
+                "I am a nudity photo booth, would you like to be my model for the night?",
+                "I like to be touched...and re-touched",
+                "I want to live life with you to the fullest resolution (300 dpi)",
+                "I wish I had an Eyedropper to capture the color of your eyes",
+                "I'll make your clothes 0% opacity",
+                "Are you a memory card? Because my heart can't contain all the images of you.",
+                "Are you a camera lens? Because every time I look at you, I focus.",
+                "You must be a polaroid, because you make every moment instantaneously better.",
+                "Do you believe in love at first sight, or should I take another picture of you?",
+                "I must be a camera, because I can't seem to capture anyone's attention but yours.",
+                "Are you a camera flash? Because you just illuminated my world.",
+                "You're like a perfectly framed shot—picture-perfect from every angle.",
+                "Are you a tripod? Because I want to stabilize our relationship.",
+                "I'm like a zoom lens—I can't help but zoom in on you.",
+                "Are you a photography studio? Because I want to capture our love in every setting.",
+                "They say a picture is worth a thousand words, but with you, it's worth a million smiles.",
+                "You're so picture-worthy, even National Geographic would want to feature you.",
+                "If photography were illegal, you'd definitely be my partner in crime.",
+                "I must be a darkroom, because I can't develop feelings for anyone but you.",
+                "Are you a camera strap? Because you're the perfect accessory to my life.",
+            };
+            return pickupLines;
         }
 
         private Settings LoadSettings(SettingsSerializer settingsSerializer, string rootFolder)
