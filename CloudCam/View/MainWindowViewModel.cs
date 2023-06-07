@@ -10,6 +10,7 @@ using CloudCam.Light;
 using CloudCam.Printing;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Serilog;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace CloudCam.View
@@ -30,6 +31,8 @@ namespace CloudCam.View
 
         public MainWindowViewModel()
         {
+            Log.Logger.Information("Starting CloudCam");
+
             ErrorViewModel = new ErrorViewModel();
             ErrorViewModel.SetError("Test error long sentence bla bla dotnet is a cool language");
 
@@ -88,7 +91,7 @@ namespace CloudCam.View
             });
             settingsViewModel.Start.Subscribe(settingsToUse =>
             {
-
+                Log.Logger.Information("Initializing photo booth");
                 settings = settingsToUse;
                 settingsSerializer.Save(settingsToUse);
 

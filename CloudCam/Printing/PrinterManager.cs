@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Printing;
+using Serilog;
 
 /*namespace printerTestCsharp
 {
@@ -169,6 +170,7 @@ namespace CloudCam.Printing
 
         public void Print(Bitmap image)
         {
+            Log.Logger.Information("Printing image");
             PrintDocument document = new PrintDocument();
             document.PrinterSettings.PrinterName = _printerName;
 

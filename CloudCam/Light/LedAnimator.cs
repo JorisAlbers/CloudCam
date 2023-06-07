@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Light;
 using Light.Chases;
+using Serilog;
 
 namespace CloudCam.Light
 {
@@ -36,6 +37,7 @@ namespace CloudCam.Light
 
         public async Task Animate()
         {
+            Log.Logger.Information("Starting led animations");
             AnimationCreator creator = new AnimationCreator(_pixelsSide);
             Random random = new Random();
             await Task.Run(async () =>
@@ -65,6 +67,7 @@ namespace CloudCam.Light
                         {
                             chase = creator.CreateSlidingPatterns(random);
                         }
+
                         _ledController.StartAnimationAtSide(chase);
 
                     }

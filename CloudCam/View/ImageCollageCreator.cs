@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace CloudCam.View
 {
@@ -18,6 +19,7 @@ namespace CloudCam.View
 
         public async Task<Bitmap> Create(Bitmap[] foregrounds, CancellationToken cancellationToken)
         {
+            Log.Logger.Information("Creating image collage");
             if (foregrounds.Length != _overlayAreas.Length)
             {
                 throw new ArgumentException(

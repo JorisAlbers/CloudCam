@@ -14,6 +14,7 @@ using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Serilog;
 using Color = System.Windows.Media.Color;
 using Point = System.Drawing.Point;
 
@@ -78,6 +79,7 @@ namespace CloudCam.View
             IPrinterManager printerManager,
             ImageCollageCreator imageCollageCreator)
         {
+            Log.Logger.Information("Starting photo booth");
             _outputImageRepository = outputImageRepository;
             _ledAnimator = ledAnimator;
             _pickupLines = pickupLines;
@@ -140,6 +142,8 @@ namespace CloudCam.View
             {
                 return Unit.Default;
             }
+
+            Log.Logger.Information("Taking a picture with mode {PictureMode}", PictureMode);
             
             switch (PictureMode)
             {
@@ -230,6 +234,7 @@ namespace CloudCam.View
 
         private async Task<Bitmap> TakeImage(CancellationToken cancellationToken)
         {
+            Log.Logger.Information("Capturing an image");
             _ledAnimator.StartFlash();
 
             SecondsUntilPictureIsTaken = 3;

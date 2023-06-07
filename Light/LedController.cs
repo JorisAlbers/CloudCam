@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Light
 {
@@ -40,6 +41,7 @@ namespace Light
 
         public async Task StartAsync()
         {
+            Log.Logger.Information("Starting led controller");
             await Task.Run(() =>
             {
                 using (var serialPort = new SerialPort(_usbPort, _baudRate, Parity.None, 7, StopBits.One))
@@ -75,11 +77,13 @@ namespace Light
 
         public void StartAnimationAtFront(IEnumerator<int[]> chase)
         {
+            Log.Logger.Information("Starting led animation at front");
             _frontChase = chase;
         }
 
         public void StartAnimationAtSide(IEnumerator<int[]> chase)
         {
+            Log.Logger.Information("Starting led animation at side");
             _sideChase = chase;
         }
 
