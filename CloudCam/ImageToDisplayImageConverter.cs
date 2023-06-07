@@ -28,6 +28,7 @@ namespace CloudCam
         {
             await Task.Run(async () =>
             {
+                long lastErrorAt = Environment.TickCount;
                 Mat previousMat = null;
                 int startTicks = Environment.TickCount;
                 int frames = 0;
@@ -55,11 +56,12 @@ namespace CloudCam
                     }
                     catch (Exception ex)
                     {
-                        Log.Logger.Error(ex,"Failed to transform image to display image!");
-                        await Task.Delay(1000, token);
+                        if (lastErrorAt < Environment.TickCount - TimeSpan.FromSeconds(1).Ticks)
+                        {
+                            Log.Logger.Error(ex, "Failed to transform image to display image!");
+                            lastErrorAt = Environment.TickCount;
+                        }
                     }
-
-                   
                 }
             }, token);
         }

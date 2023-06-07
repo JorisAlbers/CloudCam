@@ -42,6 +42,7 @@ namespace CloudCam
 
                 FrameSize = SetMaxResolution(videoCapture);
 
+                long lastErrorAt = Environment.TickCount;
                 // Get first frame for dimensions
                 Mat frame = _matBuffer.GetNextForCapture(null);
                 videoCapture.Read(frame);
@@ -65,8 +66,11 @@ namespace CloudCam
                     }
                     catch (Exception ex)
                     {
-                        Log.Logger.Error(ex,"Failed to capture frame from webcam!");
-                        await Task.Delay(1000);
+                        if (lastErrorAt < Environment.TickCount - TimeSpan.FromSeconds(1).Ticks)
+                        {
+                            Log.Logger.Error(ex, "Failed to capture frame from webcam!");
+                            lastErrorAt = Environment.TickCount;
+                        }
                     }
                   
                 }

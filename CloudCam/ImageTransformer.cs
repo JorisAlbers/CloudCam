@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudCam.Effect;
-using Newtonsoft.Json.Linq;
 using OpenCvSharp;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -22,6 +21,7 @@ namespace CloudCam
 
         public async Task StartAsync(TransformationSettings settings, CancellationToken token)
         {
+            long lastErrorAt = Environment.TickCount;
             await Task.Run(async () =>
             {
                 Mat previousMat = null;
@@ -38,7 +38,6 @@ namespace CloudCam
                         {
                             if (effect != null)
                             {
-                                throw new Exception("test");
                                 effect.Apply(currentMat);
                             }
 
@@ -55,8 +54,11 @@ namespace CloudCam
                     }
                     catch (Exception ex)
                     {
-                        Log.Logger.Error(ex, "Failed to apply effect!");
-                        await Task.Delay(1000, token);
+                        if (lastErrorAt < Environment.TickCount - TimeSpan.FromSeconds(1).Ticks)
+                        {
+                            Log.Logger.Error(ex, "Failed to apply effect!");
+                            lastErrorAt = Environment.TickCount;
+                        }
                     }
                 }
             }, token);
