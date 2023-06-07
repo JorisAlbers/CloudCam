@@ -95,46 +95,72 @@ namespace CloudCam.View
                 settings = settingsToUse;
                 settingsSerializer.Save(settingsToUse);
 
-                KeyToUserActionDic = settings.KeyBindings.ToDictionary(y => y.Key, y => y.Action);
+                try
+                {
+                    _photoBoothViewModel = InitializePhotoBoothViewModel(settings, settingsToUse);
+                    SelectedViewModel = _photoBoothViewModel;
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Error(ex,"Failed to initialize photo booth");
+                }
+            });
 
-                var frameRepository = new ImageRepository(settingsToUse.FrameFolder);
-                frameRepository.Load();
+            SelectedViewModel = settingsViewModel;
+        }
 
-                var mustachesRepository = new EffectImageLoader(new ImageRepository(settingsToUse.MustacheFolder), new ImageSettingsRepository(settingsToUse.MustacheFolder));
-                mustachesRepository.Load();
+        private PhotoBoothViewModel InitializePhotoBoothViewModel(Settings settings, Settings settingsToUse)
+        {
+            KeyToUserActionDic = settings.KeyBindings.ToDictionary(y => y.Key, y => y.Action);
 
-                var hatsRepository = new EffectImageLoader(new ImageRepository(settingsToUse.HatFolder), new ImageSettingsRepository(settingsToUse.HatFolder));
-                hatsRepository.Load();
+            var frameRepository = new ImageRepository(settingsToUse.FrameFolder);
+            frameRepository.Load();
 
-                var glassesRepository = new EffectImageLoader(new ImageRepository(settingsToUse.GlassesFolder), new ImageSettingsRepository(settingsToUse.GlassesFolder));
-                glassesRepository.Load();
+            var mustachesRepository = new EffectImageLoader(new ImageRepository(settingsToUse.MustacheFolder),
+                new ImageSettingsRepository(settingsToUse.MustacheFolder));
+            mustachesRepository.Load();
 
-                var outputRepository = new OutputImageRepository(settingsToUse.OutputFolder);
-                
+            var hatsRepository = new EffectImageLoader(new ImageRepository(settingsToUse.HatFolder),
+                new ImageSettingsRepository(settingsToUse.HatFolder));
+            hatsRepository.Load();
+
+            var glassesRepository = new EffectImageLoader(new ImageRepository(settingsToUse.GlassesFolder),
+                new ImageSettingsRepository(settingsToUse.GlassesFolder));
+            glassesRepository.Load();
+
+            var outputRepository = new OutputImageRepository(settingsToUse.OutputFolder);
+
 #if DEBUG
-                ILedAnimator ledAnimator = new NullLedAnimator();
+            ILedAnimator ledAnimator = new NullLedAnimator();
 #else
                 var ledAnimator = new LedAnimator(33,216, new LedController (33,216, $"COM{settings.ComPortLeds}", 60));
                 ledAnimator.StartAsync();
                 ledAnimator.Animate();
 #endif
 
-                var printerManager = SetupForWhenAPrinterIsConnected(settings, out var imageCollageCreator);
 
-                _photoBoothViewModel = new PhotoBoothViewModel(CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == settingsToUse.CameraDevice),
-                    frameRepository,
-                    mustachesRepository,
-                    hatsRepository,
-                    glassesRepository,
-                    outputRepository,
-                    ledAnimator,
-                    GetPickupLines(),
-                    printerManager,
-                    imageCollageCreator);
-                SelectedViewModel = _photoBoothViewModel;
-            });
+            IPrinterManager printerManager = null;
+            ImageCollageCreator imageCollageCreator = null;
+            try
+            {
+                printerManager = SetupForWhenAPrinterIsConnected(settings, out imageCollageCreator);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Failed to setup the printer!");
+            }
 
-            SelectedViewModel = settingsViewModel;
+            return new PhotoBoothViewModel(
+                CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == settingsToUse.CameraDevice),
+                frameRepository,
+                mustachesRepository,
+                hatsRepository,
+                glassesRepository,
+                outputRepository,
+                ledAnimator,
+                GetPickupLines(),
+                printerManager,
+                imageCollageCreator);
         }
 
         private static IPrinterManager SetupForWhenAPrinterIsConnected(Settings settings,

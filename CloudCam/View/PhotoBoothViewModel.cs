@@ -144,17 +144,24 @@ namespace CloudCam.View
             }
 
             Log.Logger.Information("Taking a picture with mode {PictureMode}", PictureMode);
-            
-            switch (PictureMode)
+
+            try
             {
-                case PictureMode.OneAtATime:
-                    await TakeOnePicture(cancellationToken);
-                    break;
-                case PictureMode.ThreeOnBackground:
-                    await TakeThreePicturesOnBackground(cancellationToken);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (PictureMode)
+                {
+                    case PictureMode.OneAtATime:
+                        await TakeOnePicture(cancellationToken);
+                        break;
+                    case PictureMode.ThreeOnBackground:
+                        await TakeThreePicturesOnBackground(cancellationToken);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex,"Failed to take an image!");
             }
 
             Interlocked.Exchange(ref _takingPicture, 0);
