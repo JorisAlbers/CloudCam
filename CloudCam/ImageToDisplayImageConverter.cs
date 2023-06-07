@@ -7,6 +7,7 @@ using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Serilog;
 
 namespace CloudCam
 {
@@ -25,29 +26,40 @@ namespace CloudCam
 
         public async Task StartAsync(CancellationToken token)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 Mat previousMat = null;
                 int startTicks = Environment.TickCount;
                 int frames = 0;
                 while (!token.IsCancellationRequested)
                 {
-                    Mat currentMat = _matBuffer.GetNextForDisplay(previousMat);
-                    if (currentMat != null)
+                    try
                     {
-                        BitmapSource imageSource = currentMat.ToBitmapSource();
-                        imageSource.Freeze();
-                        ImageSourceWithMat = new ImageSourceWithMat(imageSource, currentMat);
-
-                        if (++frames > 50)
+                        Mat currentMat = _matBuffer.GetNextForDisplay(previousMat);
+                        if (currentMat != null)
                         {
-                            int elapsedMilliseconds = Environment.TickCount - startTicks;
-                            Fps = 50.0f / (elapsedMilliseconds / 1000.0f);
-                            frames = 0;
-                            startTicks = Environment.TickCount;
+                            BitmapSource imageSource = currentMat.ToBitmapSource();
+                            imageSource.Freeze();
+                            ImageSourceWithMat = new ImageSourceWithMat(imageSource, currentMat);
+
+                            if (++frames > 50)
+                            {
+                                int elapsedMilliseconds = Environment.TickCount - startTicks;
+                                Fps = 50.0f / (elapsedMilliseconds / 1000.0f);
+                                frames = 0;
+                                startTicks = Environment.TickCount;
+                            }
                         }
+
+                        previousMat = currentMat;
                     }
-                    previousMat = currentMat;
+                    catch (Exception ex)
+                    {
+                        Log.Logger.Error(ex,"Failed to transform image to display image!");
+                        await Task.Delay(1000, token);
+                    }
+
+                   
                 }
             }, token);
         }

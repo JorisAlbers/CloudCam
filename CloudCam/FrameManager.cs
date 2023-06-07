@@ -1,6 +1,8 @@
+using System;
 using CloudCam.View;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+using Serilog;
 
 namespace CloudCam
 {
@@ -33,7 +35,16 @@ namespace CloudCam
                 _currentFrameIndex = _frameRepository.Count - 1;
             }
 
-            return LoadImage(_currentFrameIndex, size);
+            try
+            {
+                return LoadImage(_currentFrameIndex, size);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex,"Failed to load frame!");
+            }
+
+            return null;
         }
 
         private ImageSourceWithMat LoadImage(int index, Size size)

@@ -11,6 +11,7 @@ using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Serilog;
 
 namespace CloudCam
 {
@@ -31,7 +32,7 @@ namespace CloudCam
 
         public async Task CaptureAsync(CancellationToken cancellationToken)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 var videoCapture = new VideoCapture();
                 if (!videoCapture.Open(_camId))
@@ -48,17 +49,26 @@ namespace CloudCam
                 int frames = 0;
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    frame = _matBuffer.GetNextForCapture(frame);
-                    videoCapture.Read(frame);
-                    Cv2.Flip(frame, frame, FlipMode.Y);
-
-                    if (++frames > 50)
+                    try
                     {
-                        int elapsedMilliseconds = Environment.TickCount - startTicks;
-                        Fps = 50.0f / (elapsedMilliseconds / 1000.0f);
-                        frames = 0;
-                        startTicks = Environment.TickCount;
+                        frame = _matBuffer.GetNextForCapture(frame);
+                        videoCapture.Read(frame);
+                        Cv2.Flip(frame, frame, FlipMode.Y);
+
+                        if (++frames > 50)
+                        {
+                            int elapsedMilliseconds = Environment.TickCount - startTicks;
+                            Fps = 50.0f / (elapsedMilliseconds / 1000.0f);
+                            frames = 0;
+                            startTicks = Environment.TickCount;
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Log.Logger.Error(ex,"Failed to capture frame from webcam!");
+                        await Task.Delay(1000);
+                    }
+                  
                 }
 
                 videoCapture.Dispose();

@@ -2,9 +2,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudCam.Effect;
+using Newtonsoft.Json.Linq;
 using OpenCvSharp;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Serilog;
 
 namespace CloudCam
 {
@@ -18,36 +20,46 @@ namespace CloudCam
             _matBuffer = matBuffer;
         }
 
-        public async Task StartAsync(TransformationSettings settings, CancellationToken cancellationToken)
+        public async Task StartAsync(TransformationSettings settings, CancellationToken token)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 Mat previousMat = null;
 
                 int startTicks = Environment.TickCount;
                 int frames = 0;
-                while (!cancellationToken.IsCancellationRequested)
+                while (!token.IsCancellationRequested)
                 {
-                    IEffect effect = settings.Effect;
-                    Mat currentMat = _matBuffer.GetNextForEditing(previousMat);
-                    if (currentMat != null)
+                    try
                     {
-                        if (effect != null)
+                        IEffect effect = settings.Effect;
+                        Mat currentMat = _matBuffer.GetNextForEditing(previousMat);
+                        if (currentMat != null)
                         {
-                            effect.Apply(currentMat);
+                            if (effect != null)
+                            {
+                                throw new Exception("test");
+                                effect.Apply(currentMat);
+                            }
+
+                            if (++frames > 50)
+                            {
+                                int elapsedMilliseconds = Environment.TickCount - startTicks;
+                                Fps = 50.0f / (elapsedMilliseconds / 1000.0f);
+                                frames = 0;
+                                startTicks = Environment.TickCount;
+                            }
                         }
 
-                        if (++frames > 50)
-                        {
-                            int elapsedMilliseconds = Environment.TickCount - startTicks;
-                            Fps = 50.0f / (elapsedMilliseconds / 1000.0f);
-                            frames = 0;
-                            startTicks = Environment.TickCount;
-                        }
+                        previousMat = currentMat;
                     }
-                    previousMat = currentMat;
+                    catch (Exception ex)
+                    {
+                        Log.Logger.Error(ex, "Failed to apply effect!");
+                        await Task.Delay(1000, token);
+                    }
                 }
-            }, cancellationToken);
+            }, token);
         }
     }
 }
