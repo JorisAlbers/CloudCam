@@ -54,7 +54,7 @@ namespace CloudCam
                     }
                     catch (Exception ex)
                     {
-                        if (lastErrorAt < Environment.TickCount - TimeSpan.FromSeconds(1).Ticks)
+                        if (lastErrorAt < Environment.TickCount - 1000)
                         {
                             Log.Logger.Error(ex, "Failed to apply effect!");
                             lastErrorAt = Environment.TickCount;
