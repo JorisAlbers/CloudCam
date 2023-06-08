@@ -6,14 +6,12 @@ namespace CloudCam
 {
     public class ErrorViewModel : ReactiveObject
     {
-        [Reactive] public bool HasError { get; private set; }
+        public string ErrorMessage { get; }
 
-        [Reactive] public string ErrorMessage { get; private set; }
-
-        public void SetError(string error)
+        public ErrorViewModel(string errorMessage)
         {
-            HasError = true;
-            ErrorMessage = error;
+            ErrorMessage = errorMessage;
         }
     }
+
 }

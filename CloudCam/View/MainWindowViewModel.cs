@@ -29,12 +29,15 @@ namespace CloudCam.View
 
         public ReactiveCommand<Key, UserAction> KeyPressed { get; }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(ErrorObserver errorObserver)
         {
             Log.Logger.Information("Starting CloudCam");
 
-            ErrorViewModel = new ErrorViewModel();
-            ErrorViewModel.SetError("Test error long sentence bla bla dotnet is a cool language");
+            errorObserver
+                .WhereNotNull()
+                .Select(x=> new ErrorViewModel(x.RenderMessage()))
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => ErrorViewModel = x);
 
             KeyPressed = ReactiveCommand.Create<Key, UserAction>((key) =>
             {
@@ -97,6 +100,7 @@ namespace CloudCam.View
 
                 try
                 {
+                    throw new Exception("test");
                     _photoBoothViewModel = InitializePhotoBoothViewModel(settings, settingsToUse);
                     SelectedViewModel = _photoBoothViewModel;
                 }

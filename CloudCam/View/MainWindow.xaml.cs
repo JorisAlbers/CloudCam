@@ -15,7 +15,7 @@ namespace CloudCam.View
         public MainWindow()
         {
             InitializeComponent();
-            this.ViewModel = new MainWindowViewModel();
+            this.ViewModel = new MainWindowViewModel(App.ErrorObserver);
 
             this.WhenActivated((dispose) =>
             {
