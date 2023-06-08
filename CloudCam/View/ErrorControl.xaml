@@ -11,12 +11,19 @@
                                 d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" LastChildFill="False"
                Background="White">
-            <TextBlock x:Name="ErrorTextBlock"
-                       DockPanel.Dock="Left"
-                       Foreground="Red"
-                       FontSize="24"/>
 
-            <materialDesign:PackIcon DockPanel.Dock="Left" HorizontalAlignment="Right" VerticalAlignment="Center" Height="50" Width="50" Kind="Error" Foreground="Red" />
+        <Viewbox DockPanel.Dock="Left">
 
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon  Kind="Error" Foreground="Red" />
+
+                <TextBlock x:Name="ErrorTextBlock"
+                           Text="An error occurred in the photo booth. Please shout loudly for help. This will help attract the attention of nearby staff members, ensuring swift assistance."
+                           Foreground="Red"
+                />
+                <materialDesign:PackIcon  Kind="Error" Foreground="Red" />
+
+            </StackPanel>
+            </Viewbox>
     </DockPanel>
 </reactiveUi:ReactiveUserControl>
