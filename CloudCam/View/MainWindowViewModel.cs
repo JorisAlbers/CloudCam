@@ -100,7 +100,6 @@ namespace CloudCam.View
 
                 try
                 {
-                    throw new Exception("test");
                     _photoBoothViewModel = InitializePhotoBoothViewModel(settings, settingsToUse);
                     SelectedViewModel = _photoBoothViewModel;
                 }
