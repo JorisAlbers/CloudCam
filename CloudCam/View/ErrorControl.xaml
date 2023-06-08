@@ -17,10 +17,17 @@
             <StackPanel Orientation="Horizontal">
                 <materialDesign:PackIcon  Kind="Error" Foreground="Red" />
 
-                <TextBlock x:Name="ErrorTextBlock"
-                           Text="An error occurred in the photo booth. Please shout loudly for help. This will help attract the attention of nearby staff members, ensuring swift assistance."
-                           Foreground="Red"
-                />
+                <StackPanel>
+                    <TextBlock Text="An error occurred in the photo booth. Please shout loudly for help. This will help attract the attention of nearby staff members, ensuring swift assistance."
+                               Foreground="Red"
+                    />
+                    <TextBlock x:Name="ErrorTextBlock"
+                               Text="Test error error error error error"
+                               Foreground="DarkRed"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+
+
                 <materialDesign:PackIcon  Kind="Error" Foreground="Red" />
 
             </StackPanel>
