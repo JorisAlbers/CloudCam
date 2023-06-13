@@ -30,9 +30,6 @@ namespace CloudCam.View
         private readonly ImageCollageCreator _imageCollageCreator;
        private readonly FrameManager _frameManager;
         private readonly Random _random;
-        private readonly Bitmap[] _takenImages;
-        private readonly ImageSource[] _takenImageSources;
-        private int _takenImageCounter;
         private int _takingPicture;
         private readonly TransformationSettings _transformationSettings;
 
@@ -90,8 +87,6 @@ namespace CloudCam.View
             _printerManager = printerManager;
             _imageCollageCreator = imageCollageCreator;
             _random = new Random();
-            _takenImages = new Bitmap[3];
-            _takenImageSources = new ImageSource[3];
 
             _frameManager = new FrameManager(frameRepository);
             NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
@@ -225,46 +220,67 @@ namespace CloudCam.View
         
         private async Task TakeThreePicturesOnBackground(CancellationToken cancellationToken)
         {
-            var imageAsBitmap = await TakeImage(cancellationToken);
-            var imageAsImageSource = imageAsBitmap.ToBitmapSource();
-            TakenImage = imageAsImageSource;
+            // image 1
+            var imageAsBitmap1 = await TakeImage(cancellationToken);
+            var imageAsImageSource1 = imageAsBitmap1.ToBitmapSource();
+            TakenImage = imageAsImageSource1;
             SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
-            await Task.Delay(100, cancellationToken); // allow gui to update
 
-
-            // TODO overlay frame on image, resize too.
-
-            _takenImages[_takenImageCounter] = imageAsBitmap;
-            _takenImageSources[_takenImageCounter] = TakenImage;
-            if (++_takenImageCounter == 3)
+            if (!await ShouldPrintImage())
             {
-                // at the end.
-                PickupLine = null;
-                TakenImage = _takenImageSources[2];
-                await Task.Delay(1000);
-                TakenImage = _takenImageSources[1];
-                await Task.Delay(1000);
-                TakenImage = _takenImageSources[0];
-                await Task.Delay(1000);
-
-                Bitmap toPrint = await _imageCollageCreator.Create(_takenImages, cancellationToken);
-                _printerManager.Print(toPrint);
-                _outputImageRepository.Save(toPrint);
-
+                _outputImageRepository.Save(imageAsBitmap1);
                 TakenImage = null;
-
-                _takenImageCounter = 0;
+                PickupLine = null;
                 return;
             }
+            // reset
             
             TakenImage = null;
-            PickupLine = $"{3 - _takenImageCounter} to go!";
+            PickupLine = $"2 to go!";
             await Task.Delay(2000, cancellationToken);
             PickupLine = null;
-            await TakeThreePicturesOnBackground(cancellationToken);
+
+
+            // image 2
+            var imageAsBitmap2 = await TakeImage(cancellationToken);
+            var imageAsImageSource2 = imageAsBitmap2.ToBitmapSource();
+            TakenImage = imageAsImageSource2;
+            SecondsUntilPictureIsTaken = -1;
+            PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
+            await Task.Delay(1000, cancellationToken); // allow gui to update
+            // reset
+            TakenImage = null;
+            PickupLine = $"1 to go!";
+            await Task.Delay(2000, cancellationToken);
+            PickupLine = null;
+
+            // image 3
+            var imageAsBitmap3 = await TakeImage(cancellationToken);
+            var imageAsImageSource3 = imageAsBitmap3.ToBitmapSource();
+            TakenImage = imageAsImageSource3;
+
+            // print
+            Bitmap toPrint = await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, cancellationToken);
+            _printerManager.Print(toPrint);
+            _outputImageRepository.Save(toPrint);
+
+            SecondsUntilPictureIsTaken = -1;
+            TakenImage = imageAsImageSource1;
+            await Task.Delay(1000, cancellationToken);
+            TakenImage = imageAsImageSource2;
+            await Task.Delay(1000, cancellationToken);
+            TakenImage = imageAsImageSource3;
+            await Task.Delay(1000, cancellationToken);
+            TakenImage = null;
         }
-        
+
+        private async Task<bool> ShouldPrintImage()
+        {
+            await Task.Delay(1000);
+            return true;
+        }
+
         private async Task<ImageSourceWithMat> LoadNextFrameAsync(bool forwards)
         {
             return await Task.Run(() =>
