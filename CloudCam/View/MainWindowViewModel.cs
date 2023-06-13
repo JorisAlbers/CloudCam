@@ -11,7 +11,6 @@ using CloudCam.Printing;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace CloudCam.View
 {
@@ -153,7 +152,7 @@ namespace CloudCam.View
                 Log.Logger.Error(ex, "Failed to setup the printer!");
             }
 
-            return new PhotoBoothViewModel(
+            var viewmodel = new PhotoBoothViewModel(
                 CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == settingsToUse.CameraDevice),
                 frameRepository,
                 mustachesRepository,
@@ -164,6 +163,10 @@ namespace CloudCam.View
                 GetPickupLines(),
                 printerManager,
                 imageCollageCreator);
+
+            viewmodel.Start();
+
+            return viewmodel;
         }
 
         private static IPrinterManager SetupForWhenAPrinterIsConnected(Settings settings,

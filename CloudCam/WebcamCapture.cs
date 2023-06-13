@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace CloudCam
     {
         private readonly int _camId;
         private readonly MatBuffer _matBuffer;
+        private VideoCapture _videoCapture;
 
         public Size FrameSize { get; private set; }
 
@@ -30,55 +32,67 @@ namespace CloudCam
             _matBuffer = matBuffer;
         }
 
+        public void Initialize()
+        {
+            _videoCapture = new VideoCapture();
+            if (!_videoCapture.Open(_camId))
+            {
+                throw new ApplicationException($"Failed to open video device {_camId}");
+            }
+            FrameSize = SetMaxResolution(_videoCapture);
+        }
+
         public async Task CaptureAsync(CancellationToken cancellationToken)
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
-                var videoCapture = new VideoCapture();
-                if (!videoCapture.Open(_camId))
+                try
                 {
-                    throw new ApplicationException($"Failed to open video device {_camId}");
-                }
+                    // Get first frame for dimensions
+                    Mat frame = _matBuffer.GetNextForCapture(null);
+                    _videoCapture.Read(frame);
+                    long lastErrorAt = Environment.TickCount;
 
-                FrameSize = SetMaxResolution(videoCapture);
-
-                long lastErrorAt = Environment.TickCount;
-                // Get first frame for dimensions
-                Mat frame = _matBuffer.GetNextForCapture(null);
-                videoCapture.Read(frame);
-                int startTicks = Environment.TickCount;
-                int frames = 0;
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    try
+                    int startTicks = Environment.TickCount;
+                    int frames = 0;
+                    while (!cancellationToken.IsCancellationRequested)
                     {
-                        frame = _matBuffer.GetNextForCapture(frame);
-                        videoCapture.Read(frame);
-                        Cv2.Flip(frame, frame, FlipMode.Y);
-
-                        if (++frames > 50)
+                        try
                         {
-                            int elapsedMilliseconds = Environment.TickCount - startTicks;
-                            Fps = 50.0f / (elapsedMilliseconds / 1000.0f);
-                            frames = 0;
-                            startTicks = Environment.TickCount;
+                            frame = _matBuffer.GetNextForCapture(frame);
+                            _videoCapture.Read(frame);
+                            Cv2.Flip(frame, frame, FlipMode.Y);
+
+                            if (++frames > 50)
+                            {
+                                int elapsedMilliseconds = Environment.TickCount - startTicks;
+                                Fps = 50.0f / (elapsedMilliseconds / 1000.0f);
+                                frames = 0;
+                                startTicks = Environment.TickCount;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            if (lastErrorAt < Environment.TickCount - 1000)
+                            {
+                                Log.Logger.Error(ex, "Failed to capture frame from webcam!");
+                                lastErrorAt = Environment.TickCount;
+                            }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        if (lastErrorAt < Environment.TickCount - 1000) 
-                        {
-                            Log.Logger.Error(ex, "Failed to capture frame from webcam!");
-                            lastErrorAt = Environment.TickCount;
-                        }
-                    }
-                  
-                }
 
-                videoCapture.Dispose();
+                    _videoCapture.Dispose();
+
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Error(ex, "Failed to run webcam capturewebcam!");
+                }
 
             }, cancellationToken);
         }
+
+        
         
         private Size SetMaxResolution(VideoCapture videoCapture)
         {

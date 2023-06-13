@@ -22,20 +22,23 @@ namespace CloudCam.View
 {
     public class PhotoBoothViewModel : ReactiveObject
     {
+        private readonly CameraDevice _device;
         private readonly OutputImageRepository _outputImageRepository;
         private readonly ILedAnimator _ledAnimator;
         private readonly List<string> _pickupLines;
         private readonly IPrinterManager _printerManager;
         private readonly ImageCollageCreator _imageCollageCreator;
-        private readonly WebcamCapture _capture;
-        private readonly ImageTransformer _imageTransformer;
-        private readonly ImageToDisplayImageConverter _imageToDisplayImageConverter;
-        private readonly FrameManager _frameManager;
+       private readonly FrameManager _frameManager;
         private readonly Random _random;
         private readonly Bitmap[] _takenImages;
         private readonly ImageSource[] _takenImageSources;
         private int _takenImageCounter;
         private int _takingPicture;
+        private readonly TransformationSettings _transformationSettings;
+
+        [Reactive] private WebcamCapture Capture { get; set; }
+        [Reactive] private ImageTransformer ImageTransformer { get; set; }
+        [Reactive] private ImageToDisplayImageConverter ImageToDisplayImageConverter { get; set; }
 
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
 
@@ -80,6 +83,7 @@ namespace CloudCam.View
             ImageCollageCreator imageCollageCreator)
         {
             Log.Logger.Information("Starting photo booth");
+            _device = device;
             _outputImageRepository = outputImageRepository;
             _ledAnimator = ledAnimator;
             _pickupLines = pickupLines;
@@ -88,13 +92,12 @@ namespace CloudCam.View
             _random = new Random();
             _takenImages = new Bitmap[3];
             _takenImageSources = new ImageSource[3];
-            MatBuffer matBuffer = new MatBuffer();
 
             _frameManager = new FrameManager(frameRepository);
             NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
             NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
-            TransformationSettings transformationSettings = new TransformationSettings();
+           
             EffectManager effectManager = new EffectManager(@"Resources\Caff\deploy.prototxt", @"Resources\Caff\res10_300x300_ssd_iter_140000_fp16.caffemodel",  @"Resources\Cascades\haarcascade_mcs_nose.xml" , @"Resources\Cascades\haarcascade_eye_tree_eyeglasses.xml", mustachesRepository, hatsRepository, glassesRepository);
             NextEffect = ReactiveCommand.Create<bool, IEffect>((forwards) =>
             {
@@ -105,23 +108,14 @@ namespace CloudCam.View
 
                 return effectManager.Previous();
             });
-            NextEffect.Subscribe(x => transformationSettings.Effect = x);
+            _transformationSettings = new TransformationSettings();
+            NextEffect.Subscribe(x => _transformationSettings.Effect = x);
 
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
-
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            _capture = new WebcamCapture(device.OpenCdId, matBuffer);
-            _ = _capture.CaptureAsync(cancellationTokenSource.Token);
-
-            _imageTransformer = new ImageTransformer(matBuffer);
-            Task t1 = _imageTransformer.StartAsync(transformationSettings, cancellationTokenSource.Token);
-
-            _imageToDisplayImageConverter = new ImageToDisplayImageConverter(matBuffer);
-            Task t2 = _imageToDisplayImageConverter.StartAsync(cancellationTokenSource.Token);
-
+            
             ImageSourceWithMat previous = null;
             Observable.Interval(TimeSpan.FromMilliseconds(33))
-                .Select(_ => _imageToDisplayImageConverter.ImageSourceWithMat)
+                .Select(_ => ImageToDisplayImageConverter?.ImageSourceWithMat)
                 .WhereNotNull()
                 .Where(x=> previous != x)
                 .Do(x => previous = x)
@@ -129,12 +123,57 @@ namespace CloudCam.View
                 .ToPropertyEx(this, x=>x.ImageSource);
 
 
-            this.WhenAnyValue(x => x._capture.Fps).Where((_)=> DebugModeActive).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.CameraFps);
-            this.WhenAnyValue(x => x._imageTransformer.Fps).Where((_) => DebugModeActive).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.EditingFps);
-            this.WhenAnyValue(x => x._imageToDisplayImageConverter.Fps).Where((_) => DebugModeActive).ObserveOn(RxApp.MainThreadScheduler).ToPropertyEx(this, x => x.ToDisplayImageFps);
+            this.WhenAnyValue(x => x.Capture.Fps)
+                .Where((_)=> DebugModeActive)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToPropertyEx(this, x => x.CameraFps);
+
+            this.WhenAnyValue(x => x.ImageTransformer.Fps)
+                .Where((_) => DebugModeActive)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToPropertyEx(this, x => x.EditingFps);
+
+            this.WhenAnyValue(x => x.ImageToDisplayImageConverter.Fps)
+                .Where((_) => DebugModeActive)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToPropertyEx(this, x => x.ToDisplayImageFps);
         }
 
+        public void Start()
+        {
+            MatBuffer matBuffer = new MatBuffer();
+            WebcamCapture webcamCapture;
 
+            try
+            {
+                webcamCapture = new WebcamCapture(_device.OpenCdId, matBuffer);
+                webcamCapture.Initialize();
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Failed to setup webcam capture!");
+                throw;
+            }
+
+            try
+            {
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                Task t =  webcamCapture.CaptureAsync(cancellationTokenSource.Token);
+                Capture = webcamCapture;
+                
+                ImageTransformer = new ImageTransformer(matBuffer);
+                Task t2 =  ImageTransformer.StartAsync(_transformationSettings, cancellationTokenSource.Token);
+
+                ImageToDisplayImageConverter = new ImageToDisplayImageConverter(matBuffer);
+                Task t3 =  ImageToDisplayImageConverter.StartAsync(cancellationTokenSource.Token);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex,"Failed to setup image processing pipeline");
+                throw;
+            }
+
+        }
 
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
@@ -232,10 +271,10 @@ namespace CloudCam.View
             {
                 if (forwards)
                 {
-                    return _frameManager.Next(_capture.FrameSize);
+                    return _frameManager.Next(Capture.FrameSize);
                 }
 
-                return _frameManager.Previous(_capture.FrameSize);
+                return _frameManager.Previous(Capture.FrameSize);
             });
         }
 
