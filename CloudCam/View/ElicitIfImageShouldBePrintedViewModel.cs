@@ -6,9 +6,11 @@ using ReactiveUI.Fody.Helpers;
 
 namespace CloudCam.View
 {
-    public class ElicitIfImageShouldBePrintedViewModel : ReactiveObject, IDisposable
+    public class ElicitIfImageShouldBePrintedViewModel : ReactiveObject
     {
         private readonly CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
+        private bool _shouldPrint;
+
         private readonly string _cancelMessage;
         private readonly string _okMessage;
         [Reactive] public string Message { get; private set; }
@@ -30,7 +32,7 @@ namespace CloudCam.View
                 await Task.Delay(1000);
             }
 
-            if (_cancelTokenSource.IsCancellationRequested)
+            if (_shouldPrint)
             {
                 Message = _okMessage;
                 return true;
@@ -40,7 +42,13 @@ namespace CloudCam.View
             return false;
         }
 
-        public void Dispose()
+        public void Accept()
+        {
+            _shouldPrint = true;
+            _cancelTokenSource.Cancel();
+        }
+
+        public void Cancel()
         {
             _cancelTokenSource.Cancel();
         }

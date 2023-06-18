@@ -95,12 +95,19 @@ namespace CloudCam.View
 
             _frameManager = new FrameManager(frameRepository);
             NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
-            NextFrame.ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
+            NextFrame.WhereNotNull().ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
            
             EffectManager effectManager = new EffectManager(@"Resources\Caff\deploy.prototxt", @"Resources\Caff\res10_300x300_ssd_iter_140000_fp16.caffemodel",  @"Resources\Cascades\haarcascade_mcs_nose.xml" , @"Resources\Cascades\haarcascade_eye_tree_eyeglasses.xml", mustachesRepository, hatsRepository, glassesRepository);
             NextEffect = ReactiveCommand.Create<bool, IEffect>((forwards) =>
             {
+                var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
+                if (elicitViewModel != null)
+                {
+                    elicitViewModel.Cancel();
+                    return null;
+                }
+
                 if (forwards)
                 {
                     return effectManager.Next();
@@ -109,7 +116,7 @@ namespace CloudCam.View
                 return effectManager.Previous();
             });
             _transformationSettings = new TransformationSettings();
-            NextEffect.Subscribe(x => _transformationSettings.Effect = x);
+            NextEffect.WhereNotNull().Subscribe(x => _transformationSettings.Effect = x);
 
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
             
@@ -182,7 +189,7 @@ namespace CloudCam.View
                 var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
                 if (elicitViewModel != null)
                 {
-                    elicitViewModel.Dispose();
+                    elicitViewModel.Accept();
                 }
 
                 return Unit.Default;
@@ -302,6 +309,13 @@ namespace CloudCam.View
 
         private async Task<ImageSourceWithMat> LoadNextFrameAsync(bool forwards)
         {
+            var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
+            if (elicitViewModel != null)
+            {
+                elicitViewModel.Cancel();
+                return null;
+            }
+
             return await Task.Run(() =>
             {
                 if (forwards)
