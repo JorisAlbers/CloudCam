@@ -240,12 +240,14 @@ namespace CloudCam.View
 
             if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
             {
+                Log.Logger.Information("User does not want to print the image");
                 _outputImageRepository.Save(imageAsBitmap1);
                 TakenImage = null;
                 PickupLine = null;
                 ElicitIfImageShouldBePrintedViewModel = null;
                 return;
             }
+            Log.Logger.Information("User requested to print the image");
 
             // reset
             ElicitIfImageShouldBePrintedViewModel = null;
