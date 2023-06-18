@@ -288,11 +288,11 @@ namespace CloudCam.View
             _outputImageRepository.Save(toPrint);
 
             SecondsUntilPictureIsTaken = -1;
-            TakenImage = imageAsImageSource1;
+            TakenImage = imageAsImageSource3;
             await Task.Delay(1000, cancellationToken);
             TakenImage = imageAsImageSource2;
             await Task.Delay(1000, cancellationToken);
-            TakenImage = imageAsImageSource3;
+            TakenImage = imageAsImageSource1;
             await Task.Delay(1000, cancellationToken);
             TakenImage = null;
         }
