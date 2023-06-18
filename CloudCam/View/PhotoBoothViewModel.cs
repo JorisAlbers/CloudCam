@@ -28,7 +28,8 @@ namespace CloudCam.View
         private readonly List<string> _pickupLines;
         private readonly IPrinterManager _printerManager;
         private readonly ImageCollageCreator _imageCollageCreator;
-       private readonly FrameManager _frameManager;
+        private readonly ElicitIfImageShouldBePrintedViewModelFactory _elicitShouldPrintViewModelFactory;
+        private readonly FrameManager _frameManager;
         private readonly Random _random;
         private int _takingPicture;
         private readonly TransformationSettings _transformationSettings;
@@ -58,6 +59,8 @@ namespace CloudCam.View
         [ObservableAsProperty]
         public float EditingFps { get; set; }
 
+        [Reactive] public ElicitIfImageShouldBePrintedViewModel ElicitIfImageShouldBePrintedViewModel { get; set; }
+
         [Reactive] public bool DebugModeActive { get; set; }
 
         public ReactiveCommand<bool, ImageSourceWithMat> NextFrame { get; }
@@ -77,7 +80,8 @@ namespace CloudCam.View
             ILedAnimator ledAnimator, 
             List<string> pickupLines,
             IPrinterManager printerManager,
-            ImageCollageCreator imageCollageCreator)
+            ImageCollageCreator imageCollageCreator,
+            ElicitIfImageShouldBePrintedViewModelFactory elicitShouldPrintViewModelFactory)
         {
             Log.Logger.Information("Starting photo booth");
             _device = device;
@@ -86,6 +90,7 @@ namespace CloudCam.View
             _pickupLines = pickupLines;
             _printerManager = printerManager;
             _imageCollageCreator = imageCollageCreator;
+            _elicitShouldPrintViewModelFactory = elicitShouldPrintViewModelFactory;
             _random = new Random();
 
             _frameManager = new FrameManager(frameRepository);
@@ -174,10 +179,16 @@ namespace CloudCam.View
         {
             if (Interlocked.Exchange(ref _takingPicture, 1) == 1)
             {
+                var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
+                if (elicitViewModel != null)
+                {
+                    elicitViewModel.Dispose();
+                }
+
                 return Unit.Default;
             }
 
-            Log.Logger.Information("Taking a picture with mode {PictureMode}", PictureMode);
+             Log.Logger.Information("Taking a picture with mode {PictureMode}", PictureMode);
 
             try
             {
@@ -227,15 +238,17 @@ namespace CloudCam.View
             SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
 
-            if (!await ShouldPrintImage())
+            if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
             {
                 _outputImageRepository.Save(imageAsBitmap1);
                 TakenImage = null;
                 PickupLine = null;
+                ElicitIfImageShouldBePrintedViewModel = null;
                 return;
             }
+
             // reset
-            
+            ElicitIfImageShouldBePrintedViewModel = null;
             TakenImage = null;
             PickupLine = $"2 to go!";
             await Task.Delay(2000, cancellationToken);
@@ -275,10 +288,14 @@ namespace CloudCam.View
             TakenImage = null;
         }
 
-        private async Task<bool> ShouldPrintImage()
+        private async Task<bool> ShouldPrintImage(ElicitIfImageShouldBePrintedViewModelFactory elicitIfImageShouldBePrintedViewModelFactory)
         {
+            var viewmodel = elicitIfImageShouldBePrintedViewModelFactory.Create();
+            ElicitIfImageShouldBePrintedViewModel = viewmodel;
+            await Task.Delay(100); // allow GUI to update
+            bool shouldPrint = await viewmodel.Start();
             await Task.Delay(1000);
-            return true;
+            return shouldPrint;
         }
 
         private async Task<ImageSourceWithMat> LoadNextFrameAsync(bool forwards)

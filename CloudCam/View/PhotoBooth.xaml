@@ -19,6 +19,13 @@
         <Grid Grid.RowSpan="2">
             <MediaElement x:Name="VideoPlayer"  Source="Resources/Videos/intro_loop.mp4" MediaEnded="VideoPlayer_OnMediaEnded" LoadedBehavior="Manual"/>
             <Image x:Name="TakenPhotoImage" Grid.Row="0" Stretch="Uniform" />
+
+            <reactiveUi:ViewModelViewHost x:Name="ElicitPrintImageViewModel"
+                                          VerticalAlignment="Bottom"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalContentAlignment="Bottom"
+                                          HorizontalContentAlignment="Stretch"/>
+          
         </Grid>
         <Viewbox Grid.Row="0" Margin="50,0">
             <Grid>
