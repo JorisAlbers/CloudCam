@@ -41,7 +41,7 @@
             </Grid>
         </Viewbox>
         <Viewbox Grid.RowSpan="2">
-            <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
+            <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="/Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         </Viewbox>
         <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2"/>
         
