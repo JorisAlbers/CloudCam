@@ -5,9 +5,9 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudCam", "CloudCam\CloudCam.csproj", "{001EDE87-5E49-4712-9D70-C1D60CBD5430}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Light", "Light\Light.csproj", "{7EF0C833-06C1-4C7E-972C-9DBF87A51410}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light", "Light\Light.csproj", "{7EF0C833-06C1-4C7E-972C-9DBF87A51410}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightConsole", "LightConsole\LightConsole.csproj", "{006D9D97-AC5B-45F0-9BC5-1A2C5F5F7D08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightConsole", "LightConsole\LightConsole.csproj", "{006D9D97-AC5B-45F0-9BC5-1A2C5F5F7D08}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudCam.Tests", "CloudCam.Tests\CloudCam.Tests.csproj", "{08F2F3B3-C98F-42D7-A2A9-897D79F4888C}"
 EndProject
