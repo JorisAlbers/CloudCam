@@ -36,8 +36,9 @@ namespace CloudCam
         {
             var x = await Task.Run(() =>
             {
-                var capture  = new VideoCapture();
-                if (!capture.Open(_camId))
+                var capture  = new VideoCapture(_camId, VideoCaptureAPIs.DSHOW);
+
+                if (!capture.Open(_camId, VideoCaptureAPIs.DSHOW))
                 {
                     throw new ApplicationException($"Failed to open video device {_camId}");
                 }
@@ -51,6 +52,7 @@ namespace CloudCam
             _videoCapture = x.capture;
             FrameSize = x.frameSize;
         }
+
 
         public async Task CaptureAsync(CancellationToken cancellationToken)
         {
