@@ -32,14 +32,24 @@ namespace CloudCam
             _matBuffer = matBuffer;
         }
 
-        public void Initialize()
+        public async Task Initialize()
         {
-            _videoCapture = new VideoCapture();
-            if (!_videoCapture.Open(_camId))
+            var x = await Task.Run(() =>
             {
-                throw new ApplicationException($"Failed to open video device {_camId}");
-            }
-            FrameSize = SetMaxResolution(_videoCapture);
+                var capture  = new VideoCapture();
+                if (!capture.Open(_camId))
+                {
+                    throw new ApplicationException($"Failed to open video device {_camId}");
+                }
+
+                var frameSize =  SetMaxResolution(capture);
+
+                return (capture, frameSize);
+
+            });
+
+            _videoCapture = x.capture;
+            FrameSize = x.frameSize;
         }
 
         public async Task CaptureAsync(CancellationToken cancellationToken)

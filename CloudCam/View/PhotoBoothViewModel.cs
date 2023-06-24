@@ -146,7 +146,7 @@ namespace CloudCam.View
                 .ToPropertyEx(this, x => x.ToDisplayImageFps);
         }
 
-        public void Start()
+        public async Task Start()
         {
             MatBuffer matBuffer = new MatBuffer();
             WebcamCapture webcamCapture;
@@ -154,7 +154,7 @@ namespace CloudCam.View
             try
             {
                 webcamCapture = new WebcamCapture(_device.OpenCdId, matBuffer);
-                webcamCapture.Initialize();
+                await webcamCapture.Initialize();
             }
             catch (Exception ex)
             {

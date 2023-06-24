@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 using CloudCam.Effect;
 using CloudCam.Light;
@@ -91,26 +94,31 @@ namespace CloudCam.View
             {
                 settingsSerializer.Save(x);
             });
-            settingsViewModel.Start.Subscribe(settingsToUse =>
+            settingsViewModel.Start.Subscribe(async settingsToUse =>
             {
-                Log.Logger.Information("Initializing photo booth");
-                settingsSerializer.Save(settingsToUse);
-
-                try
-                {
-                    _photoBoothViewModel = InitializePhotoBoothViewModel(settingsToUse);
-                    SelectedViewModel = _photoBoothViewModel;
-                }
-                catch (Exception ex)
-                {
-                    Log.Logger.Error(ex,"Failed to initialize photo booth");
-                }
+                await InitializePhotoBoothViewModelAsync(settingsSerializer, settingsToUse);
             });
 
             SelectedViewModel = settingsViewModel;
         }
 
-        private PhotoBoothViewModel InitializePhotoBoothViewModel(Settings settings)
+        private async Task InitializePhotoBoothViewModelAsync(SettingsSerializer settingsSerializer, Settings settings)
+        {
+            Log.Logger.Information("Initializing photo booth");
+            settingsSerializer.Save(settings);
+
+            try
+            {
+                _photoBoothViewModel = await InitializePhotoBoothViewModel(settings);
+                SelectedViewModel = _photoBoothViewModel;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Failed to initialize photo booth");
+            }
+        }
+
+        private async Task<PhotoBoothViewModel> InitializePhotoBoothViewModel(Settings settings)
         {
             KeyToUserActionDic = settings.KeyBindings.ToDictionary(y => y.Key, y => y.Action);
 
@@ -166,7 +174,7 @@ namespace CloudCam.View
                 imageCollageCreator,
                 shouldPrintImageViewModelFactory);
 
-            viewmodel.Start();
+            await viewmodel.Start();
 
             return viewmodel;
         }
