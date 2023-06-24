@@ -7,8 +7,171 @@
                                 xmlns:local="clr-namespace:CloudCam.View"
                                 xmlns:reactiveUi="http://reactiveui.net"
                                 mc:Ignorable="d" 
-                                d:DesignHeight="450" d:DesignWidth="800" Background="Red">
-    <Viewbox VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
-        <TextBlock  x:Name="MessageTextBlock" Text="Test test test test"/>
-    </Viewbox>
+                                d:DesignHeight="200" d:DesignWidth="800" Background="Transparent">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+        <Viewbox Grid.Column="0" Grid.Row="1" RenderTransformOrigin="0.5,0.5">
+            <Grid>
+                <Ellipse Height="52"
+                             Width="52"
+                             Fill="DarkRed">
+                </Ellipse>
+
+                <Ellipse Height="50"
+                             Width="50"
+                             Fill="Yellow">
+                </Ellipse>
+
+
+                <TextBlock Text="Cancel" 
+                               FontSize="10"
+                               FontFamily="/Resources/Fonts/#Tradizional DEMO Regular"
+                               Foreground="DarkRed"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+            </Grid>
+            <Viewbox.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform1" 
+                                    Storyboard.TargetProperty="AngleX"
+                                    From="45" To="-45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                            <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform1" 
+                                    Storyboard.TargetProperty="AngleY"
+                                    From="-45" To="45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Viewbox.Triggers>
+
+            <Viewbox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="ScaleTransform1" ScaleX="0.50" ScaleY="0.50"></ScaleTransform>
+                    <SkewTransform x:Name="SkewTransform1" AngleX="1" AngleY="1"></SkewTransform>
+                </TransformGroup>
+            </Viewbox.RenderTransform>
+
+        </Viewbox>
+
+        <Viewbox Grid.Column="1" Grid.Row="1" RenderTransformOrigin="0.5,0.5">
+            <Grid>
+                <Ellipse Height="52"
+                             Width="52"
+                             Fill="DarkRed">
+                </Ellipse>
+
+                <Ellipse Height="50"
+                             Width="50"
+                             Fill="Red">
+                </Ellipse>
+
+
+                <TextBlock Text="Press to print!" 
+                               Margin="5"
+                               FontSize="10"
+                               FontFamily="/Resources/Fonts/#Tradizional DEMO Regular"
+                               Foreground="Yellow"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+            </Grid>
+            <Viewbox.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                    Storyboard.TargetName="ScaleTransform2" 
+                                    Storyboard.TargetProperty="ScaleX"
+                                    From="0.50" To="1" Duration="0:0:1" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                            <DoubleAnimation
+                                    Storyboard.TargetName="ScaleTransform2" 
+                                    Storyboard.TargetProperty="ScaleY"
+                                    From="0.50" To="1" Duration="0:0:1" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Viewbox.Triggers>
+
+            <Viewbox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="ScaleTransform2" ScaleX="0.50" ScaleY="0.50"></ScaleTransform>
+                    <SkewTransform x:Name="SkewTransform2" AngleX="1" AngleY="1"></SkewTransform>
+                </TransformGroup>
+            </Viewbox.RenderTransform>
+
+        </Viewbox>
+
+
+
+        <Viewbox Grid.Column="2" Grid.Row="1" RenderTransformOrigin="0.5,0.5">
+            <Grid>
+                <Ellipse Height="52"
+                             Width="52"
+                             Fill="DarkRed">
+                </Ellipse>
+
+                <Ellipse Height="50"
+                             Width="50"
+                             Fill="Yellow">
+                </Ellipse>
+
+                <TextBlock Text="Cancel" 
+                               FontSize="10"
+                               FontFamily="/Resources/Fonts/#Tradizional DEMO Regular"
+                               Foreground="DarkRed"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+            </Grid>
+
+            <Viewbox.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform3" 
+                                    Storyboard.TargetProperty="AngleX"
+                                    From="-45" To="45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                            <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform3" 
+                                    Storyboard.TargetProperty="AngleY"
+                                    From="45" To="-45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Viewbox.Triggers>
+
+            <Viewbox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="ScaleTransform3" ScaleX="0.50" ScaleY="0.50"></ScaleTransform>
+                    <SkewTransform x:Name="SkewTransform3" AngleX="1" AngleY="1"></SkewTransform>
+                </TransformGroup>
+            </Viewbox.RenderTransform>
+        </Viewbox>
+
+
+    </Grid>
+
+
+
+
+
+    
 </reactiveUi:ReactiveUserControl>

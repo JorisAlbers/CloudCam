@@ -28,8 +28,7 @@ namespace CloudCam.View
 
             this.WhenActivated(disposable =>
             {
-                this.OneWayBind(ViewModel, vm => vm.Message, view => view.MessageTextBlock.Text)
-                    .DisposeWith(disposable);
+               
 
 
             });
