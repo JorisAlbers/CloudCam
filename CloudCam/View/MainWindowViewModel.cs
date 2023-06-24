@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -94,9 +95,19 @@ namespace CloudCam.View
             {
                 settingsSerializer.Save(x);
             });
+
+            bool initializing = false;
+
             settingsViewModel.Start.Subscribe(async settingsToUse =>
             {
+                if (initializing)
+                {
+                    return;
+                }
+
+                initializing = true;
                 await InitializePhotoBoothViewModelAsync(settingsSerializer, settingsToUse);
+                initializing = false;
             });
 
             SelectedViewModel = settingsViewModel;
