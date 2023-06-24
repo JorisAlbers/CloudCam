@@ -89,18 +89,16 @@ namespace CloudCam.View
             var settingsViewModel = new SettingsViewModel(settings, devices);
             settingsViewModel.Apply.Subscribe(x =>
             {
-                settings = x;
                 settingsSerializer.Save(x);
             });
             settingsViewModel.Start.Subscribe(settingsToUse =>
             {
                 Log.Logger.Information("Initializing photo booth");
-                settings = settingsToUse;
                 settingsSerializer.Save(settingsToUse);
 
                 try
                 {
-                    _photoBoothViewModel = InitializePhotoBoothViewModel(settings, settingsToUse);
+                    _photoBoothViewModel = InitializePhotoBoothViewModel(settingsToUse);
                     SelectedViewModel = _photoBoothViewModel;
                 }
                 catch (Exception ex)
@@ -112,26 +110,26 @@ namespace CloudCam.View
             SelectedViewModel = settingsViewModel;
         }
 
-        private PhotoBoothViewModel InitializePhotoBoothViewModel(Settings settings, Settings settingsToUse)
+        private PhotoBoothViewModel InitializePhotoBoothViewModel(Settings settings)
         {
             KeyToUserActionDic = settings.KeyBindings.ToDictionary(y => y.Key, y => y.Action);
 
-            var frameRepository = new ImageRepository(settingsToUse.FrameFolder);
+            var frameRepository = new ImageRepository(settings.FrameFolder);
             frameRepository.Load();
 
-            var mustachesRepository = new EffectImageLoader(new ImageRepository(settingsToUse.MustacheFolder),
-                new ImageSettingsRepository(settingsToUse.MustacheFolder));
+            var mustachesRepository = new EffectImageLoader(new ImageRepository(settings.MustacheFolder),
+                new ImageSettingsRepository(settings.MustacheFolder));
             mustachesRepository.Load();
 
-            var hatsRepository = new EffectImageLoader(new ImageRepository(settingsToUse.HatFolder),
-                new ImageSettingsRepository(settingsToUse.HatFolder));
+            var hatsRepository = new EffectImageLoader(new ImageRepository(settings.HatFolder),
+                new ImageSettingsRepository(settings.HatFolder));
             hatsRepository.Load();
 
-            var glassesRepository = new EffectImageLoader(new ImageRepository(settingsToUse.GlassesFolder),
-                new ImageSettingsRepository(settingsToUse.GlassesFolder));
+            var glassesRepository = new EffectImageLoader(new ImageRepository(settings.GlassesFolder),
+                new ImageSettingsRepository(settings.GlassesFolder));
             glassesRepository.Load();
 
-            var outputRepository = new OutputImageRepository(settingsToUse.OutputFolder);
+            var outputRepository = new OutputImageRepository(settings.OutputFolder);
 
 #if DEBUG
             ILedAnimator ledAnimator = new NullLedAnimator();
@@ -156,7 +154,7 @@ namespace CloudCam.View
             }
 
             var viewmodel = new PhotoBoothViewModel(
-                CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == settingsToUse.CameraDevice),
+                CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == settings.CameraDevice),
                 frameRepository,
                 mustachesRepository,
                 hatsRepository,
