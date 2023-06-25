@@ -65,6 +65,7 @@ namespace CloudCam.View
                 this.OneWayBind(ViewModel, vm => vm.EditingFps, v => v.EditingFpsTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ToDisplayImageFps, v => v.ToDisplayImageTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ElicitIfImageShouldBePrintedViewModel, v => v.ElicitPrintImageViewModel.ViewModel).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.PrintingViewModel, v => v.PrintViewModelViewHost.ViewModel).DisposeWith(d);
             });
         }
 

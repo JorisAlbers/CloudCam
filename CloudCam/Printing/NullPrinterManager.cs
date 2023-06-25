@@ -1,10 +1,13 @@
 ﻿using System.Drawing;
+using System.Threading.Tasks;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace CloudCam.Printing
 {
-    public class NullPrinterManager : IPrinterManager
+    public class NullPrinterManager : ReactiveObject, IPrinterManager
     {
-        public bool IsPrinting { get; } = false;
+        [Reactive] public bool IsPrinting { get; set; }
 
         public PrinterSpecs Initialize()
         {
@@ -13,6 +16,12 @@ namespace CloudCam.Printing
 
         public void Print(Bitmap image)
         {
+            IsPrinting = true;
+            Task.Run(async () =>
+            {
+                await Task.Delay(5000);
+                IsPrinting = false;
+            });
         }
 
         public int PrintsRemaining()

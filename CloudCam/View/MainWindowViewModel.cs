@@ -201,8 +201,8 @@ namespace CloudCam.View
 #if FALSE
                 printerManager = new NullPrinterManager();
 #else
-                    printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
-                    var printerSpecs = printerManager.Initialize();
+                printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
+                var printerSpecs = printerManager.Initialize();
 #endif
 
                 double dpixCorrected = printerSpecs.DpiX / 100.0;

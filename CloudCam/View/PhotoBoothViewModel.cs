@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using CloudCam.Effect;
 using CloudCam.Light;
 using CloudCam.Printing;
@@ -60,6 +61,7 @@ namespace CloudCam.View
         public float EditingFps { get; set; }
 
         [Reactive] public ElicitIfImageShouldBePrintedViewModel ElicitIfImageShouldBePrintedViewModel { get; set; }
+        [Reactive] public PrintingViewModel PrintingViewModel { get; set; }
 
         [Reactive] public bool DebugModeActive { get; set; }
 
@@ -144,6 +146,17 @@ namespace CloudCam.View
                 .Where((_) => DebugModeActive)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.ToDisplayImageFps);
+
+            if (_printerManager != null)
+            {
+                this.WhenAnyValue(x => x._printerManager.IsPrinting)
+                    .Where(x => !x)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(x =>
+                    {
+                        PrintingViewModel = null;
+                    });
+            }
         }
 
         public async Task Start()
@@ -306,6 +319,8 @@ namespace CloudCam.View
             TakenImage = imageAsImageSource1;
             await Task.Delay(1000, cancellationToken);
             TakenImage = null;
+            PrintingViewModel = new PrintingViewModel("Woooow printing printing!", imageAsImageSource1,
+                imageAsImageSource2, imageAsImageSource3);
         }
 
         private async Task<bool> ShouldPrintImage(ElicitIfImageShouldBePrintedViewModelFactory elicitIfImageShouldBePrintedViewModelFactory)
