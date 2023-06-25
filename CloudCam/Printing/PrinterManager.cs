@@ -181,7 +181,7 @@ namespace CloudCam.Printing
             // Set the page orientation to landscape or portrait
             // TODO inject these setting and allow user to configur
             document.PrinterSettings.DefaultPageSettings.Landscape = false;
-            document.PrinterSettings.DefaultPageSettings.Margins = new Margins(50, 50, 50, 50);
+            document.PrinterSettings.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
             document.PrinterSettings.DefaultPageSettings.PaperSize = sizesList.First(x => x.Width == 211 && x.Height == 615);
             _document = document;
 
@@ -200,8 +200,10 @@ namespace CloudCam.Printing
             _document.PrintPage += (sender, e) =>
             {
                 // Draw the image on the print page
-                Console.Out.WriteLine($"While printing, this is the page size: (w.h) {e.PageSettings.PaperSize.Width} x {e.PageSettings.PaperSize.Height}");
-                e.Graphics.DrawImage(image, e.PageBounds);
+
+                var rec = new Rectangle(0, 8, 200, 600);
+
+                e.Graphics.DrawImage(image, rec);
             };
 
             // Print the document
