@@ -17,7 +17,7 @@ namespace CloudCam.Printing
         private Bitmap _bitmapToPrint;
         private Rectangle _printArea;
 
-        [Reactive] private bool IsPrinting { get; set; }
+        [Reactive] public bool IsPrinting { get; set; }
 
         public PrinterManager(string printerName)
         {

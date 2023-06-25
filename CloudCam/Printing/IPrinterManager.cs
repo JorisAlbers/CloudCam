@@ -4,6 +4,7 @@ namespace CloudCam.Printing
 {
     public interface IPrinterManager
     {
+        public bool IsPrinting { get;  }
         PrinterSpecs Initialize();
         void Print(Bitmap image);
         int PrintsRemaining();
