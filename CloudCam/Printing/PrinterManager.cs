@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Printing;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Serilog;
 
 /*namespace printerTestCsharp
@@ -152,12 +154,14 @@ using Serilog;
 
 namespace CloudCam.Printing
 {
-    public class PrinterManager : IPrinterManager
+    public class PrinterManager : ReactiveObject, IPrinterManager
     {
         private readonly string _printerName;
         private PrintDocument _document;
         private Bitmap _bitmapToPrint;
         private Rectangle _printArea;
+
+        [Reactive] private bool IsPrinting { get; set; }
 
         public PrinterManager(string printerName)
         {
@@ -213,17 +217,24 @@ namespace CloudCam.Printing
 
         private void DocumentOnEndPrint(object sender, PrintEventArgs e)
         {
-            ;
+            IsPrinting = false;
         }
 
         private void DocumentOnBeginPrint(object sender, PrintEventArgs e)
         {
-            ;
+            IsPrinting = true;
         }
 
         public void Print(Bitmap image)
         {
             Log.Logger.Information("Printing image");
+
+            if (IsPrinting)
+            {
+                Log.Logger.Warning("Cannot print, already printing!");
+                return;
+            }
+
             _bitmapToPrint = image;
             _document.Print();
         }
