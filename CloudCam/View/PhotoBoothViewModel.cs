@@ -182,6 +182,30 @@ namespace CloudCam.View
 
         }
 
+        public async Task HandelSwipeInput(SwipeDirection direction)
+        {
+            switch (direction)
+            {
+                case SwipeDirection.Left:
+                    NextEffect.Execute(true).Subscribe();
+                    break;
+                case SwipeDirection.Right:
+                    NextEffect.Execute(false).Subscribe();
+                    break;
+                case SwipeDirection.Up:
+                /*
+                    await TakePicture.Execute();
+                    */
+                    break;
+                case SwipeDirection.Down:
+                    /*await this.ResetFramesAndEffects();*/
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+            await Task.CompletedTask;
+        }
+
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
             if (Interlocked.Exchange(ref _takingPicture, 1) == 1)

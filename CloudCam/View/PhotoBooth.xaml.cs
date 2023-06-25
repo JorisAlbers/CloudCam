@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ReactiveUI;
@@ -11,8 +12,13 @@ namespace CloudCam.View
     /// <summary>
     /// Interaction logic for PhotoBooth.xaml
     /// </summary>
+    /// 
     public partial class PhotoBooth
     {
+        private Point initialTouchPoint;
+        private const double SwipeThreshold = 100; // Adjust this value as needed
+        private Boolean swipeInProgress = false;
+
         public PhotoBooth()
         {
             InitializeComponent();
@@ -66,6 +72,59 @@ namespace CloudCam.View
                 this.OneWayBind(ViewModel, vm => vm.ToDisplayImageFps, v => v.ToDisplayImageTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ElicitIfImageShouldBePrintedViewModel, v => v.ElicitPrintImageViewModel.ViewModel).DisposeWith(d);
             });
+
+            this.TouchDown += PhotoBooth_TouchDown;
+            this.TouchMove += PhotoBooth_TouchMove;
+            this.TouchUp += PhotoBooth_TouchUp;
+
+        }
+
+        private void PhotoBooth_TouchMove(object sender, TouchEventArgs e)
+        {
+            if (ViewModel == null) { return; }
+            if (swipeInProgress) { return; }
+            
+            Point currentTouchPoint = e.GetTouchPoint(this).Position;
+
+            double horizontalDelta = currentTouchPoint.X - initialTouchPoint.X;
+            double verticalDelta = currentTouchPoint.Y - initialTouchPoint.Y;
+
+            if (Math.Abs(verticalDelta) >= SwipeThreshold && Math.Abs(verticalDelta) >= Math.Abs(horizontalDelta))
+            {
+                if (verticalDelta > 0)
+                {
+                    ViewModel.HandelSwipeInput(SwipeDirection.Down);
+                }
+                else
+                {
+                    ViewModel.HandelSwipeInput(SwipeDirection.Up);
+                }
+                this.swipeInProgress = true;
+            }
+            else if (Math.Abs(horizontalDelta) >= SwipeThreshold && Math.Abs(verticalDelta) <= Math.Abs(horizontalDelta))
+            {
+                if (horizontalDelta > 0)
+                {
+                    ViewModel.HandelSwipeInput(SwipeDirection.Right);
+                }
+                else
+                {
+                    ViewModel.HandelSwipeInput(SwipeDirection.Left);
+                }
+                this.swipeInProgress = true;
+            }
+        }
+
+        private void PhotoBooth_TouchDown(object sender, TouchEventArgs e)
+        {
+            if (ViewModel == null) { return; }
+
+            initialTouchPoint = e.GetTouchPoint(this).Position;
+        }
+
+        private void PhotoBooth_TouchUp(object sender, TouchEventArgs e)
+        {
+            this.swipeInProgress = false;
         }
 
         private void VideoPlayer_OnMediaEnded(object sender, RoutedEventArgs e)
