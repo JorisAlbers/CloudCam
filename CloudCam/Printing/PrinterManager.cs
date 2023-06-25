@@ -91,6 +91,12 @@ namespace CloudCam.Printing
                 return;
             }
 
+            if (PrintsRemaining() < 0)
+            {
+                Log.Logger.Warning("Cannot print, no print left!");
+                return;
+            }
+
             _bitmapToPrint = image;
             _document.Print();
         }
