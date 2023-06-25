@@ -26,105 +26,104 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <ScrollViewer Grid.Column="1" Grid.Row="0">
+            <DockPanel  LastChildFill="False" x:Name="DockPanel">
 
-        <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="False" x:Name="DockPanel">
-
-            <TextBlock Text="CloudCam" DockPanel.Dock="Top" Style="{StaticResource MaterialDesignHeadline4TextBlock}"/>
-
-
-            <GroupBox Header="Resources" DockPanel.Dock="Top">
-                <UniformGrid Columns="1">
-                    <TextBlock Text="Path to frames:" />
-                    <Grid Height="32">
-                        <TextBox x:Name="FramesPathTextBox" MaxLines="1" />
-                        <Button x:Name="SelectFrameFolderButton" HorizontalAlignment="Right">
-                            <materialDesign:PackIcon Kind="Folder" />
-                        </Button>
-                    </Grid>
+                <TextBlock Text="CloudCam" DockPanel.Dock="Top" Style="{StaticResource MaterialDesignHeadline4TextBlock}"/>
 
 
-                    <TextBlock Text="Path to mustaches:" />
-                    <Grid Height="32">
-                        <TextBox x:Name="MustachesPathTextBox" MaxLines="1" />
-                        <Button x:Name="SelectMustacheFolderButton" HorizontalAlignment="Right">
-                            <materialDesign:PackIcon Kind="Folder" />
-                        </Button>
-                    </Grid>
-
-                    <TextBlock Text="Path to hats:" />
-                    <Grid Height="32">
-                        <TextBox x:Name="HatsPathTextBox" MaxLines="1" />
-                        <Button x:Name="SelectHatFolderButton" HorizontalAlignment="Right">
-                            <materialDesign:PackIcon Kind="Folder" />
-                        </Button>
-                    </Grid>
-
-                    <TextBlock Text="Path to glasses:" />
-                    <Grid Height="32">
-                        <TextBox x:Name="GlassesPathTextBox" MaxLines="1" />
-                        <Button x:Name="SelectGlassesFolderButton" HorizontalAlignment="Right">
-                            <materialDesign:PackIcon Kind="Folder" />
-                        </Button>
-                    </Grid>
-
-                    <TextBlock Text="Path to output:" />
-                    <Grid Height="32">
-                        <TextBox x:Name="OutputPathTextBox" MaxLines="1" />
-                        <Button x:Name="SelectOutputFolderButton" HorizontalAlignment="Right">
-                            <materialDesign:PackIcon Kind="Folder" />
-                        </Button>
-                    </Grid>
-                </UniformGrid>
-            </GroupBox>
-
-            <GroupBox Header="Printing" DockPanel.Dock="Top">
-                <UniformGrid Columns="1">
-                    <TextBlock Text="Path to background image:" />
-                    <TextBox x:Name="BackgroundImagePathTextBox" MaxLines="1" />
-
-                    <TextBlock Text="Printer:" />
-                    <ComboBox x:Name="PrinterComboBox" >
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type system:String}">
-                                <TextBlock Text="{Binding }"></TextBlock>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </UniformGrid>
-            </GroupBox>
+                <GroupBox Header="Resources" DockPanel.Dock="Top">
+                    <UniformGrid Columns="1">
+                        <TextBlock Text="Path to frames:" />
+                        <Grid Height="32">
+                            <TextBox x:Name="FramesPathTextBox" MaxLines="1" />
+                            <Button x:Name="SelectFrameFolderButton" HorizontalAlignment="Right">
+                                <materialDesign:PackIcon Kind="Folder" />
+                            </Button>
+                        </Grid>
 
 
-            <GroupBox Header="Camera" DockPanel.Dock="Top">
-                <UniformGrid Columns="1">
-                    <TextBlock Text="Camera:" />
-                    <ComboBox x:Name="CameraDeviceComboBox" >
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate DataType="local:CameraDevice">
-                                <TextBlock Text="{Binding Name}"></TextBlock>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </UniformGrid>
-            </GroupBox>
+                        <TextBlock Text="Path to mustaches:" />
+                        <Grid Height="32">
+                            <TextBox x:Name="MustachesPathTextBox" MaxLines="1" />
+                            <Button x:Name="SelectMustacheFolderButton" HorizontalAlignment="Right">
+                                <materialDesign:PackIcon Kind="Folder" />
+                            </Button>
+                        </Grid>
 
-            <GroupBox Header="Leds" DockPanel.Dock="Top">
-                <UniformGrid Columns="1">
-                    <TextBlock Text="Leds Com port:" />
-                    <ComboBox x:Name="ComPortLedsComboBox" >
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate DataType="local:CameraDevice">
-                                <TextBlock Text="{Binding }"></TextBlock>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </UniformGrid>
-            </GroupBox>
+                        <TextBlock Text="Path to hats:" />
+                        <Grid Height="32">
+                            <TextBox x:Name="HatsPathTextBox" MaxLines="1" />
+                            <Button x:Name="SelectHatFolderButton" HorizontalAlignment="Right">
+                                <materialDesign:PackIcon Kind="Folder" />
+                            </Button>
+                        </Grid>
 
-            <GroupBox Header="Key bindings" DockPanel.Dock="Top">
-                <DataGrid CanUserAddRows="False"
+                        <TextBlock Text="Path to glasses:" />
+                        <Grid Height="32">
+                            <TextBox x:Name="GlassesPathTextBox" MaxLines="1" />
+                            <Button x:Name="SelectGlassesFolderButton" HorizontalAlignment="Right">
+                                <materialDesign:PackIcon Kind="Folder" />
+                            </Button>
+                        </Grid>
+
+                        <TextBlock Text="Path to output:" />
+                        <Grid Height="32">
+                            <TextBox x:Name="OutputPathTextBox" MaxLines="1" />
+                            <Button x:Name="SelectOutputFolderButton" HorizontalAlignment="Right">
+                                <materialDesign:PackIcon Kind="Folder" />
+                            </Button>
+                        </Grid>
+                    </UniformGrid>
+                </GroupBox>
+
+                <GroupBox Header="Printing" DockPanel.Dock="Top">
+                    <UniformGrid Columns="1">
+                        <TextBlock Text="Path to background image:" />
+                        <TextBox x:Name="BackgroundImagePathTextBox" MaxLines="1" />
+
+                        <TextBlock Text="Printer:" />
+                        <ComboBox x:Name="PrinterComboBox" >
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type system:String}">
+                                    <TextBlock Text="{Binding }"></TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </UniformGrid>
+                </GroupBox>
+
+
+                <GroupBox Header="Camera" DockPanel.Dock="Top">
+                    <UniformGrid Columns="1">
+                        <TextBlock Text="Camera:" />
+                        <ComboBox x:Name="CameraDeviceComboBox" >
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="local:CameraDevice">
+                                    <TextBlock Text="{Binding Name}"></TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </UniformGrid>
+                </GroupBox>
+
+                <GroupBox Header="Leds" DockPanel.Dock="Top">
+                    <UniformGrid Columns="1">
+                        <TextBlock Text="Leds Com port:" />
+                        <ComboBox x:Name="ComPortLedsComboBox" >
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="local:CameraDevice">
+                                    <TextBlock Text="{Binding }"></TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </UniformGrid>
+                </GroupBox>
+
+                <GroupBox Header="Key bindings" DockPanel.Dock="Top">
+                    <DataGrid CanUserAddRows="False"
                           CanUserSortColumns="False"
                           AutoGenerateColumns="False"
                           CanUserResizeColumns="False"
@@ -133,40 +132,36 @@
                           HeadersVisibility="Column"
                           HorizontalAlignment="Stretch"
                           Width="{Binding ElementName=DockPanel, Path=ActualWidth}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Key" 
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Key" 
                                             Binding="{Binding Action}" 
                                             Width="*"/>
-                        <DataGridTemplateColumn Width="*" Header="Current">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate DataType="view:KeyBindingViewModel">
-                                    <TextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding SelectedKeyAsString}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="*" Header="Current">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="view:KeyBindingViewModel">
+                                        <TextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Text="{Binding SelectedKeyAsString}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Width="*">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate DataType="view:KeyBindingViewModel">
-                                    <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PreviewKeyUp="InputTextBox_KeyUp" AcceptsReturn="True"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
+                            <DataGridTemplateColumn Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="view:KeyBindingViewModel">
+                                        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PreviewKeyUp="InputTextBox_KeyUp" AcceptsReturn="True"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </DockPanel>
+        </ScrollViewer>
+        
 
-
-
-            <UniformGrid Columns="2" DockPanel.Dock="Bottom">
-                <Button  Content="Apply" x:Name="ApplyButton" />
-                <Button Content="Start" x:Name="StartButton" />
-            </UniformGrid>
-
-        </DockPanel>
-
-
-
+        <UniformGrid Grid.Column="1" Grid.Row="1" Columns="2" DockPanel.Dock="Bottom">
+            <Button  Content="Apply" x:Name="ApplyButton" />
+            <Button Content="Start" x:Name="StartButton" />
+        </UniformGrid>
     </Grid>
 
 
