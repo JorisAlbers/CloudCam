@@ -201,10 +201,7 @@ namespace CloudCam.Printing
             {
                 // Draw the image on the print page
                 Console.Out.WriteLine($"While printing, this is the page size: (w.h) {e.PageSettings.PaperSize.Width} x {e.PageSettings.PaperSize.Height}");
-
-                var rec = new Rectangle(10, 50, 635 - 100, 1845 - 20);
-
-                e.Graphics.DrawImage(image, rec);
+                e.Graphics.DrawImage(image, e.PageBounds);
             };
 
             // Print the document
