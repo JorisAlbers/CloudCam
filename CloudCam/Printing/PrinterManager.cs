@@ -156,6 +156,8 @@ namespace CloudCam.Printing
     {
         private readonly string _printerName;
         private PrintDocument _document;
+        private Bitmap _bitmapToPrint;
+        private Rectangle _printArea;
 
         public PrinterManager(string printerName)
         {
@@ -183,30 +185,46 @@ namespace CloudCam.Printing
             document.PrinterSettings.DefaultPageSettings.Landscape = false;
             document.PrinterSettings.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
             document.PrinterSettings.DefaultPageSettings.PaperSize = sizesList.First(x => x.Width == 211 && x.Height == 615);
+            _printArea = new Rectangle(0, 8, 200, 600);
+
             _document = document;
 
 
             int dpiX = document.PrinterSettings.DefaultPageSettings.PrinterResolution.X;
             int dpiY = document.PrinterSettings.DefaultPageSettings.PrinterResolution.Y;
 
+            _document.BeginPrint += DocumentOnBeginPrint;
+            _document.EndPrint   += DocumentOnEndPrint;
+            _document.PrintPage  += DocumentOnPrintPage;
             return new PrinterSpecs(dpiX, dpiY, new Size(211, 615));
 
+        }
+
+        private void DocumentOnPrintPage(object sender, PrintPageEventArgs e)
+        {
+            var bitmap = _bitmapToPrint;
+            if (bitmap == null)
+            {
+                return;
+            }
+            
+            e.Graphics.DrawImage(bitmap, _printArea);
+        }
+
+        private void DocumentOnEndPrint(object sender, PrintEventArgs e)
+        {
+            ;
+        }
+
+        private void DocumentOnBeginPrint(object sender, PrintEventArgs e)
+        {
+            ;
         }
 
         public void Print(Bitmap image)
         {
             Log.Logger.Information("Printing image");
-
-            _document.PrintPage += (sender, e) =>
-            {
-                // Draw the image on the print page
-
-                var rec = new Rectangle(0, 8, 200, 600);
-
-                e.Graphics.DrawImage(image, rec);
-            };
-
-            // Print the document
+            _bitmapToPrint = image;
             _document.Print();
         }
 
