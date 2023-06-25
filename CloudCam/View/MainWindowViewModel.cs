@@ -198,13 +198,24 @@ namespace CloudCam.View
 
             if (!String.IsNullOrWhiteSpace(settings.PrinterSettings.SelectedPrinter))
             {
-#if DEBUG
+#if FALSE
                 printerManager = new NullPrinterManager();
 #else
                     printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
+                    var printerSpecs = printerManager.Initialize();
 #endif
 
-                var imageSize = new Rectangle(0, 0, 211, 615); // TODO convert inch to pixels per inch!
+                double dpixCorrected = printerSpecs.DpiX / 100.0;
+                double dpiyCorrected = printerSpecs.DpiX / 100.0;
+
+                /*
+                int heightInPixels = (int)(printerSpecs.paperSize.Height * dpiyCorrected);
+                int widthInPixels  = (int)(printerSpecs.paperSize.Width  * dpixCorrected);*/
+
+                int heightInPixels = (int)(200* dpiyCorrected);
+                int widthInPixels  = (int)(600 * dpixCorrected); 
+
+                var imageSize = new Rectangle(0, 0, heightInPixels, widthInPixels);
 
                 double topAndBottomMargin = 50;
                 double leftAndRightMargin = 10;

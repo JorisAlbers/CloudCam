@@ -163,7 +163,7 @@ namespace CloudCam.Printing
             // set properties
         }
         
-        public void Initialize()
+        public PrinterSpecs Initialize()
         {
             Log.Logger.Information($"Initializing printer {_printerName}");
 
@@ -177,31 +177,34 @@ namespace CloudCam.Printing
                 sizesList.Add(paperSize);
             }
 
+
             // Set the page orientation to landscape or portrait
             // TODO inject these setting and allow user to configur
             document.PrinterSettings.DefaultPageSettings.Landscape = false;
-            document.PrinterSettings.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
+            document.PrinterSettings.DefaultPageSettings.Margins = new Margins(50, 50, 50, 50);
             document.PrinterSettings.DefaultPageSettings.PaperSize = sizesList.First(x => x.Width == 211 && x.Height == 615);
             _document = document;
+
+
+            int dpiX = document.PrinterSettings.DefaultPageSettings.PrinterResolution.X;
+            int dpiY = document.PrinterSettings.DefaultPageSettings.PrinterResolution.Y;
+
+            return new PrinterSpecs(dpiX, dpiY, new Size(211, 615));
+
         }
 
         public void Print(Bitmap image)
         {
             Log.Logger.Information("Printing image");
 
-            /*int dpiX = document.PrinterSettings.DefaultPageSettings.PrinterResolution.X;
-            int dpiY = document.PrinterSettings.DefaultPageSettings.PrinterResolution.Y;*/
-
-            float widthInInches = _document.PrinterSettings.DefaultPageSettings.PaperSize.Width / 100.0f;
-            float heightInInches = _document.PrinterSettings.DefaultPageSettings.PaperSize.Height / 100.0f;
-            /*int widthInPixels = (int)(widthInInches * dpiX);
-            int heightInPixels = (int)(heightInInches * dpiY);*/
-
             _document.PrintPage += (sender, e) =>
             {
                 // Draw the image on the print page
                 Console.Out.WriteLine($"While printing, this is the page size: (w.h) {e.PageSettings.PaperSize.Width} x {e.PageSettings.PaperSize.Height}");
-                e.Graphics.DrawImage(image, e.PageBounds);
+
+                var rec = new Rectangle(10, 50, 635 - 100, 1845 - 20);
+
+                e.Graphics.DrawImage(image, rec);
             };
 
             // Print the document

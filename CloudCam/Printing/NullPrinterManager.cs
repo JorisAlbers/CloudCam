@@ -4,8 +4,9 @@ namespace CloudCam.Printing
 {
     public class NullPrinterManager : IPrinterManager
     {
-        public void Initialize()
+        public PrinterSpecs Initialize()
         {
+            return new PrinterSpecs(0, 0, new Size(0, 0));
         }
 
         public void Print(Bitmap image)
