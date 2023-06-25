@@ -155,6 +155,7 @@ namespace CloudCam.Printing
     public class PrinterManager : IPrinterManager
     {
         private readonly string _printerName;
+        private PrintDocument _document;
 
         public PrinterManager(string printerName)
         {
@@ -164,13 +165,8 @@ namespace CloudCam.Printing
         
         public void Initialize()
         {
-            
-            // load stuff that might take a while
-        }
+            Log.Logger.Information($"Initializing printer {_printerName}");
 
-        public void Print(Bitmap image)
-        {
-            Log.Logger.Information("Printing image");
             PrintDocument document = new PrintDocument();
             document.PrinterSettings.PrinterName = _printerName;
 
@@ -179,38 +175,37 @@ namespace CloudCam.Printing
             foreach (PaperSize paperSize in sizes)
             {
                 sizesList.Add(paperSize);
-                Console.Out.WriteLine($"Size accepted by printer:  (w.h) {paperSize.Width} x {paperSize.Height}");
             }
 
             // Set the page orientation to landscape or portrait
-            document.PrinterSettings.DefaultPageSettings.Landscape = false; // or false for portrait
+            // TODO inject these setting and allow user to configur
+            document.PrinterSettings.DefaultPageSettings.Landscape = false;
             document.PrinterSettings.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
             document.PrinterSettings.DefaultPageSettings.PaperSize = sizesList.First(x => x.Width == 211 && x.Height == 615);
+            _document = document;
+        }
+
+        public void Print(Bitmap image)
+        {
+            Log.Logger.Information("Printing image");
 
             /*int dpiX = document.PrinterSettings.DefaultPageSettings.PrinterResolution.X;
             int dpiY = document.PrinterSettings.DefaultPageSettings.PrinterResolution.Y;*/
 
-            float widthInInches = document.PrinterSettings.DefaultPageSettings.PaperSize.Width / 100.0f;
-            float heightInInches = document.PrinterSettings.DefaultPageSettings.PaperSize.Height / 100.0f;
+            float widthInInches = _document.PrinterSettings.DefaultPageSettings.PaperSize.Width / 100.0f;
+            float heightInInches = _document.PrinterSettings.DefaultPageSettings.PaperSize.Height / 100.0f;
             /*int widthInPixels = (int)(widthInInches * dpiX);
             int heightInPixels = (int)(heightInInches * dpiY);*/
 
-            document.PrintPage += (sender, e) =>
+            _document.PrintPage += (sender, e) =>
             {
                 // Draw the image on the print page
                 Console.Out.WriteLine($"While printing, this is the page size: (w.h) {e.PageSettings.PaperSize.Width} x {e.PageSettings.PaperSize.Height}");
                 e.Graphics.DrawImage(image, e.PageBounds);
-
-                Console.ReadLine();
-                return;
             };
 
-            Console.Out.WriteLine("Press enter to print");
-            Console.ReadLine();
-
             // Print the document
-            document.Print();
-
+            _document.Print();
         }
 
         public int PrintsRemaining()
