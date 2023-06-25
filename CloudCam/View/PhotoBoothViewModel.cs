@@ -6,7 +6,6 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using CloudCam.Effect;
 using CloudCam.Light;
 using CloudCam.Printing;
