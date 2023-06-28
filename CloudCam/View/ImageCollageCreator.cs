@@ -17,7 +17,7 @@ namespace CloudCam.View
             _overlayAreas = overlayAreas;
         }
 
-        public async Task<Bitmap> Create(Bitmap[] foregrounds, CancellationToken cancellationToken)
+        public async Task<Bitmap> Create(Bitmap[] foregrounds, String pickupLine, CancellationToken cancellationToken)
         {
             Log.Logger.Information("Creating image collage");
             if (foregrounds.Length != _overlayAreas.Length)
@@ -35,6 +35,32 @@ namespace CloudCam.View
                 {
                     gr.DrawImage(foregrounds[i], _overlayAreas[i]);
                 }
+
+                // Overlay pickup line on the bottom of the image
+                float fontSize = 72;
+                FontStyle fontStyle = FontStyle.Bold;
+                using Font font = new Font("Arial", fontSize, fontStyle);
+                using SolidBrush brush = new SolidBrush(Color.Blue);
+
+                RectangleF textRectangle = new RectangleF(80, copy.Height - 460, copy.Width - 160, 430);
+                SizeF textSize = gr.MeasureString(pickupLine, font);
+                StringFormat stringFormat = new StringFormat();
+                stringFormat.Alignment = StringAlignment.Center;
+                stringFormat.LineAlignment = StringAlignment.Center;
+
+                // If the text is too big, make it smaller
+                if (gr.MeasureString(pickupLine, font).Width > textRectangle.Width*3)
+                {
+                    fontSize = ((textRectangle.Width * 3) / gr.MeasureString(pickupLine, font).Width) * fontSize;
+                    using Font smallerFont = new Font("Arial", fontSize, fontStyle);
+                    gr.DrawString(pickupLine, smallerFont, brush, textRectangle, stringFormat);
+                }
+                else
+                {
+                    gr.DrawString(pickupLine, font, brush, textRectangle, stringFormat);
+                }
+
+                /*gr.DrawString(pickupLine, font, brush, new RectangleF(40, 1600-460, 600-80, 390), new StringFormat(ContentAlignment.MiddleCenter));*/
             }, cancellationToken);
 
             return copy;

@@ -332,7 +332,8 @@ namespace CloudCam.View
             TakenImage = imageAsImageSource3;
 
             // print
-            Bitmap toPrint = await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, cancellationToken);
+            PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
+            Bitmap toPrint = await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, PickupLine, cancellationToken);
             _printerManager.Print(toPrint);
             _outputImageRepository.Save(toPrint);
 
