@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Printing;
+using System.Threading.Tasks;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
@@ -73,7 +74,11 @@ namespace CloudCam.Printing
 
         private void DocumentOnEndPrint(object sender, PrintEventArgs e)
         {
-            IsPrinting = false;
+            Task.Run((async () =>
+            {
+                await Task.Delay(30 * 1000);
+                IsPrinting = false;
+            }));
         }
 
         private void DocumentOnBeginPrint(object sender, PrintEventArgs e)
@@ -91,11 +96,11 @@ namespace CloudCam.Printing
                 return;
             }
 
-            if (PrintsRemaining() < 0)
+            /*if (PrintsRemaining() < 0)
             {
                 Log.Logger.Warning("Cannot print, no print left!");
                 return;
-            }
+            }*/
 
             _bitmapToPrint = image;
             _document.Print();

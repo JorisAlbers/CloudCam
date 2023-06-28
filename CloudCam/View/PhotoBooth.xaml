@@ -44,7 +44,14 @@
             <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="/Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         </Viewbox>
         <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2"/>
-        
+
+
+        <reactiveUi:ViewModelViewHost  x:Name="PrintViewModelViewHost" 
+                                       Grid.Row="0" Grid.RowSpan="2"
+                                       VerticalAlignment="Stretch"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalContentAlignment="Stretch"
+                                       HorizontalContentAlignment="Stretch"/>
 
         <StackPanel x:Name="DebugPanel" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure" Grid.RowSpan="2">
             <TextBlock Foreground="Red">
