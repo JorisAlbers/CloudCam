@@ -201,41 +201,39 @@ namespace CloudCam.View
 #if FALSE
                 printerManager = new NullPrinterManager();
 #else
-                    printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
-                    var printerSpecs = printerManager.Initialize();
+                printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
+                var printerSpecs = printerManager.Initialize();
 #endif
 
                 double dpixCorrected = printerSpecs.DpiX / 100.0;
                 double dpiyCorrected = printerSpecs.DpiX / 100.0;
 
-                /*
-                int heightInPixels = (int)(printerSpecs.paperSize.Height * dpiyCorrected);
-                int widthInPixels  = (int)(printerSpecs.paperSize.Width  * dpixCorrected);*/
-
-                int heightInPixels = (int)(200* dpiyCorrected);
-                int widthInPixels  = (int)(600 * dpixCorrected); 
+                // Total paper size is 2x6 inches wich is 600x1800 pixels
+                int heightInPixels = (int)( 600 * dpiyCorrected);
+                int widthInPixels  = (int)(1800 * dpixCorrected);
 
                 var imageSize = new Rectangle(0, 0, heightInPixels, widthInPixels);
 
-                double topAndBottomMargin = 50;
-                double leftAndRightMargin = 10;
-                double marginBetweenImages = 10;
+                // Margins in between the images are fitted.
+                double topMargin = 355;
+                double leftMargin = 30;
+                double rightMargin = 30;
+                double bottomMargin = 475;
                 int numberOfImages = 3;
 
-                double heightAvailable = imageSize.Height - topAndBottomMargin * 2 - marginBetweenImages * (numberOfImages - 1);
-                double heightPerImage = heightAvailable / numberOfImages;
+                double widthPerImage = imageSize.Width - leftMargin - rightMargin; // Calculate width per image based on margins
+                double heightPerImage = widthPerImage * (9.0 / 16.0); // To maintain 16:9 aspect ratio
 
-                int widthAvailable = (int)(imageSize.Width - leftAndRightMargin * 2);
+                // Calculate margin between images. 
+                double topAndBottomMarginBetweenImages = (imageSize.Height - topMargin - bottomMargin - (numberOfImages * heightPerImage) ) / (numberOfImages - 1); 
 
                 var rectangles = new Rectangle[numberOfImages];
-
                 for (int i = 0; i < numberOfImages; i++)
                 {
-                    int x = (int)leftAndRightMargin;
-                    int y = (int)(topAndBottomMargin + i * heightPerImage + i * marginBetweenImages);
+                    int x = (int)leftMargin;
+                    int y = (int)(topMargin + i * heightPerImage + i * topAndBottomMarginBetweenImages);
 
-
-                    rectangles[i] = new Rectangle(x, y, widthAvailable, (int)heightPerImage);
+                    rectangles[i] = new Rectangle(x, y, (int)widthPerImage, (int)heightPerImage);
                 }
 
                 imageCollageCreator =
@@ -266,7 +264,6 @@ namespace CloudCam.View
                 "I’m setting my focus on you",
                 "I left most of my gear at home but I did bring my 200mm",
                 "Was your daddy Ansel Adams? Because you’re a natural beauty",
-                "What say we go into a dark room and see what develops?",
                 "A portrait of you will need no photoshop at all",
                 "Before you were mine, everything was grayscale, but now I see the world in CMYK",
                 "Futura generations will speak of our romance",

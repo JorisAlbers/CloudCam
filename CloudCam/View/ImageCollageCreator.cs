@@ -38,7 +38,6 @@ namespace CloudCam.View
             }, cancellationToken);
 
             return copy;
-
         }
     }
 }
