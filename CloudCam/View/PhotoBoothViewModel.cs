@@ -276,6 +276,7 @@ namespace CloudCam.View
             // image 1
             var imageAsBitmap1 = await TakeImage(cancellationToken);
             var imageAsImageSource1 = imageAsBitmap1.ToBitmapSource();
+            _outputImageRepository.Save(imageAsBitmap1);
             TakenImage = imageAsImageSource1;
             SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
@@ -283,7 +284,6 @@ namespace CloudCam.View
             if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
             {
                 Log.Logger.Information("User does not want to print the image");
-                _outputImageRepository.Save(imageAsBitmap1);
                 TakenImage = null;
                 PickupLine = null;
                 ElicitIfImageShouldBePrintedViewModel = null;
@@ -302,6 +302,7 @@ namespace CloudCam.View
             // image 2
             var imageAsBitmap2 = await TakeImage(cancellationToken);
             var imageAsImageSource2 = imageAsBitmap2.ToBitmapSource();
+            _outputImageRepository.Save(imageAsBitmap2);
             TakenImage = imageAsImageSource2;
             SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
@@ -315,6 +316,7 @@ namespace CloudCam.View
             // image 3
             var imageAsBitmap3 = await TakeImage(cancellationToken);
             var imageAsImageSource3 = imageAsBitmap3.ToBitmapSource();
+            _outputImageRepository.Save(imageAsBitmap3);
             TakenImage = imageAsImageSource3;
 
             // print
