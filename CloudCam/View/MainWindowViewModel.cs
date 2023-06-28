@@ -153,9 +153,9 @@ namespace CloudCam.View
 #if DEBUG
             ILedAnimator ledAnimator = new NullLedAnimator();
 #else
-                var ledAnimator = new LedAnimator(33,216, new LedController (33,216, $"COM{settings.ComPortLeds}", 60));
-                ledAnimator.StartAsync();
-                ledAnimator.Animate();
+            var ledAnimator = new LedAnimator(33,216, new LedController (33,216, $"COM{settings.ComPortLeds}", 60));
+            ledAnimator.StartAsync();
+            ledAnimator.Animate();
 #endif
 
 
@@ -198,40 +198,37 @@ namespace CloudCam.View
 
             if (!String.IsNullOrWhiteSpace(settings.PrinterSettings.SelectedPrinter))
             {
-#if FALSE
+#if DEBUG
                 printerManager = new NullPrinterManager();
 #else
                 printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
-                var printerSpecs = printerManager.Initialize();
 #endif
-
-                double dpixCorrected = printerSpecs.DpiX / 100.0;
-                double dpiyCorrected = printerSpecs.DpiX / 100.0;
+                var printerSpecs = printerManager.Initialize();
 
                 // Total paper size is 2x6 inches wich is 600x1800 pixels
-                int heightInPixels = (int)( 600 * dpiyCorrected);
-                int widthInPixels  = (int)(1800 * dpixCorrected);
+                int heightInPixels = 1800;
+                int widthInPixels = 600;
 
-                var imageSize = new Rectangle(0, 0, heightInPixels, widthInPixels);
+                var imageSize = new Rectangle(0, 0, widthInPixels, heightInPixels);
 
                 // Margins in between the images are fitted.
                 double topMargin = 355;
-                double leftMargin = 30;
-                double rightMargin = 30;
-                double bottomMargin = 475;
+                double leftMargin = 27;
+                double rightMargin = 27;
+                double bottomMargin = 473;
                 int numberOfImages = 3;
 
                 double widthPerImage = imageSize.Width - leftMargin - rightMargin; // Calculate width per image based on margins
                 double heightPerImage = widthPerImage * (9.0 / 16.0); // To maintain 16:9 aspect ratio
 
                 // Calculate margin between images. 
-                double topAndBottomMarginBetweenImages = (imageSize.Height - topMargin - bottomMargin - (numberOfImages * heightPerImage) ) / (numberOfImages - 1); 
+                double marginBetweenImages = (imageSize.Height - topMargin - bottomMargin - numberOfImages * heightPerImage) / (numberOfImages - 1);
 
                 var rectangles = new Rectangle[numberOfImages];
                 for (int i = 0; i < numberOfImages; i++)
                 {
                     int x = (int)leftMargin;
-                    int y = (int)(topMargin + i * heightPerImage + i * topAndBottomMarginBetweenImages);
+                    int y = (int)(topMargin + i * heightPerImage + i * marginBetweenImages);
 
                     rectangles[i] = new Rectangle(x, y, (int)widthPerImage, (int)heightPerImage);
                 }
