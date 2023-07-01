@@ -7,15 +7,16 @@
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <LangVersion>9</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System.Printing" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Fonts\tradizional_DEMO.otf">
+    <EmbeddedResource Include="Resources\Fonts\tradizional_DEMO.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </EmbeddedResource>
     <Resource Include="Resources\Backgrounds\test_background.png" />
     <Content Include="Resources\Caff\deploy.prototxt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
