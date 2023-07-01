@@ -212,10 +212,10 @@ namespace CloudCam.View
                 var imageSize = new Rectangle(0, 0, widthInPixels, heightInPixels);
 
                 // Margins in between the images are fitted.
-                double topMargin = 355;
-                double leftMargin = 27;
-                double rightMargin = 27;
-                double bottomMargin = 473;
+                double topMargin = 357;
+                double leftMargin = 29;
+                double rightMargin = 30;
+                double bottomMargin = 475;
                 int numberOfImages = 3;
 
                 double widthPerImage = imageSize.Width - leftMargin - rightMargin; // Calculate width per image based on margins
