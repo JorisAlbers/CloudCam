@@ -293,7 +293,7 @@ namespace CloudCam.View
             SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
 
-            if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
+            /*if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
             {
                 Log.Logger.Information("User does not want to print the image");
                 TakenImage = null;
@@ -304,7 +304,7 @@ namespace CloudCam.View
             Log.Logger.Information("User requested to print the image");
 
             // reset
-            ElicitIfImageShouldBePrintedViewModel = null;
+            ElicitIfImageShouldBePrintedViewModel = null;*/
             TakenImage = null;
             PickupLine = $"2 to go!";
             await Task.Delay(2000, cancellationToken);
