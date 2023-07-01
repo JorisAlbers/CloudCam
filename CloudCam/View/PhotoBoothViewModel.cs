@@ -15,8 +15,6 @@ using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
-using Color = System.Windows.Media.Color;
-using Point = System.Drawing.Point;
 
 namespace CloudCam.View
 {

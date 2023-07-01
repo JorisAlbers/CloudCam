@@ -3,11 +3,8 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
 using Serilog;
 using Color = System.Drawing.Color;
 
@@ -88,35 +85,6 @@ namespace CloudCam.View
 
                     }
                 }
-                /*PrivateFontCollection fontCollection = new PrivateFontCollection();
-                string fontFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\Fonts\tradizional_DEMO.otf");
-                fontCollection.AddFontFile(fontFilePath);
-
-                // Register the custom font
-                *//*IntPtr fontPtr = Marshal.AllocCoTaskMem(fontCollection.GetTotalMemory());
-                fontCollection.SaveMemory(fontPtr);*//*
-
-                // Create the font object
-                using System.Drawing.FontFamily fontFamily = new System.Drawing.FontFamily(fontCollection.Families[0].Name, fontCollection);
-
-                float fontSize = 72;
-                FontStyle fontStyle = FontStyle.Bold;
-                Font font = new Font(fontFamily, fontSize, fontStyle);
-                using SolidBrush brush = new SolidBrush(Color.Blue);
-
-                RectangleF textRectangle = new RectangleF(80, copy.Height - 460, copy.Width - 160, 430);
-                SizeF textSize = gr.MeasureString(pickupLine, font);
-                StringFormat stringFormat = new StringFormat();
-                stringFormat.Alignment = StringAlignment.Center;
-                stringFormat.LineAlignment = StringAlignment.Center;
-
-                // If the text is too big, make it smaller
-                if (gr.MeasureString(pickupLine, font).Width > textRectangle.Width*3)
-                {
-                    fontSize = ((textRectangle.Width * 3) / gr.MeasureString(pickupLine, font).Width) * fontSize;
-                    font = new Font(fontFamily , fontSize, fontStyle);
-                }
-                gr.DrawString(pickupLine, font, brush, textRectangle, stringFormat);*/
             }, cancellationToken);
 
             return copy;
