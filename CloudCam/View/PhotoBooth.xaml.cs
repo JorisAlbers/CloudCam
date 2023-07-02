@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ReactiveUI;
-using Color = System.Drawing.Color;
 
 namespace CloudCam.View
 {
@@ -67,6 +65,7 @@ namespace CloudCam.View
                     (b) => b ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.PickupLine, v => v.PickupLineTextBlock.Text).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.PhotoCountdownText, v => v.PhotoCountdownTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.CameraFps, v => v.CameraFpsTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.EditingFps, v => v.EditingFpsTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ToDisplayImageFps, v => v.ToDisplayImageTextBlock.Text).DisposeWith(d);
@@ -74,10 +73,15 @@ namespace CloudCam.View
                 this.OneWayBind(ViewModel, vm => vm.PrintingViewModel, v => v.PrintViewModelViewHost.ViewModel).DisposeWith(d);
             });
 
+
+            // Touch events
             this.TouchDown += PhotoBooth_TouchDown;
             this.TouchMove += PhotoBooth_TouchMove;
             this.TouchUp += PhotoBooth_TouchUp;
-
+            /*// Mouse events
+            this.MouseDown += PhotoBooth_MouseDown;
+            this.MouseMove += PhotoBooth_MouseMove;
+            this.MouseUp += PhotoBooth_MouseUp;*/
         }
 
         private void PhotoBooth_TouchMove(object sender, TouchEventArgs e)

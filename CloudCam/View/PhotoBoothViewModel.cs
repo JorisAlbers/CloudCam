@@ -40,6 +40,8 @@ namespace CloudCam.View
 
         [Reactive] public string PickupLine { get; set; }
 
+        [Reactive] public string PhotoCountdownText { get; set; }
+
         [Reactive] public ImageSource TakenImage { get; set; }
 
         [ObservableAsProperty]
@@ -269,7 +271,7 @@ namespace CloudCam.View
 
         private async Task TakeOnePicture(CancellationToken cancellationToken)
         {
-            var imageAsBitmap = await TakeImage(cancellationToken);
+            var imageAsBitmap = await TakeImage(cancellationToken, 0);
             TakenImage = imageAsBitmap.ToBitmapSource();
             SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
@@ -284,11 +286,9 @@ namespace CloudCam.View
         private async Task TakeThreePicturesOnBackground(CancellationToken cancellationToken)
         {
             // image 1
-            var imageAsBitmap1 = await TakeImage(cancellationToken);
+            var imageAsBitmap1 = await TakeImage(cancellationToken, 3);
             var imageAsImageSource1 = imageAsBitmap1.ToBitmapSource();
-            _outputImageRepository.Save(imageAsBitmap1);
             TakenImage = imageAsImageSource1;
-            SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
 
             /*if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
@@ -303,39 +303,33 @@ namespace CloudCam.View
 
             // reset
             ElicitIfImageShouldBePrintedViewModel = null;*/
+
+            await Task.Delay(2000, cancellationToken); // allow gui to update
             TakenImage = null;
-            PickupLine = $"2 to go!";
-            await Task.Delay(2000, cancellationToken);
             PickupLine = null;
 
 
             // image 2
-            var imageAsBitmap2 = await TakeImage(cancellationToken);
+            var imageAsBitmap2 = await TakeImage(cancellationToken, 2);
             var imageAsImageSource2 = imageAsBitmap2.ToBitmapSource();
-            _outputImageRepository.Save(imageAsBitmap2);
             TakenImage = imageAsImageSource2;
-            SecondsUntilPictureIsTaken = -1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
-            await Task.Delay(1000, cancellationToken); // allow gui to update
-            // reset
+            await Task.Delay(2000, cancellationToken); // allow gui to update
             TakenImage = null;
-            PickupLine = $"1 to go!";
-            await Task.Delay(2000, cancellationToken);
             PickupLine = null;
 
             // image 3
-            var imageAsBitmap3 = await TakeImage(cancellationToken);
+            var imageAsBitmap3 = await TakeImage(cancellationToken, 1);
             var imageAsImageSource3 = imageAsBitmap3.ToBitmapSource();
-            _outputImageRepository.Save(imageAsBitmap3);
             TakenImage = imageAsImageSource3;
-
-            // print
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
-            Bitmap toPrint = await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, PickupLine, cancellationToken);
-            _printerManager.Print(toPrint);
-            _outputImageRepository.Save(toPrint);
+            await StartPrintingProcedureAsync(imageAsBitmap1, imageAsBitmap2, imageAsBitmap3, cancellationToken);
+            await Task.Delay(2000, cancellationToken); // allow gui to update
 
             SecondsUntilPictureIsTaken = -1;
+            TakenImage = null;
+            PickupLine = null;
+
             TakenImage = imageAsImageSource3;
             await Task.Delay(1000, cancellationToken);
             TakenImage = imageAsImageSource2;
@@ -345,6 +339,15 @@ namespace CloudCam.View
             TakenImage = null;
             PrintingViewModel = new PrintingViewModel("Woooow printing printing!", imageAsImageSource1,
                 imageAsImageSource2, imageAsImageSource3);
+        }
+
+
+        private async Task StartPrintingProcedureAsync(Bitmap imageAsBitmap1, Bitmap imageAsBitmap2, Bitmap imageAsBitmap3, CancellationToken cancellationToken)
+        {
+            PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
+            Bitmap toPrint = await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, PickupLine, cancellationToken);
+            _printerManager.Print(toPrint);
+            _outputImageRepository.Save(toPrint);
         }
 
         private async Task<bool> ShouldPrintImage(ElicitIfImageShouldBePrintedViewModelFactory elicitIfImageShouldBePrintedViewModelFactory)
@@ -377,8 +380,12 @@ namespace CloudCam.View
             });
         }
 
-        private async Task<Bitmap> TakeImage(CancellationToken cancellationToken)
+        private async Task<Bitmap> TakeImage(CancellationToken cancellationToken, int numberOfPicture)
         {
+            if (numberOfPicture != 0)
+            {
+                PhotoCountdownText = $"{numberOfPicture} to go!";
+            }    
             Log.Logger.Information("Capturing an image");
             _ledAnimator.StartFlash();
 
@@ -403,6 +410,9 @@ namespace CloudCam.View
                 }, cancellationToken);
             }
             _ledAnimator.EndFlash();
+            PhotoCountdownText = null;
+            _outputImageRepository.Save(imageAsBitmap);
+            SecondsUntilPictureIsTaken = -1;
             return imageAsBitmap;
         }
     }

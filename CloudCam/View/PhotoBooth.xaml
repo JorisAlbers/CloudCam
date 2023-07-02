@@ -25,7 +25,7 @@
                                           HorizontalAlignment="Stretch"
                                           VerticalContentAlignment="Bottom"
                                           HorizontalContentAlignment="Stretch"/>
-          
+
         </Grid>
         <Viewbox Grid.Row="0" Margin="50,0">
             <Grid>
@@ -39,6 +39,25 @@
                     </TextBlock.Effect>
                 </TextBlock>
             </Grid>
+        </Viewbox>
+        <Viewbox Grid.Row="1" Margin="512,10,25,282">
+            <TextBlock x:Name="PhotoCountdownTextBlock" TextWrapping="Wrap" Foreground="Yellow" Visibility="Visible" Text="Testje testje" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Width="121" Height="32">
+                <TextBlock.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="1"/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="16"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </TextBlock.RenderTransform>
+                <TextBlock.Effect>
+                    <DropShadowEffect
+                            ShadowDepth="0" 
+                            Color="Purple"
+                            Opacity="1"
+                            BlurRadius="5"/>
+                </TextBlock.Effect>
+            </TextBlock>
         </Viewbox>
         <Viewbox Grid.RowSpan="2">
             <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="/Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
