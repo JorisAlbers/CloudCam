@@ -14,22 +14,21 @@ namespace CloudCam.View
         private readonly string _cancelMessage;
         private readonly string _okMessage;
         [Reactive] public string Message { get; private set; }
-        [Reactive] public int SecondsBeforeTimeout { get; private set; }
-
+        [Reactive] public int TenthOfSecondsBeforeTimeout { get; private set; }
 
         public ElicitIfImageShouldBePrintedViewModel(string requestMessage, string cancelMessage, string okMessage, int secondsBeforeTimeout)
         {
             _cancelMessage = cancelMessage;
             _okMessage = okMessage;
             Message = requestMessage;
-            SecondsBeforeTimeout = secondsBeforeTimeout;
+            TenthOfSecondsBeforeTimeout = secondsBeforeTimeout * 10;
         }
 
         public async Task<bool> Start()
         {
-            while (SecondsBeforeTimeout-- > 0 && !_cancelTokenSource.IsCancellationRequested)
+            while (TenthOfSecondsBeforeTimeout-- > 0 && !_cancelTokenSource.IsCancellationRequested)
             {
-                await Task.Delay(1000);
+                await Task.Delay(100);
             }
 
             if (_shouldPrint)

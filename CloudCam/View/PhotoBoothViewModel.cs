@@ -220,42 +220,53 @@ namespace CloudCam.View
 
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
+            // If we are already taking a picture, we don't want to take another one
             if (Interlocked.Exchange(ref _takingPicture, 1) == 1)
             {
-                var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
-                if (elicitViewModel != null)
-                {
-                    elicitViewModel.Accept();
-                }
-
+                return Unit.Default;
+            }
+            // If we are questioning the user if the image should be printed, we don't want to take another one
+            var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
+            if (elicitViewModel != null)
+            {
+                return Unit.Default;
+            }
+            // If we are printing, we don't want to take another one
+            if (_printerManager != null && _printerManager.IsPrinting)
+            {
+                return Unit.Default;
+            }
+            // If we are in the middle of a countdown, we don't want to take another one
+            if (SecondsUntilPictureIsTaken > 0)
+            {
                 return Unit.Default;
             }
 
-             Log.Logger.Information("Taking a picture with mode {PictureMode}", PictureMode);
+            Log.Logger.Information("Taking a picture with mode {PictureMode}", PictureMode);
 
-             try
-             {
-                 switch (PictureMode)
-                 {
-                     case PictureMode.OneAtATime:
-                         await TakeOnePicture(cancellationToken);
-                         break;
-                     case PictureMode.ThreeOnBackground:
-                         await TakeThreePicturesOnBackground(cancellationToken);
-                         break;
-                     default:
-                         throw new ArgumentOutOfRangeException();
-                 }
-             }
-             catch (Exception ex)
-             {
-                 Log.Logger.Error(ex, "Failed to take an image!");
-             }
-             finally
-             {
-                 ResetPhotoBooth();
-                 Interlocked.Exchange(ref _takingPicture, 0);
-             }
+            try
+            {
+                switch (PictureMode)
+                {
+                    case PictureMode.OneAtATime:
+                        await TakeOnePicture(cancellationToken);
+                        break;
+                    case PictureMode.ThreeOnBackground:
+                        await TakeThreePicturesOnBackground(cancellationToken);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Failed to take an image!");
+            }
+            finally
+            {
+                ResetPhotoBooth();
+                Interlocked.Exchange(ref _takingPicture, 0);
+            }
 
 
             return Unit.Default;
@@ -290,24 +301,9 @@ namespace CloudCam.View
             var imageAsImageSource1 = imageAsBitmap1.ToBitmapSource();
             TakenImage = imageAsImageSource1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
-
-            /*if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
-            {
-                Log.Logger.Information("User does not want to print the image");
-                TakenImage = null;
-                PickupLine = null;
-                ElicitIfImageShouldBePrintedViewModel = null;
-                return;
-            }
-            Log.Logger.Information("User requested to print the image");
-
-            // reset
-            ElicitIfImageShouldBePrintedViewModel = null;*/
-
             await Task.Delay(2000, cancellationToken); // allow gui to update
             TakenImage = null;
             PickupLine = null;
-
 
             // image 2
             var imageAsBitmap2 = await TakeImage(cancellationToken, 2);
@@ -323,8 +319,20 @@ namespace CloudCam.View
             var imageAsImageSource3 = imageAsBitmap3.ToBitmapSource();
             TakenImage = imageAsImageSource3;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
-            await StartPrintingProcedureAsync(imageAsBitmap1, imageAsBitmap2, imageAsBitmap3, cancellationToken);
+            Bitmap collage = await StartPrintingProcedureAsync(imageAsBitmap1, imageAsBitmap2, imageAsBitmap3, cancellationToken);
             await Task.Delay(2000, cancellationToken); // allow gui to update
+
+
+            TakenImage = collage.ToBitmapSource();
+            if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
+            {
+                Log.Logger.Information("User does not want to print the image");
+                TakenImage = null;
+                PickupLine = null;
+                ElicitIfImageShouldBePrintedViewModel = null;
+                return;
+            }
+            Log.Logger.Information("User requested to print the image");
 
             SecondsUntilPictureIsTaken = -1;
             TakenImage = null;
@@ -342,12 +350,13 @@ namespace CloudCam.View
         }
 
 
-        private async Task StartPrintingProcedureAsync(Bitmap imageAsBitmap1, Bitmap imageAsBitmap2, Bitmap imageAsBitmap3, CancellationToken cancellationToken)
+        private async Task<Bitmap> StartPrintingProcedureAsync(Bitmap imageAsBitmap1, Bitmap imageAsBitmap2, Bitmap imageAsBitmap3, CancellationToken cancellationToken)
         {
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
             Bitmap toPrint = await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, PickupLine, cancellationToken);
             _printerManager.Print(toPrint);
             _outputImageRepository.Save(toPrint);
+            return toPrint;
         }
 
         private async Task<bool> ShouldPrintImage(ElicitIfImageShouldBePrintedViewModelFactory elicitIfImageShouldBePrintedViewModelFactory)
@@ -356,7 +365,6 @@ namespace CloudCam.View
             ElicitIfImageShouldBePrintedViewModel = viewmodel;
             await Task.Delay(100); // allow GUI to update
             bool shouldPrint = await viewmodel.Start();
-            await Task.Delay(1000);
             return shouldPrint;
         }
 
@@ -411,8 +419,9 @@ namespace CloudCam.View
             }
             _ledAnimator.EndFlash();
             PhotoCountdownText = null;
-            _outputImageRepository.Save(imageAsBitmap);
             SecondsUntilPictureIsTaken = -1;
+            await Task.Delay(50, cancellationToken);
+            _outputImageRepository.Save(imageAsBitmap);
             return imageAsBitmap;
         }
     }

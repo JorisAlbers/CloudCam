@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
-using Color = System.Drawing.Color;
+using System.Drawing.Color;
 
 namespace CloudCam.View
 {
@@ -42,7 +42,7 @@ namespace CloudCam.View
 
                 // Overlay pickup line on the bottom of the image
                 float fontSize = 72;
-                System.Drawing.FontStyle fontStyle = System.Drawing.FontStyle.Bold;
+                FontStyle fontStyle = FontStyle.Bold;
                 using (Stream fontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("CloudCam.Resources.Fonts.tradizional_DEMO.otf"))
                 {
                     if (fontStream != null)
