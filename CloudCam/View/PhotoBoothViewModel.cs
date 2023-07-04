@@ -20,6 +20,7 @@ namespace CloudCam.View
 {
     public class PhotoBoothViewModel : ReactiveObject
     {
+        private const int _SECONDS_IMAGE_DISPLAYED = 3;
         private readonly CameraDevice _device;
         private readonly OutputImageRepository _outputImageRepository;
         private readonly ILedAnimator _ledAnimator;
@@ -288,7 +289,7 @@ namespace CloudCam.View
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
             await Task.Delay(100, cancellationToken); // allow gui to update
             _outputImageRepository.Save(imageAsBitmap);
-            await Task.Delay(3000, cancellationToken);
+            await AllowUserToLookAtImage(cancellationToken);
             TakenImage = null;
             PickupLine = null;
         }
@@ -301,7 +302,7 @@ namespace CloudCam.View
             var imageAsImageSource1 = imageAsBitmap1.ToBitmapSource();
             TakenImage = imageAsImageSource1;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
-            await Task.Delay(2000, cancellationToken); // allow gui to update
+            await AllowUserToLookAtImage(cancellationToken);
             TakenImage = null;
             PickupLine = null;
 
@@ -310,7 +311,7 @@ namespace CloudCam.View
             var imageAsImageSource2 = imageAsBitmap2.ToBitmapSource();
             TakenImage = imageAsImageSource2;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
-            await Task.Delay(2000, cancellationToken); // allow gui to update
+            await AllowUserToLookAtImage(cancellationToken);
             TakenImage = null;
             PickupLine = null;
 
@@ -320,7 +321,7 @@ namespace CloudCam.View
             TakenImage = imageAsImageSource3;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
             Bitmap collage = await StartPrintingProcedureAsync(imageAsBitmap1, imageAsBitmap2, imageAsBitmap3, cancellationToken);
-            await Task.Delay(2000, cancellationToken); // allow gui to update
+            await AllowUserToLookAtImage(cancellationToken);
 
 
             TakenImage = collage.ToBitmapSource();
@@ -347,6 +348,11 @@ namespace CloudCam.View
             TakenImage = null;
             PrintingViewModel = new PrintingViewModel("Woooow printing printing!", imageAsImageSource1,
                 imageAsImageSource2, imageAsImageSource3);
+        }
+
+        private async Task AllowUserToLookAtImage(CancellationToken cancellationToken)
+        {
+            await Task.Delay(_SECONDS_IMAGE_DISPLAYED * 1000, cancellationToken);
         }
 
 
