@@ -348,7 +348,8 @@ namespace CloudCam.View
 
             // Show the collage
             // TODO instead of showing the end result, show the three images enlarged next to each other.
-            TakenImage = collage.ToBitmapSource();
+            var collageAsBitmapSource = collage.ToBitmapSource();
+            TakenImage = collageAsBitmapSource;
             if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
             {
                 Log.Logger.Information("User does not want to print the image");
@@ -368,8 +369,8 @@ namespace CloudCam.View
             PickupLine = null;
             ElicitIfImageShouldBePrintedViewModel = null;
 
-            PrintingViewModel = new PrintingViewModel("Woooow printing printing!", imageAsImageSource1,
-                imageAsImageSource2, imageAsImageSource3);
+            PrintingViewModel = new PrintingViewModel("Woooow printing printing!", collageAsBitmapSource,
+                collageAsBitmapSource, collageAsBitmapSource);
         }
 
         private async Task AllowUserToLookAtImage(CancellationToken cancellationToken)
