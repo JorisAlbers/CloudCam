@@ -110,6 +110,11 @@ namespace CloudCam.View
                     return null;
                 }
 
+                if (SecondsUntilPictureIsTaken > 0)
+                {
+                    SecondsUntilPictureIsTaken = 3;
+                }
+                
                 if (forwards)
                 {
                     return effectManager.Next();
@@ -395,6 +400,11 @@ namespace CloudCam.View
                 return null;
             }
 
+            if (SecondsUntilPictureIsTaken > 0)
+            {
+                SecondsUntilPictureIsTaken = 3;
+            }
+
             return await Task.Run(() =>
             {
                 if (forwards)
@@ -413,15 +423,16 @@ namespace CloudCam.View
                 PhotoCountdownText = $"{numberOfPicture} to go!";
             }    
             Log.Logger.Information("Capturing an image");
-            _ledAnimator.StartFlash();
 
             SecondsUntilPictureIsTaken = 3;
-            await Task.Delay(1000, cancellationToken);
-            SecondsUntilPictureIsTaken = 2;
-            await Task.Delay(1000, cancellationToken);
-            SecondsUntilPictureIsTaken = 1;
-            await Task.Delay(1000, cancellationToken);
-            SecondsUntilPictureIsTaken = 0;
+            // SecondsUntilPictureIsTaken might be modified during this loop.
+            while (SecondsUntilPictureIsTaken > 0)
+            {
+                await Task.Delay(1000, cancellationToken);
+                SecondsUntilPictureIsTaken--;
+            }
+
+            _ledAnimator.StartFlash();
             await Task.Delay(500, cancellationToken); // allow camera to adjust to the flash
 
             var imageAsBitmap = ImageSource.Mat.ToBitmap();
