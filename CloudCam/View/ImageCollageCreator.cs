@@ -73,9 +73,9 @@ namespace CloudCam.View
                                 stringFormat.LineAlignment = StringAlignment.Center;
 
                                 // If the text is too big, make it smaller
-                                if (gr.MeasureString(pickupLine, font).Width > textRectangle.Width * 3)
+                                if (gr.MeasureString(pickupLine, font).Width > textRectangle.Width * 4)
                                 {
-                                    fontSize = ((textRectangle.Width * 3) / gr.MeasureString(pickupLine, font).Width) * fontSize;
+                                    fontSize = ((textRectangle.Width * 4) / gr.MeasureString(pickupLine, font).Width) * fontSize;
                                     font = new Font(fontFamily, fontSize, fontStyle);
                                 }
                                 gr.DrawString(pickupLine, font, brush, textRectangle, stringFormat);
