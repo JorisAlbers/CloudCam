@@ -41,7 +41,7 @@
             </Grid>
         </Viewbox>
         <Viewbox Grid.Row="1" Margin="512,10,25,282">
-            <TextBlock x:Name="PhotoCountdownTextBlock" TextWrapping="Wrap" Foreground="Yellow" Visibility="Visible" Text="Testje testje" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Width="121" Height="32">
+            <TextBlock x:Name="PhotoCountdownTextBlock" TextWrapping="Wrap" Foreground="Yellow" Visibility="Visible" Text="3 to go!" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Width="121" Height="32">
                 <TextBlock.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleY="1"/>
@@ -60,7 +60,7 @@
             </TextBlock>
         </Viewbox>
         <Viewbox Grid.RowSpan="2">
-            <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="/Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
+            <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontFamily="/Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         </Viewbox>
         <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2"/>
 
