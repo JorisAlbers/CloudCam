@@ -13,6 +13,8 @@ namespace CloudCam.View
     {
         private readonly Bitmap _backgroundImage;
         private readonly Rectangle[] _overlayAreas;
+        // set line size to 3.5
+        private readonly float LINE_SIZE = (float)3.5;
 
         public ImageCollageCreator(Bitmap backgroundImage, Rectangle[] overlayAreas)
         {
@@ -73,9 +75,9 @@ namespace CloudCam.View
                                 stringFormat.LineAlignment = StringAlignment.Center;
 
                                 // If the text is too big, make it smaller
-                                if (gr.MeasureString(pickupLine, font).Width > textRectangle.Width * 4)
+                                if (gr.MeasureString(pickupLine, font).Width > textRectangle.Width * LINE_SIZE)
                                 {
-                                    fontSize = ((textRectangle.Width * 4) / gr.MeasureString(pickupLine, font).Width) * fontSize;
+                                    fontSize = ((textRectangle.Width * LINE_SIZE) / gr.MeasureString(pickupLine, font).Width) * fontSize;
                                     font = new Font(fontFamily, fontSize, fontStyle);
                                 }
                                 gr.DrawString(pickupLine, font, brush, textRectangle, stringFormat);
