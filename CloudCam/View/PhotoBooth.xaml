@@ -38,12 +38,12 @@
                                 <DoubleAnimation
                                     Storyboard.TargetName="ScaleTransform1" 
                                     Storyboard.TargetProperty="ScaleX"
-                                    From="0.50" To="1" Duration="0:0:5" 
+                                    From="0.75" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                                 <DoubleAnimation
                                     Storyboard.TargetName="ScaleTransform1" 
                                     Storyboard.TargetProperty="ScaleY"
-                                    From="0.50" To="1" Duration="0:0:5" 
+                                    From="0.75" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
@@ -69,12 +69,12 @@
                                 <DoubleAnimation
                                     Storyboard.TargetName="ScaleTransform2" 
                                     Storyboard.TargetProperty="ScaleX"
-                                    From="0.50" To="1" Duration="0:0:5" 
+                                    From="0.75" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                                 <DoubleAnimation
                                     Storyboard.TargetName="ScaleTransform2" 
                                     Storyboard.TargetProperty="ScaleY"
-                                    From="0.50" To="1" Duration="0:0:5" 
+                                    From="0.75" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
@@ -100,12 +100,12 @@
                                 <DoubleAnimation
                                     Storyboard.TargetName="ScaleTransform3" 
                                     Storyboard.TargetProperty="ScaleX"
-                                    From="0.50" To="1" Duration="0:0:5" 
+                                    From="0.75" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                                 <DoubleAnimation
                                     Storyboard.TargetName="ScaleTransform3" 
                                     Storyboard.TargetProperty="ScaleY"
-                                    From="0.50" To="1" Duration="0:0:5" 
+                                    From="0.75" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
