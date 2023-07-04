@@ -221,28 +221,46 @@ namespace CloudCam.View
 
         private async Task<Unit> TakePictureAsync(Unit unit, CancellationToken cancellationToken)
         {
+            // If we are questioning the user if the image should be printed, we don't want to take another one
+            var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
+            if (elicitViewModel != null)
+            {
+                elicitViewModel.Accept();
+                return Unit.Default;
+            }
+
             // If we are already taking a picture, we don't want to take another one
             if (Interlocked.Exchange(ref _takingPicture, 1) == 1)
             {
                 return Unit.Default;
             }
-            // If we are questioning the user if the image should be printed, we don't want to take another one
-            var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
-            if (elicitViewModel != null)
-            {
-                return Unit.Default;
-            }
-            // If we are printing, we don't want to take another one
-            if (_printerManager != null && _printerManager.IsPrinting)
-            {
-                return Unit.Default;
-            }
-            // If we are in the middle of a countdown, we don't want to take another one
-            if (SecondsUntilPictureIsTaken > 0)
-            {
-                return Unit.Default;
-            }
 
+            try
+            {
+                // If we are printing, we don't want to take another one
+                if (_printerManager != null && _printerManager.IsPrinting)
+                {
+                    return Unit.Default;
+                }
+                // If we are in the middle of a countdown, we don't want to take another one
+                if (SecondsUntilPictureIsTaken > 0)
+                {
+                    return Unit.Default;
+                }
+
+                await InternalTakePictureAsync(cancellationToken);
+
+            }
+            finally
+            {
+                Interlocked.Exchange(ref _takingPicture, 0);
+            }
+            
+            return Unit.Default;
+        }
+
+        private async Task InternalTakePictureAsync(CancellationToken cancellationToken)
+        {
             Log.Logger.Information("Taking a picture with mode {PictureMode}", PictureMode);
 
             try
@@ -266,11 +284,7 @@ namespace CloudCam.View
             finally
             {
                 ResetPhotoBooth();
-                Interlocked.Exchange(ref _takingPicture, 0);
             }
-
-
-            return Unit.Default;
         }
 
         private void ResetPhotoBooth()
@@ -294,7 +308,7 @@ namespace CloudCam.View
             PickupLine = null;
         }
 
-        
+
         private async Task TakeThreePicturesOnBackground(CancellationToken cancellationToken)
         {
             // image 1
@@ -320,32 +334,34 @@ namespace CloudCam.View
             var imageAsImageSource3 = imageAsBitmap3.ToBitmapSource();
             TakenImage = imageAsImageSource3;
             PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
-            Bitmap collage = await StartPrintingProcedureAsync(imageAsBitmap1, imageAsBitmap2, imageAsBitmap3, cancellationToken);
-            await AllowUserToLookAtImage(cancellationToken);
+            // create collage while user is looking at image
+            Bitmap collage = await CreateCollageAsync(imageAsBitmap1, imageAsBitmap2, imageAsBitmap3, cancellationToken);
+            await AllowUserToLookAtImage(cancellationToken); // TODO combine with wait time for the collage creation.
+            TakenImage = null;
+            PickupLine = null;
 
-
+            // Show the collage
+            // TODO instead of showing the end result, show the three images enlarged next to each other.
             TakenImage = collage.ToBitmapSource();
             if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
             {
                 Log.Logger.Information("User does not want to print the image");
                 TakenImage = null;
                 PickupLine = null;
+                SecondsUntilPictureIsTaken = -1;
                 ElicitIfImageShouldBePrintedViewModel = null;
                 return;
             }
-            Log.Logger.Information("User requested to print the image");
+
+            Log.Logger.Information("User requested a print of the image");
+            _printerManager.Print(collage);
+            _outputImageRepository.Save(collage);
 
             SecondsUntilPictureIsTaken = -1;
             TakenImage = null;
             PickupLine = null;
+            ElicitIfImageShouldBePrintedViewModel = null;
 
-            TakenImage = imageAsImageSource3;
-            await Task.Delay(1000, cancellationToken);
-            TakenImage = imageAsImageSource2;
-            await Task.Delay(1000, cancellationToken);
-            TakenImage = imageAsImageSource1;
-            await Task.Delay(1000, cancellationToken);
-            TakenImage = null;
             PrintingViewModel = new PrintingViewModel("Woooow printing printing!", imageAsImageSource1,
                 imageAsImageSource2, imageAsImageSource3);
         }
@@ -356,13 +372,9 @@ namespace CloudCam.View
         }
 
 
-        private async Task<Bitmap> StartPrintingProcedureAsync(Bitmap imageAsBitmap1, Bitmap imageAsBitmap2, Bitmap imageAsBitmap3, CancellationToken cancellationToken)
+        private async Task<Bitmap> CreateCollageAsync(Bitmap imageAsBitmap1, Bitmap imageAsBitmap2, Bitmap imageAsBitmap3, CancellationToken cancellationToken)
         {
-            PickupLine = _pickupLines[_random.Next(0, _pickupLines.Count - 1)];
-            Bitmap toPrint = await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, PickupLine, cancellationToken);
-            _printerManager.Print(toPrint);
-            _outputImageRepository.Save(toPrint);
-            return toPrint;
+            return await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, PickupLine, cancellationToken);
         }
 
         private async Task<bool> ShouldPrintImage(ElicitIfImageShouldBePrintedViewModelFactory elicitIfImageShouldBePrintedViewModelFactory)
