@@ -11,12 +11,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2" />
-        <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="2"/>
-        <Grid Grid.RowSpan="2">
+        <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="3" />
+        <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="3"/>
+        <Grid Grid.RowSpan="3">
             <MediaElement x:Name="VideoPlayer"  Source="Resources/Videos/intro_loop.mp4" MediaEnded="VideoPlayer_OnMediaEnded" LoadedBehavior="Manual"/>
             <Image x:Name="TakenPhotoImage" Grid.Row="0" Stretch="Uniform" />
 
@@ -59,20 +60,20 @@
                 </TextBlock.Effect>
             </TextBlock>
         </Viewbox>
-        <Viewbox Grid.RowSpan="2">
+        <Viewbox Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
             <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontFamily="/Resources/Fonts/#KR Cloud Nine" Foreground="White"/>
         </Viewbox>
-        <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2"/>
+        <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="3"/>
 
 
         <reactiveUi:ViewModelViewHost  x:Name="PrintViewModelViewHost" 
-                                       Grid.Row="0" Grid.RowSpan="2"
+                                       Grid.Row="0" Grid.RowSpan="3"
                                        VerticalAlignment="Stretch"
                                        HorizontalAlignment="Stretch"
                                        VerticalContentAlignment="Stretch"
                                        HorizontalContentAlignment="Stretch"/>
 
-        <StackPanel x:Name="DebugPanel" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure" Grid.RowSpan="2">
+        <StackPanel x:Name="DebugPanel" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Azure" Grid.RowSpan="3">
             <TextBlock Foreground="Red">
                 <TextBlock Text="Camera FPS:"/>
                 <TextBlock x:Name="CameraFpsTextBlock"/>
