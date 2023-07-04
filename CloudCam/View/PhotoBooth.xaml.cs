@@ -66,6 +66,20 @@ namespace CloudCam.View
                         
                     }).DisposeWith(d);
 
+                this.OneWayBind(ViewModel, vm => vm.MultipleTakenImage1, v => v.VideoPlayer.Visibility,
+                    (picture) =>
+                    {
+                        if (picture != null)
+                        {
+                            VideoPlayer.Play();
+                            return Visibility.Visible;
+
+                        }
+                        VideoPlayer.Pause();
+                        return Visibility.Hidden;
+
+                    }).DisposeWith(d);
+
                 this.OneWayBind(ViewModel, vm => vm.PrintingViewModel, v => v.VideoPlayer.Visibility,
                     (picture) =>
                     {

@@ -36,14 +36,14 @@
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation
-                                    Storyboard.TargetName="SkewTransform1" 
-                                    Storyboard.TargetProperty="AngleX"
-                                    From="45" To="-45" Duration="0:0:5" 
+                                    Storyboard.TargetName="ScaleTransform1" 
+                                    Storyboard.TargetProperty="ScaleX"
+                                    From="0.50" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                                 <DoubleAnimation
-                                    Storyboard.TargetName="SkewTransform1" 
-                                    Storyboard.TargetProperty="AngleY"
-                                    From="-45" To="45" Duration="0:0:5" 
+                                    Storyboard.TargetName="ScaleTransform1" 
+                                    Storyboard.TargetProperty="ScaleY"
+                                    From="0.50" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
@@ -58,7 +58,6 @@
                 </Image.RenderTransform>
             </Image>
 
-            <Rectangle/>
 
             <Image x:Name="TakenImage2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                     RenderTransformOrigin="0.5,0.5">
@@ -68,14 +67,14 @@
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation
-                                    Storyboard.TargetName="SkewTransform2" 
-                                    Storyboard.TargetProperty="AngleX"
-                                    From="45" To="-45" Duration="0:0:5" 
+                                    Storyboard.TargetName="ScaleTransform2" 
+                                    Storyboard.TargetProperty="ScaleX"
+                                    From="0.50" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                                 <DoubleAnimation
-                                    Storyboard.TargetName="SkewTransform2" 
-                                    Storyboard.TargetProperty="AngleY"
-                                    From="-45" To="45" Duration="0:0:5" 
+                                    Storyboard.TargetName="ScaleTransform2" 
+                                    Storyboard.TargetProperty="ScaleY"
+                                    From="0.50" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
@@ -90,8 +89,6 @@
                 </Image.RenderTransform>
             </Image>
 
-            <Rectangle/>
-
 
             <Image x:Name="TakenImage3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                    RenderTransformOrigin="0.5,0.5">
@@ -101,14 +98,14 @@
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation
-                                    Storyboard.TargetName="SkewTransform3" 
-                                    Storyboard.TargetProperty="AngleX"
-                                    From="45" To="-45" Duration="0:0:5" 
+                                    Storyboard.TargetName="ScaleTransform3" 
+                                    Storyboard.TargetProperty="ScaleX"
+                                    From="0.50" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                                 <DoubleAnimation
-                                    Storyboard.TargetName="SkewTransform3" 
-                                    Storyboard.TargetProperty="AngleY"
-                                    From="-45" To="45" Duration="0:0:5" 
+                                    Storyboard.TargetName="ScaleTransform3" 
+                                    Storyboard.TargetProperty="ScaleY"
+                                    From="0.50" To="1" Duration="0:0:5" 
                                     AutoReverse="True" RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
