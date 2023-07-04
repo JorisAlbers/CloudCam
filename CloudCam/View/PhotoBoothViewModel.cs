@@ -21,6 +21,7 @@ namespace CloudCam.View
     public class PhotoBoothViewModel : ReactiveObject
     {
         private const int _SECONDS_IMAGE_DISPLAYED = 3;
+        private const int _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN = 3;
         private readonly CameraDevice _device;
         private readonly OutputImageRepository _outputImageRepository;
         private readonly ILedAnimator _ledAnimator;
@@ -112,7 +113,7 @@ namespace CloudCam.View
 
                 if (SecondsUntilPictureIsTaken > 0)
                 {
-                    SecondsUntilPictureIsTaken = 3;
+                    SecondsUntilPictureIsTaken = _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN;
                 }
                 
                 if (forwards)
@@ -402,7 +403,7 @@ namespace CloudCam.View
 
             if (SecondsUntilPictureIsTaken > 0)
             {
-                SecondsUntilPictureIsTaken = 3;
+                SecondsUntilPictureIsTaken = _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN;
             }
 
             return await Task.Run(() =>
@@ -424,7 +425,7 @@ namespace CloudCam.View
             }    
             Log.Logger.Information("Capturing an image");
 
-            SecondsUntilPictureIsTaken = 3;
+            SecondsUntilPictureIsTaken = _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN;
             // SecondsUntilPictureIsTaken might be modified during this loop.
             while (SecondsUntilPictureIsTaken > 0)
             {
