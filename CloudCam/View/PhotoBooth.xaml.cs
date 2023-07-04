@@ -32,7 +32,12 @@ namespace CloudCam.View
                 this.OneWayBind(ViewModel, vm => vm.TakenImage, v => v.TakenPhotoImage.LayoutTransform,
                     (_) => new RotateTransform(random.Next(-20, 20), 0.5, 0.5)).DisposeWith(d);
 
-                
+
+                this.OneWayBind(ViewModel, vm => vm.MultipleTakenImage1, v => v.TakenImage1.Source).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.MultipleTakenImage2, v => v.TakenImage2.Source).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.MultipleTakenImage3, v => v.TakenImage3.Source).DisposeWith(d);
+
+
                 this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.CountdownTextBlock.Text,
                     (seconds) =>
                     {

@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using CloudCam.Effect;
 using CloudCam.Light;
 using CloudCam.Printing;
@@ -45,6 +46,10 @@ namespace CloudCam.View
         [Reactive] public string PhotoCountdownText { get; set; }
 
         [Reactive] public ImageSource TakenImage { get; set; }
+
+        [Reactive] public ImageSource MultipleTakenImage1 { get; set; }
+        [Reactive] public ImageSource MultipleTakenImage2 { get; set; }
+        [Reactive] public ImageSource MultipleTakenImage3 { get; set; }
 
         [ObservableAsProperty]
         public ImageSourceWithMat ImageSource { get; }
@@ -348,8 +353,11 @@ namespace CloudCam.View
 
             // Show the collage
             // TODO instead of showing the end result, show the three images enlarged next to each other.
-            var collageAsBitmapSource = collage.ToBitmapSource();
-            TakenImage = collageAsBitmapSource;
+            BitmapSource collageAsBitmapSource = collage.ToBitmapSource();
+            MultipleTakenImage1 = imageAsImageSource1;
+            MultipleTakenImage2 = imageAsImageSource2;
+            MultipleTakenImage3 = imageAsImageSource3;
+
             if (!await ShouldPrintImage(_elicitShouldPrintViewModelFactory))
             {
                 Log.Logger.Information("User does not want to print the image");
@@ -357,6 +365,9 @@ namespace CloudCam.View
                 PickupLine = null;
                 SecondsUntilPictureIsTaken = -1;
                 ElicitIfImageShouldBePrintedViewModel = null;
+                MultipleTakenImage1 = null;
+                MultipleTakenImage2 = null;
+                MultipleTakenImage3 = null;
                 return;
             }
 
@@ -368,6 +379,9 @@ namespace CloudCam.View
             TakenImage = null;
             PickupLine = null;
             ElicitIfImageShouldBePrintedViewModel = null;
+            MultipleTakenImage1 = null;
+            MultipleTakenImage2 = null;
+            MultipleTakenImage3 = null;
 
             PrintingViewModel = new PrintingViewModel("Woooow printing printing!", collageAsBitmapSource,
                 collageAsBitmapSource, collageAsBitmapSource);

@@ -26,6 +26,106 @@
 
         <Image x:Name="TakenPhotoImage" Grid.RowSpan="3" Stretch="Uniform" />
 
+
+        <UniformGrid Grid.Row="0" Grid.RowSpan="3" Rows="1" Margin="50,0">
+            <Image x:Name="TakenImage1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                   RenderTransformOrigin="0.5,0.5">
+
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform1" 
+                                    Storyboard.TargetProperty="AngleX"
+                                    From="45" To="-45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                                <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform1" 
+                                    Storyboard.TargetProperty="AngleY"
+                                    From="-45" To="45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="ScaleTransform1" ScaleX="0.50" ScaleY="0.50"></ScaleTransform>
+                        <SkewTransform x:Name="SkewTransform1" AngleX="1" AngleY="1"></SkewTransform>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+
+            <Rectangle/>
+
+            <Image x:Name="TakenImage2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                    RenderTransformOrigin="0.5,0.5">
+
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform2" 
+                                    Storyboard.TargetProperty="AngleX"
+                                    From="45" To="-45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                                <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform2" 
+                                    Storyboard.TargetProperty="AngleY"
+                                    From="-45" To="45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="ScaleTransform2" ScaleX="0.50" ScaleY="0.50"></ScaleTransform>
+                        <SkewTransform x:Name="SkewTransform2" AngleX="1" AngleY="1"></SkewTransform>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+
+            <Rectangle/>
+
+
+            <Image x:Name="TakenImage3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                   RenderTransformOrigin="0.5,0.5">
+
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform3" 
+                                    Storyboard.TargetProperty="AngleX"
+                                    From="45" To="-45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                                <DoubleAnimation
+                                    Storyboard.TargetName="SkewTransform3" 
+                                    Storyboard.TargetProperty="AngleY"
+                                    From="-45" To="45" Duration="0:0:5" 
+                                    AutoReverse="True" RepeatBehavior="Forever" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="ScaleTransform3" ScaleX="0.50" ScaleY="0.50"></ScaleTransform>
+                        <SkewTransform x:Name="SkewTransform3" AngleX="1" AngleY="1"></SkewTransform>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+
+        </UniformGrid>
+
+
         <reactiveUi:ViewModelViewHost x:Name="ElicitPrintImageViewModel"
                                       Grid.RowSpan="3"
                                       VerticalAlignment="Bottom"
