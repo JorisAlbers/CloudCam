@@ -72,10 +72,10 @@ namespace CloudCam.View
                         await _photoBoothViewModel.TakePicture.Execute();
                         break;
                     case UserAction.MoveToNextEffect:
-                        await _photoBoothViewModel.NextEffect.Execute(true);
+                        await _photoBoothViewModel.Next.Execute(true);
                         break;
                     case UserAction.MoveToPreviousEffect:
-                        await _photoBoothViewModel.NextEffect.Execute(false);
+                        await _photoBoothViewModel.Next.Execute(false);
                         break;
                     case UserAction.ToggleDebugMode:
                         _photoBoothViewModel.DebugModeActive =! _photoBoothViewModel.DebugModeActive;

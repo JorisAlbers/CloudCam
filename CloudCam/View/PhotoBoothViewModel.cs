@@ -34,6 +34,7 @@ namespace CloudCam.View
         private readonly Random _random;
         private int _takingPicture;
         private readonly TransformationSettings _transformationSettings;
+        private readonly EffectManager _effectManager;
 
         [Reactive] private WebcamCapture Capture { get; set; }
         [Reactive] private ImageTransformer ImageTransformer { get; set; }
@@ -74,7 +75,10 @@ namespace CloudCam.View
         [Reactive] public bool DebugModeActive { get; set; }
 
         public ReactiveCommand<bool, ImageSourceWithMat> NextFrame { get; }
-        public ReactiveCommand<bool, IFaceDetectionEffect> NextEffect { get; }
+
+        public ReactiveCommand<bool, Unit> Next { get; }
+
+
 
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
@@ -108,30 +112,23 @@ namespace CloudCam.View
             NextFrame.WhereNotNull().ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
 
            
-            EffectManager effectManager = new EffectManager(@"Resources\Caff\deploy.prototxt", @"Resources\Caff\res10_300x300_ssd_iter_140000_fp16.caffemodel",  @"Resources\Cascades\haarcascade_mcs_nose.xml" , @"Resources\Cascades\haarcascade_eye_tree_eyeglasses.xml", mustachesRepository, hatsRepository, glassesRepository);
-            NextEffect = ReactiveCommand.Create<bool, IFaceDetectionEffect>((forwards) =>
+            _effectManager = new EffectManager(@"Resources\Caff\deploy.prototxt", @"Resources\Caff\res10_300x300_ssd_iter_140000_fp16.caffemodel",  @"Resources\Cascades\haarcascade_mcs_nose.xml" , @"Resources\Cascades\haarcascade_eye_tree_eyeglasses.xml", mustachesRepository, hatsRepository, glassesRepository);
+
+            Next = ReactiveCommand.Create<bool, Unit>((forwards =>
             {
                 var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
                 if (elicitViewModel != null)
                 {
                     elicitViewModel.Cancel();
-                    return null;
+                    return Unit.Default;
                 }
 
-                if (SecondsUntilPictureIsTaken > 0)
-                {
-                    SecondsUntilPictureIsTaken = _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN;
-                }
-                
-                if (forwards)
-                {
-                    return effectManager.Next();
-                }
-
-                return effectManager.Previous();
-            });
+                LoadNextEffect(forwards);
+                return Unit.Default;
+            }));
+            
+            
             _transformationSettings = new TransformationSettings();
-            NextEffect.WhereNotNull().Subscribe(x => _transformationSettings.Effect = x);
 
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);
             
@@ -171,6 +168,22 @@ namespace CloudCam.View
                         PrintingViewModel = null;
                     });
             }
+        }
+
+        private void LoadNextEffect(bool forwards)
+        {
+            if (SecondsUntilPictureIsTaken > 0)
+            {
+                SecondsUntilPictureIsTaken = _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN;
+            }
+
+            if (forwards)
+            {
+                _transformationSettings.Effect =  _effectManager.Next();
+                return;
+            }
+
+            _transformationSettings.Effect = _effectManager.Previous();
         }
 
         public async Task Start()
@@ -214,10 +227,10 @@ namespace CloudCam.View
             switch (direction)
             {
                 case SwipeDirection.Left:
-                    NextEffect.Execute(true).Subscribe();
+                    Next.Execute(true).Subscribe();
                     break;
                 case SwipeDirection.Right:
-                    NextEffect.Execute(false).Subscribe();
+                    Next.Execute(false).Subscribe();
                     break;
                 case SwipeDirection.Up:
                 /*
