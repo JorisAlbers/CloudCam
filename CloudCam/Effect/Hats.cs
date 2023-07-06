@@ -1,36 +1,39 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Documents;
 using CloudCam.Detection;
+using CloudCam.View;
 using OpenCvSharp;
 
 namespace CloudCam.Effect
 {
-    public class Hats : IEffect
+    public class Hats : IFaceDetectionEffect
     {
-        private readonly ImageOverlayer _imageOverlayer;
         private readonly Size _hatSize;
-        private readonly ImageSettings _settings;
+        private readonly EffectImageWithSettings _settings;
         private readonly FaceDetection _faceDetection;
 
-        public Hats(ImageOverlayer imageOverlayer, Size hatSize, ImageSettings settings, FaceDetection faceDetection)
+        public Hats(Size hatSize, EffectImageWithSettings settings, FaceDetection faceDetection)
         {
-            _imageOverlayer = imageOverlayer;
             _hatSize = hatSize;
             _settings = settings;
             _faceDetection = faceDetection;
         }
 
-        public void Apply(Mat mat)
+        public List<ForegroundImage> Find(Mat mat)
         {
             Rect[] faces = _faceDetection.Detect(mat);
+            var rects = new List<Rect>();
             foreach (Rect faceRect in faces)
             {
-                int hatWidth = (int)(faceRect.Width * _settings.WidthRatio);
+                int hatWidth = (int)(faceRect.Width * _settings.Settings.WidthRatio);
 
                 int hatHeight = hatWidth * _hatSize.Height / _hatSize.Width;
                 
                 int adjustment = (hatWidth - faceRect.Width) / 2;
                 // Center the hat on top of the face
 
-                int yAdjustment = (hatHeight / 100 )* _settings.Y;
+                int yAdjustment = (hatHeight / 100 )* _settings.Settings.Y;
                 int y2 = faceRect.Top + yAdjustment;
                 int y1 = y2 - hatHeight;
 
@@ -56,9 +59,11 @@ namespace CloudCam.Effect
                 {
                     continue;
                 }
-
-                _imageOverlayer.Overlay(mat, new Size(hatWidth, hatHeight), new Rect(x1, y1, x2 - x1, y2 - y1));
+                // TODO apply image settings here.
+                rects.Add(new Rect(x1, y1, x2 - x1, y2 - y1));
             }
+
+            return  rects.Select(x => new ForegroundImage(_settings.Image, x)).ToList();
         }
     }
 }

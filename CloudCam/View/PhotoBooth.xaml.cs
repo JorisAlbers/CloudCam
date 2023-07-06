@@ -25,6 +25,7 @@ namespace CloudCam.View
             {
                 Cursor = Cursors.None;
 
+
                 Random random = new Random();
                 this.OneWayBind(ViewModel, vm => vm.ImageSource.ImageSource, v => v.VideoImage.Source).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Frame.ImageSource, v => v.FrameImage.Source).DisposeWith(d);
@@ -105,6 +106,19 @@ namespace CloudCam.View
                 this.OneWayBind(ViewModel, vm => vm.ToDisplayImageFps, v => v.ToDisplayImageTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ElicitIfImageShouldBePrintedViewModel, v => v.ElicitPrintImageViewModel.ViewModel).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.PrintingViewModel, v => v.PrintViewModelViewHost.ViewModel).DisposeWith(d);
+
+
+                this.WhenAnyValue(x => x.ViewModel.ForegroundImages).Subscribe(x =>
+                {
+                    if (x == null)
+                    {
+                        ForeGroundLayer.Clear();
+                        return;
+                    }
+
+                    ForeGroundLayer.SetItems(x);
+                });
+
             });
 
 

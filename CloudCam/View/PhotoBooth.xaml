@@ -17,6 +17,7 @@
 
         <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="3" />
         <Image x:Name="FrameImage" Grid.Row="0" Stretch="Uniform" Grid.RowSpan="3"/>
+        <view:ForegroundLayerControl x:Name="ForeGroundLayer" Grid.Row="0" Grid.RowSpan="3"/>
 
         <MediaElement x:Name="VideoPlayer"  
                       Grid.RowSpan="3"

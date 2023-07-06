@@ -36,13 +36,17 @@ namespace CloudCam
                     {
                         try
                         {
-                            IEffect effect = settings.Effect;
+                            IFaceDetectionEffect faceDetectionEffect = settings.Effect;
                             Mat currentMat = _matBuffer.GetNextForEditing(previousMat);
                             if (currentMat != null)
                             {
-                                if (effect != null)
+                                if (faceDetectionEffect == null)
                                 {
-                                    effect.Apply(currentMat);
+                                    settings.CurrentForegrounds = null;
+                                }
+                                else
+                                {
+                                    settings.CurrentForegrounds = faceDetectionEffect.Find(currentMat);
                                 }
 
                                 if (++frames > 50)

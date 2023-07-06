@@ -1,20 +1,22 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Documents;
 using CloudCam.Detection;
+using CloudCam.View;
 using OpenCvSharp;
 
 namespace CloudCam.Effect
 {
-    public class Glasses : IEffect
+    public class Glasses : IFaceDetectionEffect
     {
-        private readonly ImageOverlayer _overlayer;
         private readonly Size _glassesSize;
-        private readonly ImageSettings _settings;
+        private readonly EffectImageWithSettings _settings;
         private readonly FaceDetection _faceDetection;
         private readonly EyesDetection _eyesDetection;
 
-        public Glasses(ImageOverlayer overlayer, Size glassesSize, ImageSettings settings, FaceDetection faceDetection, EyesDetection eyesDetection)
+        public Glasses(Size glassesSize, EffectImageWithSettings settings, FaceDetection faceDetection, EyesDetection eyesDetection)
         {
-            _overlayer = overlayer;
             _glassesSize = glassesSize;
             _settings = settings;
 
@@ -22,9 +24,10 @@ namespace CloudCam.Effect
             _eyesDetection = eyesDetection;
         }
 
-        public void Apply(Mat mat)
+        public List<ForegroundImage> Find(Mat mat)
         {
             Rect[] faces = _faceDetection.Detect(mat);
+            var rects = new List<Rect>();
             foreach (Rect faceRect in faces)
             {
                 Mat roiColor = new Mat(mat, faceRect);
@@ -57,11 +60,16 @@ namespace CloudCam.Effect
                 int glassesWidth = x2 - x1;
                 int glassesHeight = y2 - y1;
 
+                // TODO apply image settings here
+
                 Size glassesSize = new Size(glassesWidth, glassesHeight);
                 Rect rectangle = new Rect(faceRect.X + x1, faceRect.Y + y1, x2 - x1, y2 - y1);
-                _overlayer.Overlay(mat, glassesSize, rectangle);
+                rects.Add(rectangle);
             }
+
+            return rects.Select(x => new ForegroundImage(_settings.Image, x)).ToList();
         }
+
         private Rect CalculateSurroundingRect(int faceWidth,Rect eye1, Rect eye2)
         {
             int x1 = 0;

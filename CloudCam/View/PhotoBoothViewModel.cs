@@ -54,6 +54,8 @@ namespace CloudCam.View
         [ObservableAsProperty]
         public ImageSourceWithMat ImageSource { get; }
 
+        [Reactive] public List<ForegroundImage> ForegroundImages { get; set; }
+
         [ObservableAsProperty]
         public ImageSourceWithMat Frame { get; }
 
@@ -72,7 +74,7 @@ namespace CloudCam.View
         [Reactive] public bool DebugModeActive { get; set; }
 
         public ReactiveCommand<bool, ImageSourceWithMat> NextFrame { get; }
-        public ReactiveCommand<bool, IEffect> NextEffect { get; }
+        public ReactiveCommand<bool, IFaceDetectionEffect> NextEffect { get; }
 
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
@@ -107,7 +109,7 @@ namespace CloudCam.View
 
            
             EffectManager effectManager = new EffectManager(@"Resources\Caff\deploy.prototxt", @"Resources\Caff\res10_300x300_ssd_iter_140000_fp16.caffemodel",  @"Resources\Cascades\haarcascade_mcs_nose.xml" , @"Resources\Cascades\haarcascade_eye_tree_eyeglasses.xml", mustachesRepository, hatsRepository, glassesRepository);
-            NextEffect = ReactiveCommand.Create<bool, IEffect>((forwards) =>
+            NextEffect = ReactiveCommand.Create<bool, IFaceDetectionEffect>((forwards) =>
             {
                 var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
                 if (elicitViewModel != null)
@@ -140,6 +142,7 @@ namespace CloudCam.View
                 .Where(x=> previous != x)
                 .Do(x => previous = x)
                 .ObserveOn(RxApp.MainThreadScheduler)
+                .Do(x=> ForegroundImages =  _transformationSettings.CurrentForegrounds)// TODO this is not sync. The foregroundimages need to be bundled with the frame.
                 .ToPropertyEx(this, x=>x.ImageSource);
 
 
@@ -470,6 +473,8 @@ namespace CloudCam.View
             return imageAsBitmap;
         }
     }
+
+    public record ForegroundImage(Mat image, Rect rect);
 
     public class ImageSourceWithMat
     {

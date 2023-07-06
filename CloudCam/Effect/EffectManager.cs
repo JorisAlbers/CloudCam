@@ -10,7 +10,7 @@ namespace CloudCam.Effect
         private readonly EffectImageLoader _hatsRepository;
         private readonly EffectImageLoader _glassesRepository;
         private int _effectIndex = 0;
-        private readonly List<IEffect> _effects;
+        private readonly List<IFaceDetectionEffect> _effects;
         private readonly FaceDetection _faceDetection;
         private readonly NoseDetection _noseDetection;
         private EyesDetection _eyesDetection;
@@ -27,34 +27,32 @@ namespace CloudCam.Effect
             _noseDetection = new NoseDetection(noseCascadeFile);
             _eyesDetection = new EyesDetection(eyesCascadeFile);
 
-            _effects = new List<IEffect>
+            _effects = new List<IFaceDetectionEffect>
             {
                 null,
-                new OilPainting(),
+                // TODO enable oilpainting and debug detection
+                //new OilPainting(),
 #if DEBUG
-                new DebugDetection(_faceDetection, _noseDetection, _eyesDetection),
+                //new DebugDetection(_faceDetection, _noseDetection, _eyesDetection),
 #endif
             };
 
             for (int i = 0; i < mustachesRepository.Count; i++)
             {
                 EffectImageWithSettings settings = LoadImage(mustachesRepository[i]);
-                ImageOverlayer overlayer = new ImageOverlayer(settings.Image);
-                _effects.Add(new Mustaches(overlayer,settings.Image.Size(), settings.Settings, _faceDetection, _noseDetection));
+                _effects.Add(new Mustaches(settings.Image.Size(), settings, _faceDetection, _noseDetection));
             }
 
             for (int i = 0; i < hatsRepository.Count; i++)
             {
                 EffectImageWithSettings settings = LoadImage(hatsRepository[i]);
-                ImageOverlayer overlayer = new ImageOverlayer(settings.Image);
-                _effects.Add(new Hats(overlayer, settings.Image.Size(), settings.Settings, _faceDetection));
+                _effects.Add(new Hats(settings.Image.Size(), settings, _faceDetection));
             }
 
             for (int i = 0; i < glassesRepository.Count; i++)
             {
                 EffectImageWithSettings settings = LoadImage(glassesRepository[i]);
-                ImageOverlayer overlayer = new ImageOverlayer(settings.Image);
-                _effects.Add(new Glasses(overlayer, settings.Image.Size(), settings.Settings, _faceDetection, _eyesDetection));
+                _effects.Add(new Glasses( settings.Image.Size(), settings, _faceDetection, _eyesDetection));
             }
         }
 
@@ -73,7 +71,7 @@ namespace CloudCam.Effect
             return new ImageSettings(0, 0, 1);
         }
 
-        public IEffect Next()
+        public IFaceDetectionEffect Next()
         {
             if (++_effectIndex > _effects.Count - 1)
             {
@@ -83,7 +81,7 @@ namespace CloudCam.Effect
             return _effects[_effectIndex];
         }
 
-        public IEffect Previous()
+        public IFaceDetectionEffect Previous()
         {
             if (--_effectIndex < 0)
             {

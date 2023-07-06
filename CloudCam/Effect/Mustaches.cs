@@ -1,19 +1,21 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Documents;
 using CloudCam.Detection;
+using CloudCam.View;
 using OpenCvSharp;
 
 namespace CloudCam.Effect
 {
-    public class Mustaches : IEffect
+    public class Mustaches : IFaceDetectionEffect
     {
-        private readonly ImageOverlayer _overlayer;
         private readonly Size _mustacheSize;
-        private readonly ImageSettings _settings;
+        private readonly EffectImageWithSettings _settings;
         private readonly FaceDetection _faceDetection;
         private readonly NoseDetection _noseDetection;
 
-        public Mustaches(ImageOverlayer overlayer,Size mustacheSize, ImageSettings settings, FaceDetection faceDetection, NoseDetection noseDetection)
+        public Mustaches(Size mustacheSize, EffectImageWithSettings settings, FaceDetection faceDetection, NoseDetection noseDetection)
         {
-            _overlayer = overlayer;
             _mustacheSize = mustacheSize;
             _settings = settings;
 
@@ -21,9 +23,12 @@ namespace CloudCam.Effect
             _noseDetection = noseDetection;
         }
 
-        public void Apply(Mat mat)
+        public List<ForegroundImage> Find(Mat mat)
         {
             Rect[] faces = _faceDetection.Detect(mat);
+            
+            var rects = new List<Rect>();
+
             foreach (Rect faceRect in faces)
             {
                 Mat roiColor = new Mat(mat, faceRect);
@@ -61,10 +66,13 @@ namespace CloudCam.Effect
                 mustacheWidth = x2 - x1;
                 mustacheHeight = y2 - y1;
 
+                // TODO apply image settings here
                 Size mustacheSize = new Size(mustacheWidth, mustacheHeight);
                 Rect rectangle = new Rect(faceRect.X + x1, faceRect.Y + y1, x2 - x1, y2 - y1);
-                _overlayer.Overlay(mat, mustacheSize, rectangle);
+                rects.Add(rectangle);
             }
+
+            return rects.Select(x => new ForegroundImage(_settings.Image, x)).ToList();
         }
     }
 }
