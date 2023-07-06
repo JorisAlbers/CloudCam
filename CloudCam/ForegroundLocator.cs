@@ -11,12 +11,12 @@ using Serilog;
 
 namespace CloudCam
 {
-    public class ImageTransformer: ReactiveObject
+    public class ForegroundLocator: ReactiveObject
     {
         private readonly MatBuffer _matBuffer;
         [Reactive] public float Fps { get; private set; }
 
-        public ImageTransformer(MatBuffer matBuffer)
+        public ForegroundLocator(MatBuffer matBuffer)
         {
             _matBuffer = matBuffer;
         }

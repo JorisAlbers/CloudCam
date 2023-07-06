@@ -37,7 +37,7 @@ namespace CloudCam.View
         private readonly EffectManager _effectManager;
 
         [Reactive] private WebcamCapture Capture { get; set; }
-        [Reactive] private ImageTransformer ImageTransformer { get; set; }
+        [Reactive] private ForegroundLocator ForegroundLocator { get; set; }
         [Reactive] private ImageToDisplayImageConverter ImageToDisplayImageConverter { get; set; }
 
         [Reactive] public int SecondsUntilPictureIsTaken { get; set; } = -1;
@@ -148,7 +148,7 @@ namespace CloudCam.View
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.CameraFps);
 
-            this.WhenAnyValue(x => x.ImageTransformer.Fps)
+            this.WhenAnyValue(x => x.ForegroundLocator.Fps)
                 .Where((_) => DebugModeActive)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.EditingFps);
@@ -208,8 +208,8 @@ namespace CloudCam.View
                 Task t =  webcamCapture.CaptureAsync(cancellationTokenSource.Token);
                 Capture = webcamCapture;
                 
-                ImageTransformer = new ImageTransformer(matBuffer);
-                Task t2 =  ImageTransformer.StartAsync(_transformationSettings, cancellationTokenSource.Token);
+                ForegroundLocator = new ForegroundLocator(matBuffer);
+                Task t2 =  ForegroundLocator.StartAsync(_transformationSettings, cancellationTokenSource.Token);
 
                 ImageToDisplayImageConverter = new ImageToDisplayImageConverter(matBuffer);
                 Task t3 =  ImageToDisplayImageConverter.StartAsync(cancellationTokenSource.Token);
