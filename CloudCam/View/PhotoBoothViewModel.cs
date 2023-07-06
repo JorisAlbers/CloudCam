@@ -399,8 +399,7 @@ namespace CloudCam.View
             MultipleTakenImage2 = null;
             MultipleTakenImage3 = null;
 
-            PrintingViewModel = new PrintingViewModel("Woooow printing printing!", collageAsBitmapSource,
-                collageAsBitmapSource, collageAsBitmapSource);
+            PrintingViewModel = new PrintingViewModel(collageAsBitmapSource);
         }
 
         private async Task AllowUserToLookAtImage(CancellationToken cancellationToken)

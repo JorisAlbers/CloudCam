@@ -19,12 +19,12 @@ namespace CloudCam.View
         public BitmapSource Image2 { get; }
         public BitmapSource Image3 { get; }
 
-        public PrintingViewModel(string message, BitmapSource image1, BitmapSource image2, BitmapSource image3)
+        public PrintingViewModel(BitmapSource image1)
         {
             Message = photoPrintingMessages[_random.Next(0, photoPrintingMessages.Length)];
             Image1 = image1;
-            Image2 = image2;
-            Image3 = image3;
+            Image2 = image1;
+            Image3 = image1;
         }
 
         static private string[] photoPrintingMessages = {
