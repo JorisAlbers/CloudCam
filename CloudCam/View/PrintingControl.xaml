@@ -15,7 +15,15 @@
         </Grid.RowDefinitions>
 
         <Viewbox Grid.Row="0">
-            <TextBlock x:Name="MessageTextBlock"></TextBlock>
+            <TextBlock x:Name="MessageTextBlock" Foreground="Yellow" TextWrapping="Wrap">
+                <TextBlock.Effect>
+                    <DropShadowEffect
+                        ShadowDepth="0" 
+                        Color="Purple"
+                        Opacity="1"
+                        BlurRadius="5"/>
+                </TextBlock.Effect>
+            </TextBlock>
         </Viewbox>
 
         <UniformGrid Grid.Row="1" Rows="1" Margin="50,0">
@@ -120,7 +128,15 @@
         </UniformGrid>
 
         <Viewbox Grid.Row="2">
-            <TextBlock Text="Printing!"></TextBlock>
+            <TextBlock Text="Printing!" Foreground="Yellow">
+                <TextBlock.Effect>
+                    <DropShadowEffect
+                        ShadowDepth="0" 
+                        Color="Purple"
+                        Opacity="1"
+                        BlurRadius="5"/>
+                </TextBlock.Effect>
+            </TextBlock>
         </Viewbox>
 
     </Grid>
