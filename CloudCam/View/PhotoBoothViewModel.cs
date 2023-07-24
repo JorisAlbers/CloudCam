@@ -477,15 +477,19 @@ namespace CloudCam.View
                 {
                     // Overlay frame on top of image
                     using Graphics gr = Graphics.FromImage(imageAsBitmap);
-                    
-                    // Draw foregrounds (the hats and mustaches and stuff)
-                    foreach (ForegroundImage foregroundImage in foregrounds)
-                    {
-                        var resized = foregroundImage.image.Resize(foregroundImage.rect.Size);
-                        var bitmap = resized.ToBitmap();
 
-                        gr.DrawImage(bitmap, new System.Drawing.Point(foregroundImage.rect.X, foregroundImage.rect.Y));
-                    }
+                    if(foregrounds != null)
+                    {
+                        // Draw foregrounds (the hats and mustaches and stuff)
+                        foreach (ForegroundImage foregroundImage in foregrounds)
+                        {
+                            var resized = foregroundImage.image.Resize(foregroundImage.rect.Size);
+                            var bitmap = resized.ToBitmap();
+
+                            gr.DrawImage(bitmap, new System.Drawing.Point(foregroundImage.rect.X, foregroundImage.rect.Y));
+                        }
+                    }             
+                  
                     
                     // Draw frame
                     gr.DrawImage(frameAsBitmap, new System.Drawing.Point(0, 0));
