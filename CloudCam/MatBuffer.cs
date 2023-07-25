@@ -25,6 +25,12 @@ namespace CloudCam
         {
             if (previous != null)
             {
+                if (previous.Empty())
+                {
+                    // An error occurred during capturing. return the same mat for capturing.
+                    return previous;
+                }
+                
                 Mat editing = Interlocked.Exchange(ref _readyForEditing, previous);
                 if (editing != null)
                 {
