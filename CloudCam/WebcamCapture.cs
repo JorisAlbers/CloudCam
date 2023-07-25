@@ -63,7 +63,7 @@ namespace CloudCam
 
         public async Task CaptureAsync(CancellationToken cancellationToken)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 try
                 {
@@ -79,7 +79,12 @@ namespace CloudCam
                         try
                         {
                             frame = _matBuffer.GetNextForCapture(frame);
-                            _videoCapture.Read(frame);
+
+                            if (!_videoCapture.Read(frame))
+                            {
+                                throw new WebcamFailedException();
+                            }
+
                             Cv2.Flip(frame, frame, FlipMode.Y);
 
                             if (++frames > 50)
@@ -89,6 +94,13 @@ namespace CloudCam
                                 frames = 0;
                                 startTicks = Environment.TickCount;
                             }
+                        }
+                        catch (WebcamFailedException e)
+                        {
+                            Log.Logger.Warning("Webcam failed. Attempting to reconnect");
+                            // TODO reset frame, or the frame will leak.
+                            _videoCapture.Dispose();
+                            await Initialize();
                         }
                         catch (Exception ex)
                         {
@@ -152,5 +164,9 @@ namespace CloudCam
                 videoCapture.Get(VideoCaptureProperties.FrameWidth),
                 videoCapture.Get(VideoCaptureProperties.FrameHeight));
         }
+    }
+
+    public class WebcamFailedException : Exception
+    {
     }
 }
