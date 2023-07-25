@@ -29,15 +29,16 @@ namespace CloudCam
                 try
                 {
                     Mat previousMat = null;
-
+                    Mat currentMat = null;
                     int startTicks = Environment.TickCount;
                     int frames = 0;
                     while (!token.IsCancellationRequested)
                     {
                         try
                         {
+                            currentMat = _matBuffer.GetNextForEditing(previousMat);
                             IFaceDetectionEffect faceDetectionEffect = settings.Effect;
-                            Mat currentMat = _matBuffer.GetNextForEditing(previousMat);
+
                             if (currentMat != null)
                             {
                                 if (faceDetectionEffect == null)
@@ -57,8 +58,6 @@ namespace CloudCam
                                     startTicks = Environment.TickCount;
                                 }
                             }
-
-                            previousMat = currentMat;
                         }
                         catch (Exception ex)
                         {
@@ -67,6 +66,10 @@ namespace CloudCam
                                 Log.Logger.Error(ex, "Failed to apply effect!");
                                 lastErrorAt = Environment.TickCount;
                             }
+                        }
+                        finally
+                        {
+                            previousMat = currentMat;
                         }
                     }
                 }

@@ -32,13 +32,14 @@ namespace CloudCam
                 {
                     long lastErrorAt = Environment.TickCount;
                     Mat previousMat = null;
+                    Mat currentMat = null;
                     int startTicks = Environment.TickCount;
                     int frames = 0;
                     while (!token.IsCancellationRequested)
                     {
                         try
                         {
-                            Mat currentMat = _matBuffer.GetNextForDisplay(previousMat);
+                            currentMat = _matBuffer.GetNextForDisplay(previousMat);
                             if (currentMat != null)
                             {
                                 BitmapSource imageSource = currentMat.ToBitmapSource();
@@ -53,8 +54,6 @@ namespace CloudCam
                                     startTicks = Environment.TickCount;
                                 }
                             }
-
-                            previousMat = currentMat;
                         }
                         catch (Exception ex)
                         {
@@ -63,6 +62,10 @@ namespace CloudCam
                                 Log.Logger.Error(ex, "Failed to transform image to display image!");
                                 lastErrorAt = Environment.TickCount;
                             }
+                        }
+                        finally
+                        {
+                            previousMat = currentMat;
                         }
                     }
                 }
