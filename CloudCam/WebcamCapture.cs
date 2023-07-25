@@ -98,7 +98,6 @@ namespace CloudCam
                         catch (WebcamFailedException e)
                         {
                             Log.Logger.Warning("Webcam failed. Attempting to reconnect");
-                            // TODO reset frame, or the frame will leak.
                             _videoCapture.Dispose();
                             await Initialize();
                         }
