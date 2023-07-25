@@ -193,7 +193,7 @@ namespace CloudCam.View
 
             try
             {
-                webcamCapture = new WebcamCapture(_device.OpenCdId, matBuffer);
+                webcamCapture = new WebcamCapture(_device, matBuffer);
                 await webcamCapture.Initialize();
             }
             catch (Exception ex)

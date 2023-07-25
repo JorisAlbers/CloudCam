@@ -18,7 +18,7 @@ namespace CloudCam
 {
     public class WebcamCapture : ReactiveObject
     {
-        private readonly int _camId;
+        private readonly CameraDevice _cameraDevice;
         private readonly MatBuffer _matBuffer;
         private VideoCapture _videoCapture;
 
@@ -26,21 +26,28 @@ namespace CloudCam
 
         [Reactive] public float Fps { get; private set; }
 
-        public WebcamCapture(int camId, MatBuffer matBuffer)
+        public WebcamCapture(CameraDevice cameraDevice, MatBuffer matBuffer)
         {
-            _camId = camId;
+            _cameraDevice = cameraDevice;
             _matBuffer = matBuffer;
         }
 
         public async Task Initialize()
         {
-            var x = await Task.Run(() =>
+            var x = await Task.Run(async () =>
             {
-                var capture  = new VideoCapture(_camId, VideoCaptureAPIs.DSHOW);
-
-                if (!capture.Open(_camId, VideoCaptureAPIs.DSHOW))
+                // Get the latest openCV ID of the webcam. It could be changed if its index changed)
+                while(!_cameraDevice.TryGetOpenCvId(out int openCvId))
                 {
-                    throw new ApplicationException($"Failed to open video device {_camId}");
+                    Log.Logger.Warning("Failed to connect to webcam, trying again in a few seconds");
+                    Thread.Sleep(5000);
+                }
+                
+                var capture  = new VideoCapture(_cameraDevice.OpenCdId, VideoCaptureAPIs.DSHOW);
+
+                if (!capture.Open(_cameraDevice.OpenCdId, VideoCaptureAPIs.DSHOW))
+                {
+                    throw new ApplicationException($"Failed to open video device {_cameraDevice.OpenCdId}");
                 }
 
                 var frameSize =  SetMaxResolution(capture);

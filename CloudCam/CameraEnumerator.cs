@@ -19,13 +19,26 @@ namespace CloudCam
     {
         public string DeviceId { get; }
         public string Name { get; }
-        public int OpenCdId { get; }
+        public int OpenCdId { get; private set; }
 
         public CameraDevice(string deviceId, string name, int openCdId)
         {
             DeviceId = deviceId;
             Name = name;
             OpenCdId = openCdId;
+        }
+
+        public bool TryGetOpenCvId(out int openCvId)
+        {
+            openCvId = CameraDevicesEnumerator.GetAllConnectedCameras().FindIndex(y => y.Name == Name);
+
+            if (openCvId < 0)
+            {
+                return false;
+            }
+
+            OpenCdId = openCvId;
+            return true;
         }
     }
 }
