@@ -146,7 +146,7 @@ namespace CloudCam.View
 
             var outputRepository = new OutputImageRepository(settings.OutputFolder);
 
-#if DEBUG
+#if TRUE
             ILedAnimator ledAnimator = new NullLedAnimator();
 #else
             var ledAnimator = new LedAnimator(33,216, new LedController (33,216, $"COM{settings.ComPortLeds}", 60));
