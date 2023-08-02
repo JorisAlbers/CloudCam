@@ -22,7 +22,7 @@ namespace CloudCam.View
     public class PhotoBoothViewModel : ReactiveObject
     {
         private const int _SECONDS_IMAGE_DISPLAYED = 3;
-        private const int _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN = 3;
+        private const int _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN = 5;
         private readonly CameraDevice _device;
         private readonly OutputImageRepository _outputImageRepository;
         private readonly ILedAnimator _ledAnimator;
