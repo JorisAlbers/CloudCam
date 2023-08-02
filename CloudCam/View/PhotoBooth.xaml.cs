@@ -24,7 +24,7 @@ namespace CloudCam.View
             
             this.WhenActivated((d) =>
             {
-                //Cursor = Cursors.None;
+                Cursor = Cursors.None;
 
 
                 Random random = new Random();
@@ -185,11 +185,6 @@ namespace CloudCam.View
         {
             VideoPlayer.Position = TimeSpan.Zero;
             VideoPlayer.Play();
-        }
-
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            ViewModel.HandelSwipeInput(SwipeDirection.Down);
         }
     }
 }
