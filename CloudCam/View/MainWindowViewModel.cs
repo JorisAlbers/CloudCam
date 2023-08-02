@@ -9,6 +9,7 @@ using System.Windows.Input;
 using CloudCam.Effect;
 using CloudCam.Light;
 using CloudCam.Printing;
+using Light;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;

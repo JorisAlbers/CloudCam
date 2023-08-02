@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -23,7 +24,7 @@ namespace CloudCam.View
             
             this.WhenActivated((d) =>
             {
-                Cursor = Cursors.None;
+                //Cursor = Cursors.None;
 
 
                 Random random = new Random();
@@ -146,11 +147,11 @@ namespace CloudCam.View
             {
                 if (verticalDelta > 0)
                 {
-                    ViewModel.HandelSwipeInput(SwipeDirection.Down);
+                    ViewModel.HandelSwipeInput(SwipeDirection.Down).Wait();
                 }
                 else
                 {
-                    ViewModel.HandelSwipeInput(SwipeDirection.Up);
+                    ViewModel.HandelSwipeInput(SwipeDirection.Up).Wait();
                 }
                 this.swipeInProgress = true;
             }
@@ -158,11 +159,11 @@ namespace CloudCam.View
             {
                 if (horizontalDelta > 0)
                 {
-                    ViewModel.HandelSwipeInput(SwipeDirection.Right);
+                    ViewModel.HandelSwipeInput(SwipeDirection.Right).Wait();
                 }
                 else
                 {
-                    ViewModel.HandelSwipeInput(SwipeDirection.Left);
+                    ViewModel.HandelSwipeInput(SwipeDirection.Left).Wait();
                 }
                 this.swipeInProgress = true;
             }
@@ -184,6 +185,11 @@ namespace CloudCam.View
         {
             VideoPlayer.Position = TimeSpan.Zero;
             VideoPlayer.Play();
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel.HandelSwipeInput(SwipeDirection.Down);
         }
     }
 }

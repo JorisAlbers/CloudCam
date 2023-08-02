@@ -57,8 +57,8 @@ namespace CloudCam.View
 
         [Reactive] public List<ForegroundImage> ForegroundImages { get; set; }
 
-        [ObservableAsProperty]
-        public ImageSourceWithMat Frame { get; }
+        [Reactive]
+        public ImageSourceWithMat Frame { get; set; }
 
         [ObservableAsProperty]
         public float CameraFps { get; set; }  
@@ -77,9 +77,8 @@ namespace CloudCam.View
         public ReactiveCommand<bool, ImageSourceWithMat> NextFrame { get; }
 
         public ReactiveCommand<bool, Unit> Next { get; }
-
-
-
+        public ReactiveCommand<Unit, Unit> ClearFramesAndEffects { get; }
+        
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
         [Reactive] public PictureMode PictureMode { get; set; } = PictureMode.ThreeOnBackground;
@@ -108,8 +107,16 @@ namespace CloudCam.View
             _random = new Random();
 
             _frameManager = new FrameManager(frameRepository);
+            // Next frame
             NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
-            NextFrame.WhereNotNull().ToPropertyEx(this, x => x.Frame, scheduler:RxApp.MainThreadScheduler);
+            NextFrame.WhereNotNull().ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => Frame = x);
+            // Clear frames and effect
+            ClearFramesAndEffects = ReactiveCommand.Create(InternalClearFramesAndEffects);
+            ClearFramesAndEffects.ObserveOn(RxApp.MainThreadScheduler).Subscribe(x =>
+            {
+                Frame = new ImageSourceWithMat(null, null);
+                if (_transformationSettings != null) _transformationSettings.Effect = null;
+            });
 
            
             _effectManager = new EffectManager(@"Resources\Caff\deploy.prototxt", @"Resources\Caff\res10_300x300_ssd_iter_140000_fp16.caffemodel",  @"Resources\Cascades\haarcascade_mcs_nose.xml" , @"Resources\Cascades\haarcascade_eye_tree_eyeglasses.xml", mustachesRepository, hatsRepository, glassesRepository);
@@ -168,6 +175,22 @@ namespace CloudCam.View
                         PrintingViewModel = null;
                     });
             }
+        }
+
+        private Unit InternalClearFramesAndEffects()
+        {
+            var elicitViewModel = ElicitIfImageShouldBePrintedViewModel;
+            if (elicitViewModel != null)
+            {
+                elicitViewModel.Cancel();
+            }
+
+            if (SecondsUntilPictureIsTaken > 0)
+            {
+                SecondsUntilPictureIsTaken = _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN;
+            }
+
+            return Unit.Default;
         }
 
         private void LoadNextEffect(bool forwards)
@@ -238,7 +261,7 @@ namespace CloudCam.View
                     */
                     break;
                 case SwipeDirection.Down:
-                    /*await this.ResetFramesAndEffects();*/
+                    ClearFramesAndEffects.Execute().Subscribe();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
@@ -435,6 +458,7 @@ namespace CloudCam.View
             {
                 SecondsUntilPictureIsTaken = _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN;
             }
+
 
             return await Task.Run(() =>
             {
