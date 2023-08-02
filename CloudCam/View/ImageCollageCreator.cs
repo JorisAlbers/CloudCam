@@ -44,7 +44,7 @@ namespace CloudCam.View
                 // Overlay pickup line on the bottom of the image
                 float fontSize = 72;
                 FontStyle fontStyle = FontStyle.Bold;
-                using (Stream fontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("CloudCam.Resources.Fonts.tradizional_DEMO.otf"))
+                using (Stream fontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("CloudCam.Resources.Fonts.daniel.ttf"))
                 {
                     if (fontStream != null)
                     {
@@ -67,7 +67,7 @@ namespace CloudCam.View
                             font = new Font(fontFamily, fontSize);
 
                             // Use the font in your drawing code
-                            using (SolidBrush brush = new SolidBrush(Color.Blue))
+                            using (SolidBrush brush = new SolidBrush(Color.FromArgb(251,246,222)))
                             {
                                 RectangleF textRectangle = new RectangleF(80, copy.Height - 460, copy.Width - 160, 430);
                                 StringFormat stringFormat = new StringFormat();

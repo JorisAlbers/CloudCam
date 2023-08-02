@@ -10,6 +10,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\Fonts\daniel.ttf" />
     <None Remove="Resources\Fonts\love-is-awesome.loveisawesome.otf" />
   </ItemGroup>
   <ItemGroup>
@@ -17,6 +18,9 @@
     <Reference Include="System.Printing" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Fonts\daniel.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Fonts\tradizional_DEMO.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
