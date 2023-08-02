@@ -1,9 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Threading;
 using ReactiveUI;
 using Serilog;
 using Serilog.Core;
@@ -24,7 +29,38 @@ namespace CloudCam
         {
             SetupLogging();
 
+            SetupLoggingForUnhandledExceptions();
+
             Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetExecutingAssembly());
+        }
+
+        private void SetupLoggingForUnhandledExceptions()
+        {
+            this.DispatcherUnhandledException += OnDispatcherUnhandledException;
+
+            RxApp.DefaultExceptionHandler = Observer.Create(
+                (Exception e) =>
+                {
+                    if (Debugger.IsAttached) Debugger.Break();
+                    Log.Logger.Fatal(e, "An unhandled exception occurred in an reactive stream.");
+                    RxApp.MainThreadScheduler.Schedule(() => { throw e; });
+                },
+                (Exception e) =>
+                {
+                    if (Debugger.IsAttached) Debugger.Break();
+                    Log.Logger.Fatal(e, "An unhandled exception occurred in an reactive stream.");
+                    RxApp.MainThreadScheduler.Schedule(() => { throw e; });
+                },
+                () =>
+                {
+                    if (Debugger.IsAttached) Debugger.Break();
+                    RxApp.MainThreadScheduler.Schedule(() => { throw new NotImplementedException(); });
+                });
+        }
+
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Log.Logger.Fatal(e.Exception, "An unhandled exception occurred.");
         }
 
         private void SetupLogging()
