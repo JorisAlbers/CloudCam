@@ -34,8 +34,17 @@
                 <TextBlock Text="CloudCam" DockPanel.Dock="Top" Style="{StaticResource MaterialDesignHeadline4TextBlock}"/>
 
 
-                <GroupBox Header="Resources" DockPanel.Dock="Top">
+                <GroupBox Header="Theme and resources" DockPanel.Dock="Top">
                     <UniformGrid Columns="1">
+                        <TextBlock Text="Theme:" />
+                        <ComboBox x:Name="SelectedThemeComboBox">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        
                         <TextBlock Text="Path to frames:" />
                         <Grid Height="32">
                             <TextBox x:Name="FramesPathTextBox" MaxLines="1" />

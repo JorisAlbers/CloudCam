@@ -340,6 +340,7 @@ namespace CloudCam.View
                 Path.Combine(rootFolder.FullName, "Glasses"),
                 Path.Combine(rootFolder.FullName, "Output"),
                 null,
+                Theme.Cloud,
                 new KeyBindingSetting[]
                 {
                     new KeyBindingSetting(UserAction.TakePicture, Key.Space),
