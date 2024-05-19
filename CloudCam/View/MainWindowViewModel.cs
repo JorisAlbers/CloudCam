@@ -170,6 +170,7 @@ namespace CloudCam.View
             }
 
             var viewmodel = new PhotoBoothViewModel(
+                settings.Theme,
                 CameraDevicesEnumerator.GetAllConnectedCameras().First(y => y.Name == settings.CameraDevice),
                 frameRepository,
                 mustachesRepository,

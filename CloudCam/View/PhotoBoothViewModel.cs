@@ -21,6 +21,7 @@ namespace CloudCam.View
 {
     public class PhotoBoothViewModel : ReactiveObject
     {
+        public Theme Theme { get; }
         private const int _SECONDS_IMAGE_DISPLAYED = 3;
         private const int _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN = 5;
         private readonly CameraDevice _device;
@@ -83,8 +84,9 @@ namespace CloudCam.View
 
         [Reactive] public PictureMode PictureMode { get; set; } = PictureMode.ThreeOnBackground;
 
-        
-        public PhotoBoothViewModel(CameraDevice device, 
+        public PhotoBoothViewModel(
+            Theme theme,
+            CameraDevice device, 
             ImageRepository frameRepository, 
             EffectImageLoader mustachesRepository, 
             EffectImageLoader hatsRepository,
@@ -97,6 +99,7 @@ namespace CloudCam.View
             ElicitIfImageShouldBePrintedViewModelFactory elicitShouldPrintViewModelFactory)
         {
             Log.Logger.Information("Starting photo booth");
+            Theme = theme;
             _device = device;
             _outputImageRepository = outputImageRepository;
             _ledAnimator = ledAnimator;
