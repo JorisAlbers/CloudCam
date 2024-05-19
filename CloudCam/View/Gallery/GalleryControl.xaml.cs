@@ -22,6 +22,8 @@ namespace CloudCam.View.Gallery
     /// </summary>
     public partial class GalleryControl
     {
+        private Random _random = new Random();
+
         public GalleryControl()
         {
             InitializeComponent();
@@ -29,6 +31,8 @@ namespace CloudCam.View.Gallery
             this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, vm => vm.CurrentImage, v => v.ImageControl.Source).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.CurrentImage, v => v.ImageControl.LayoutTransform,
+                    (_) => new RotateTransform(_random.Next(-20, 20), 0.5, 0.5)).DisposeWith(d);
             });
         }
     }

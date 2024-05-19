@@ -120,7 +120,22 @@ namespace CloudCam.View
                     ForeGroundLayer.SetItems(x);
                 });
 
+                // Gallery related stuff
                 this.Bind(ViewModel, vm => vm.GalleryViewModel, v => v.GalleryViewModelHost.ViewModel).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.GalleryViewModel, v => v.FrameImage.Visibility, x => x == null ? Visibility.Visible : Visibility.Collapsed);
+                this.OneWayBind(ViewModel, vm => vm.GalleryViewModel, v => v.VideoPlayer.Visibility,
+                    (galleryViewModel) =>
+                    {
+                        if (galleryViewModel != null)
+                        {
+                            VideoPlayer.Play();
+                            return Visibility.Visible;
+
+                        }
+                        VideoPlayer.Pause();
+                        return Visibility.Hidden;
+
+                    }).DisposeWith(d);
 
             });
 
