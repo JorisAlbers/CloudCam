@@ -27,9 +27,6 @@ namespace CloudCam.View
                 this.Bind(ViewModel, vm => vm.GlassesFolder, v => v.GlassesPathTextBox.Text).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.OutputFolder, v => v.OutputPathTextBox.Text).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.ComPortLeds, v => v.ComPortLedsComboBox.SelectedItem).DisposeWith(d);
-                this.Bind(ViewModel, vm=> vm.Theme, v=>v.SelectedThemeComboBox.SelectedItem).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm=> vm.AvailableThemes, v=>v.SelectedThemeComboBox.ItemsSource).DisposeWith(d);
-
                 this.OneWayBind(ViewModel, vm => vm.AvailableComPorts, v => v.ComPortLedsComboBox.ItemsSource).DisposeWith(d);
 
                 // printer settings

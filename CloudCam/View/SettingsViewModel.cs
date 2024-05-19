@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -15,7 +14,6 @@ namespace CloudCam.View
     public class SettingsViewModel : ReactiveObject
     {
         public List<int> AvailableComPorts => new List<int>(Enumerable.Range(0, 50));
-        public Theme[] AvailableThemes => Enum.GetValues(typeof(Theme)).Cast<Theme>().Where(x=> x!= Theme.NotSet).ToArray();
         public List<CameraDevice> CameraDevices { get; }
         [Reactive] public CameraDevice SelectedCameraDevice { get; set; }
         [Reactive] public string FrameFolder { get; set; }
@@ -24,7 +22,6 @@ namespace CloudCam.View
         [Reactive] public string GlassesFolder { get; set; }
         [Reactive] public string OutputFolder { get; set; }
         [Reactive] public int ComPortLeds { get; set; }
-        [Reactive] public Theme Theme { get; set; }
 
         public KeyBindingViewModel[] KeyBindingViewModels { get; }
 
@@ -57,9 +54,9 @@ namespace CloudCam.View
             SelectGlassesFolder = ReactiveCommand.Create<Action<string>, string>((propertyName) => GlassesFolder = ShowFolderDialog(GlassesFolder));
             SelectOutputFolder = ReactiveCommand.Create<Action<string>, string>((propertyName) => OutputFolder = ShowFolderDialog(OutputFolder));
 
-            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name, Theme,
+            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name, 
                 KeyBindingViewModels.Select(x=> new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds, PrinterSettingsViewModel.GetSettings()));
-            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name, Theme,
+            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name,
                 KeyBindingViewModels.Select(x => new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds, PrinterSettingsViewModel.GetSettings()));
         }
 
@@ -89,11 +86,7 @@ namespace CloudCam.View
 
         public PrinterSettings PrinterSettings { get; set; }
 
-        public Theme Theme { get; set; }
-
-        public Settings(string frameFolder, string mustacheFolder, string hatFolder,string glassesFolder, string outputFolder, string cameraDevice,
-            Theme theme,
-            KeyBindingSetting[] keyBindings, int comPortLeds, PrinterSettings printerSettings)
+        public Settings(string frameFolder, string mustacheFolder, string hatFolder,string glassesFolder, string outputFolder, string cameraDevice, KeyBindingSetting[] keyBindings, int comPortLeds, PrinterSettings printerSettings)
         {
             FrameFolder = frameFolder;
             MustacheFolder = mustacheFolder;
@@ -101,18 +94,10 @@ namespace CloudCam.View
             GlassesFolder = glassesFolder;
             OutputFolder = outputFolder;
             CameraDevice = cameraDevice;
-            Theme = theme;
             KeyBindings = keyBindings;
             ComPortLeds = comPortLeds;
             PrinterSettings = printerSettings;
         }
-    }
-
-    public enum Theme
-    {
-        NotSet,
-        Cloud,
-        Wedding,
     }
 
     public class KeyBindingSetting
