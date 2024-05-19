@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using CloudCam.Effect;
 using CloudCam.Light;
 using CloudCam.Printing;
+using CloudCam.View.Gallery;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;

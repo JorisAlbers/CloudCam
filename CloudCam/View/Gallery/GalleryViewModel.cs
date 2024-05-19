@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace CloudCam.View
+namespace CloudCam.View.Gallery
 {
-    public class GalleryViewModel: ReactiveObject
+    public class GalleryViewModel : ReactiveObject
     {
         private readonly OutputImageRepository _outputImageRepository;
         private readonly int _period;
