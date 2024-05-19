@@ -35,6 +35,7 @@ namespace CloudCam.View
         private int _takingPicture;
         private readonly TransformationSettings _transformationSettings;
         private readonly EffectManager _effectManager;
+        private GalleryViewModel _galleryViewModel;
 
         [Reactive] private WebcamCapture Capture { get; set; }
         [Reactive] private ForegroundLocator ForegroundLocator { get; set; }
@@ -56,6 +57,8 @@ namespace CloudCam.View
         public ImageSourceWithMat ImageSource { get; }
 
         [Reactive] public List<ForegroundImage> ForegroundImages { get; set; }
+
+        [Reactive] public GalleryViewModel GalleryViewModel { get; set; }
 
         [Reactive]
         public ImageSourceWithMat Frame { get; set; }
@@ -105,6 +108,7 @@ namespace CloudCam.View
             _imageCollageCreator = imageCollageCreator;
             _elicitShouldPrintViewModelFactory = elicitShouldPrintViewModelFactory;
             _random = new Random();
+            _galleryViewModel = new GalleryViewModel(outputImageRepository, 5, _random);
 
             _frameManager = new FrameManager(frameRepository);
             // Next frame

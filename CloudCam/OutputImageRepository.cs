@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Windows.Documents;
 
 namespace CloudCam
 {
@@ -24,6 +27,16 @@ namespace CloudCam
 
 
             image.Save(Path.Combine(_folder, fileName));
+        }
+
+        public string[] GetNames()
+        {
+            return Directory.GetFiles(_folder, "*.jpg");
+        }
+
+        public Image Load(string name)
+        {
+            return Image.FromFile(name);
         }
     }
 }
