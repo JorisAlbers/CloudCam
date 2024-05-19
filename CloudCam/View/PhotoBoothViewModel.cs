@@ -23,6 +23,7 @@ namespace CloudCam.View
     {
         private const int _SECONDS_IMAGE_DISPLAYED = 3;
         private const int _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN = 5;
+        private const int _SECONDS_BEFORE_GALLERY_IS_SHOWN = 5;
         private readonly CameraDevice _device;
         private readonly OutputImageRepository _outputImageRepository;
         private readonly ILedAnimator _ledAnimator;
@@ -179,6 +180,31 @@ namespace CloudCam.View
                         PrintingViewModel = null;
                     });
             }
+
+            this.Next
+                .Merge(ClearFramesAndEffects)
+                .Merge(TakePicture)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x =>
+                {
+                    var vm = GalleryViewModel;
+                    GalleryViewModel = null;
+                    if (vm == null) return;
+                    vm.Stop();
+                });
+
+            this.Next
+                .Merge(ClearFramesAndEffects)
+                .Merge(TakePicture)
+                .Throttle(TimeSpan.FromSeconds(_SECONDS_BEFORE_GALLERY_IS_SHOWN))
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    (x) =>
+                    {
+                        GalleryViewModel = _galleryViewModel;
+                        _ = _galleryViewModel.Start();
+                    });
+
         }
 
         private Unit InternalClearFramesAndEffects()
