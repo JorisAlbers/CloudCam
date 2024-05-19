@@ -8,6 +8,7 @@ using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Serilog;
 
 namespace CloudCam.View.Gallery
 {
@@ -39,15 +40,34 @@ namespace CloudCam.View.Gallery
                 _cancellationToken.Cancel();
             }
 
+            if (images == null|| images.Length == 0)
+            {
+                return;
+            }
+
+
             var cancellationToken = new CancellationTokenSource();
             _cancellationToken = cancellationToken;
             while (!cancellationToken.IsCancellationRequested)
             {
-                int nextImage = _random.Next(0, images.Length - 1);
-                Mat image = _outputImageRepository.Load(images[nextImage]);
+                Mat image = null;
+                try
+                {
+                    int nextImage = _random.Next(0, images.Length - 1);
+                    image = _outputImageRepository.Load(images[nextImage]);
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Error("Failed to load image to show in the gallery",ex);
+                }
+               
                 await Task.Delay(_period * 1000, cancellationToken.Token);
 
-                CurrentImage = image.ToBitmapSource();
+                if (image != null)
+                {
+                    CurrentImage = image.ToBitmapSource();
+                }
+
             }
         }
 
