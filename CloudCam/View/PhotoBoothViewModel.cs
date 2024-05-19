@@ -512,7 +512,8 @@ namespace CloudCam.View
 
                             gr.DrawImage(bitmap, new System.Drawing.Point(foregroundImage.rect.X, foregroundImage.rect.Y));
                         }
-                    }
+                    }             
+                  
                     
                     // Draw frame
                     gr.DrawImage(frameAsBitmap, new System.Drawing.Point(0, 0));

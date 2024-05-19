@@ -10,9 +10,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Resources\Fonts\love-is-awesome.loveisawesome.otf" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System.Printing" />
   </ItemGroup>
@@ -33,9 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
-    <Resource Include="Resources\Fonts\love-is-awesome.loveisawesome.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Light\Light.csproj" />
