@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Documents;
+using OpenCvSharp;
 
 namespace CloudCam
 {
@@ -34,9 +35,9 @@ namespace CloudCam
             return Directory.GetFiles(_folder, "*.jpg");
         }
 
-        public Image Load(string name)
+        public Mat Load(string name)
         {
-            return Image.FromFile(name);
+            return Cv2.ImRead(name,ImreadModes.Unchanged);
         }
     }
 }

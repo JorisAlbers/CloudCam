@@ -182,9 +182,11 @@ namespace CloudCam.View
                     });
             }
 
-            this.Next
-                .Merge(ClearFramesAndEffects)
-                .Merge(TakePicture)
+
+            var anyCommandExecuted = Observable.Merge(Next, ClearFramesAndEffects, TakePicture, NextFrame.Select(_=>Unit.Default));
+
+
+            anyCommandExecuted
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x =>
                 {
@@ -194,9 +196,7 @@ namespace CloudCam.View
                     vm.Stop();
                 });
 
-            this.Next
-                .Merge(ClearFramesAndEffects)
-                .Merge(TakePicture)
+            anyCommandExecuted
                 .Throttle(TimeSpan.FromSeconds(_SECONDS_BEFORE_GALLERY_IS_SHOWN))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(

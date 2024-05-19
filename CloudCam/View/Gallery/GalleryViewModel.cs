@@ -3,6 +3,9 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -15,7 +18,7 @@ namespace CloudCam.View.Gallery
         private readonly Random _random;
         private CancellationTokenSource _cancellationToken;
 
-        [Reactive] public Image CurrentImage { get; private set; }
+        [Reactive] public ImageSource CurrentImage { get; private set; }
 
         public GalleryViewModel(OutputImageRepository outputImageRepository, int periodInSeconds, Random random)
         {
@@ -41,10 +44,10 @@ namespace CloudCam.View.Gallery
             while (!cancellationToken.IsCancellationRequested)
             {
                 int nextImage = _random.Next(0, images.Length - 1);
-                var image = _outputImageRepository.Load(images[nextImage]);
+                Mat image = _outputImageRepository.Load(images[nextImage]);
                 await Task.Delay(_period * 1000, cancellationToken.Token);
 
-                CurrentImage = image;
+                CurrentImage = image.ToBitmapSource();
             }
         }
 

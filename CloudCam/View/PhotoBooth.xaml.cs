@@ -120,6 +120,8 @@ namespace CloudCam.View
                     ForeGroundLayer.SetItems(x);
                 });
 
+                this.Bind(ViewModel, vm => vm.GalleryViewModel, v => v.GalleryViewModelHost.ViewModel).DisposeWith(d);
+
             });
 
 
