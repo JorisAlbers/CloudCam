@@ -54,6 +54,7 @@ namespace CloudCam.View.Gallery
         public void Stop()
         {
             _cancellationToken?.Cancel();
+            CurrentImage = null;
         }
 
 
