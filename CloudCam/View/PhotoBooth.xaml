@@ -165,7 +165,7 @@
             </TextBlock>
         </Viewbox>
         <Viewbox Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
-            <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontFamily="/Resources/Fonts/#Love Is Awesome LoveIsAwesome" Foreground="Red"/>
+            <TextBlock x:Name="CountdownTextBlock" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontFamily="/Resources/Fonts/#Love Is Awesome LoveIsAwesome" Foreground="White"/>
         </Viewbox>
         <Rectangle x:Name="FlashRectangle" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="3"/>
 
