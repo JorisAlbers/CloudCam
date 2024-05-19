@@ -26,37 +26,6 @@ namespace CloudCam.View
             {
                 Cursor = Cursors.None;
 
-                // Theming
-                // Countdown
-                this.OneWayBind(ViewModel, vm => vm.Theme, v => v.CountdownTextBlock.FontFamily,
-                    (t) =>
-                    {
-                        if (t == Theme.Cloud)
-                        {
-                            return new FontFamily(new Uri(@"C:\Joris\code_prive\CloudCam\Resources\Fonts\cloudFont.ttf"), "./#KR Cloud Nine");
-                        }
-                        if(t == Theme.Wedding)
-                        {
-                            return new FontFamily(new Uri(@"C:\Joris\code_prive\CloudCam\Resources\Fonts\love-is-awesome.loveisawesome.otf"), "./#Love Is Awesome");
-                        }
-                        throw new NotImplementedException();
-                    }).DisposeWith(d);
-
-                this.OneWayBind(ViewModel, vm => vm.Theme, v => v.CountdownTextBlock.Foreground,
-                    (t) =>
-                    {
-                        if (t == Theme.Cloud)
-                        {
-                            return new SolidColorBrush(Colors.White);
-                        }
-                        if (t == Theme.Wedding)
-                        {
-                            return new SolidColorBrush(Colors.Red);
-                        }
-                        throw new NotImplementedException();
-                    }).DisposeWith(d);
-
-
 
                 Random random = new Random();
                 this.OneWayBind(ViewModel, vm => vm.ImageSource.ImageSource, v => v.VideoImage.Source).DisposeWith(d);
