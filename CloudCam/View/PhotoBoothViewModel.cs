@@ -521,36 +521,42 @@ namespace CloudCam.View
             _ledAnimator.StartFlash();
             await Task.Delay(500, cancellationToken); // allow camera to adjust to the flash
 
-            var imageAsBitmap = ImageSource.Mat.ToBitmap();
-            var foregrounds   = ForegroundImages;
+            Bitmap imageAsBitmap = ImageSource.Mat.ToBitmap();
+            Mat frame = Frame?.Mat;
+            List<ForegroundImage> foregrounds   = ForegroundImages;
 
-
-            if (Frame?.Mat != null)
+            if (frame == null && foregrounds == null)
             {
-                using Bitmap frameAsBitmap = Frame.Mat.ToBitmap();
+                return imageAsBitmap;
+            }
+
+
+
+            using Graphics gr = Graphics.FromImage(imageAsBitmap);
+
+            // Draw foregrounds (the hats and mustaches and stuff)
+            if (foregrounds != null)
+            {
+                foreach (ForegroundImage foregroundImage in foregrounds)
+                {
+                    using Mat resized = foregroundImage.image.Resize(foregroundImage.rect.Size);
+                    using Bitmap bitmap = resized.ToBitmap();
+
+                    gr.DrawImage(bitmap, new System.Drawing.Point(foregroundImage.rect.X, foregroundImage.rect.Y));
+                }
+            }
+
+            if (frame != null)
+            {
+                using Bitmap frameAsBitmap = frame.ToBitmap();
                 await Task.Run(() =>
                 {
-                    // Overlay frame on top of image
-                    using Graphics gr = Graphics.FromImage(imageAsBitmap);
-
-                    if(foregrounds != null)
-                    {
-                        // Draw foregrounds (the hats and mustaches and stuff)
-                        foreach (ForegroundImage foregroundImage in foregrounds)
-                        {
-                            var resized = foregroundImage.image.Resize(foregroundImage.rect.Size);
-                            var bitmap = resized.ToBitmap();
-
-                            gr.DrawImage(bitmap, new System.Drawing.Point(foregroundImage.rect.X, foregroundImage.rect.Y));
-                        }
-                    }             
-                  
-                    
                     // Draw frame
                     gr.DrawImage(frameAsBitmap, new System.Drawing.Point(0, 0));
                     
                 }, cancellationToken);
             }
+
             _ledAnimator.EndFlash();
             PhotoCountdownText = null;
             SecondsUntilPictureIsTaken = -1;
