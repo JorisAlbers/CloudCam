@@ -9,7 +9,8 @@
                                 xmlns:view="clr-namespace:CloudCam.View" xmlns:FolderBrowserDialog="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                                 mc:Ignorable="d" 
                                 d:DesignHeight="900" d:DesignWidth="500"
-                                d:DataContext="{d:DesignInstance view:SettingsViewModel}">
+                                d:DataContext="{d:DesignInstance view:SettingsViewModel}"
+                                AutomationProperties.AutomationId="SettingsControl">
     <Grid>
 
         <Grid.Resources>
