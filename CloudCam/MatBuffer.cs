@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenCvSharp;
+using Serilog;
 
 namespace CloudCam
 {
@@ -28,6 +29,7 @@ namespace CloudCam
                 if (previous.Empty())
                 {
                     // An error occurred during capturing. return the same mat for capturing.
+                    Log.Logger.Error("MatBuffer:GetNextForCapture an error occured during capturing. in GetNextForCapture!");
                     return previous;
                 }
                 
@@ -44,6 +46,7 @@ namespace CloudCam
                return mat;
             }
 
+            Log.Logger.Error("MatBuffer:GetNextForCapture ran out of buffers in GetNextForCapture!");
             // TODO run error instead of return previous, we are out of buffers!
             return previous;
         }
