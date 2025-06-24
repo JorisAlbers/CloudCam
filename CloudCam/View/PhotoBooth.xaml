@@ -7,7 +7,8 @@
                                 xmlns:cloudCamDotNet4="clr-namespace:CloudCam"
                                 xmlns:view="clr-namespace:CloudCam.View"
                                 mc:Ignorable="d" 
-                                d:DesignHeight="450" d:DesignWidth="800">
+                                d:DesignHeight="450" d:DesignWidth="800"
+                                AutomationProperties.AutomationId="PhotoBoothControl">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
