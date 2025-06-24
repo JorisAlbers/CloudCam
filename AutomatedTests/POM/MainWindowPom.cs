@@ -1,10 +1,11 @@
 ﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Tools;
 
 namespace AutomatedTests.POM;
 
 public class MainWindowPom
 {
-    private Window _window;
+    public Window _window;
 
     public MainWindowPom(Window? mainwindow)
     {
@@ -18,4 +19,6 @@ public class MainWindowPom
 
     public SettingsPanelPom SettingsPanel =>
         new SettingsPanelPom(_window.FindFirstDescendant(x => x.ByAutomationId("SettingsControl")));
+
+    public PhotoBoothPom PhotoBooth => new PhotoBoothPom(Retry.WhileNull(()=>_window.FindFirstDescendant(x => x.ByAutomationId("PhotoBoothControl"))).Result);
 }
