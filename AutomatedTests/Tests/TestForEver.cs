@@ -17,10 +17,14 @@ namespace AutomatedTests.Tests
         [OneTimeSetUp]
         public void Setup()
         {
-            Retry.DefaultTimeout = TimeSpan.FromSeconds(10);
+            Retry.DefaultTimeout = TimeSpan.FromSeconds(20);
 
             _instance = new Instance();
-            _instance.MainWindow.SettingsPanel.StartButton.Click();
+            var mw = Retry.WhileNull(() => _instance.MainWindow).Result;
+            var sp = Retry.WhileNull(() => mw?.SettingsPanel).Result;
+            
+            sp.StartButton.Click();
+
         }
 
 
