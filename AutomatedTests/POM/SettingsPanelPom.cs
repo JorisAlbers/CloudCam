@@ -4,15 +4,19 @@ namespace AutomatedTests.POM;
 
 public class SettingsPanelPom
 {
-    private readonly AutomationElement? _findFirstDescendant;
+    private readonly AutomationElement? _element;
 
 
-    public SettingsPanelPom(AutomationElement? findFirstDescendant)
+    public SettingsPanelPom(AutomationElement? element)
     {
-        _findFirstDescendant = findFirstDescendant;
+        if(element == null)
+        {
+            throw new ArgumentNullException();
+        }
+        _element = element;
     }
 
     public Button StartButton =>
-        _findFirstDescendant.FindFirstDescendant(x => x.ByAutomationId("StartButton")).AsButton();
+        _element.FindFirstDescendant(x => x.ByAutomationId("StartButton")).AsButton();
 
 }
