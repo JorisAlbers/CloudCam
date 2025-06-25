@@ -18,7 +18,9 @@ public class MainWindowPom
     }
 
     public SettingsPanelPom SettingsPanel =>
-        new SettingsPanelPom(_window.FindFirstDescendant(x => x.ByAutomationId("SettingsControl")));
+        new SettingsPanelPom(
+            Retry.WhileNull(()=>_window.FindFirstDescendant(x => x.ByAutomationId("SettingsControl"))).Result
+            );
 
     public PhotoBoothPom PhotoBooth => new PhotoBoothPom(Retry.WhileNull(()=>_window.FindFirstDescendant(x => x.ByAutomationId("PhotoBoothControl"))).Result);
 }
