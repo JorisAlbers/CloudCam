@@ -53,7 +53,7 @@ namespace CloudCam.View.Gallery
                 Mat image = null;
                 try
                 {
-                    int nextImage = _random.Next(0, images.Length - 1);
+                    int nextImage = _random.Next(0, images.Length);
                     image = _outputImageRepository.Load(images[nextImage]);
                 }
                 catch (Exception ex)
