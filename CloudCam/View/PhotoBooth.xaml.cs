@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -100,6 +101,18 @@ namespace CloudCam.View
                 this.OneWayBind(ViewModel, vm => vm.DebugModeActive, v => v.DebugPanel.Visibility,
                     (b) => b ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
 
+                this.WhenAnyValue(x => x.DebugPanel.Visibility).Subscribe(x =>
+                {
+                    if (x == Visibility.Visible)
+                        {
+                            Cursor = Cursors.Arrow;
+                        }
+                        else
+                        {
+                            Cursor = Cursors.None;
+                        }
+                });
+
                 this.OneWayBind(ViewModel, vm => vm.PickupLine, v => v.PickupLineTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.PhotoCountdownText, v => v.PhotoCountdownTextBlock.Text).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.CameraFps, v => v.CameraFpsTextBlock.Text).DisposeWith(d);
@@ -136,6 +149,10 @@ namespace CloudCam.View
                         return Visibility.Hidden;
 
                     }).DisposeWith(d);
+
+                this.BindCommand(ViewModel, vm => vm.CrashEffectLayer, view => view.BreakTheEffectLayerButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.CrashCaptureLayer, view => view.BreakTheCaptureLayerButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.StartGallery, view => view.StartGalleryButton).DisposeWith(d);
 
             });
 

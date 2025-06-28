@@ -200,6 +200,20 @@
                 <TextBlock Text="To display image FPS:"/>
                 <TextBlock x:Name="ToDisplayImageTextBlock"/>
             </TextBlock>
+
+            <Button x:Name="BreakTheCaptureLayerButton"
+     Content="Break the capture layer">
+            </Button>
+
+            <Button x:Name="BreakTheEffectLayerButton"
+                Content="Break the effect layer">
+            </Button>
+
+            <Button x:Name="StartGalleryButton"
+     Content="Start gallery">
+            </Button>
+
+
         </StackPanel>
     </Grid>
 </reactiveUi:ReactiveUserControl>

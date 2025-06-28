@@ -21,6 +21,8 @@ namespace CloudCam
             _matBuffer = matBuffer;
         }
 
+        private bool _goBad = false;
+
         public async Task StartAsync(TransformationSettings settings, CancellationToken token)
         {
             long lastErrorAt = Environment.TickCount;
@@ -34,6 +36,11 @@ namespace CloudCam
                     int frames = 0;
                     while (!token.IsCancellationRequested)
                     {
+                        if (_goBad)
+                        {
+                            await Task.Delay(10000000);
+                            continue;
+                        }
                         try
                         {
                             currentMat = _matBuffer.GetNextForEditing(previousMat);
@@ -79,6 +86,11 @@ namespace CloudCam
                 }
                
             }, token);
+        }
+
+        public void GoBad()
+        {
+            _goBad = true;
         }
     }
 }

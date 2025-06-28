@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CloudCam.Effect;
@@ -22,8 +23,8 @@ namespace CloudCam.View
 {
     public class PhotoBoothViewModel : ReactiveObject
     {
-        private const int _SECONDS_IMAGE_DISPLAYED = 3;
-        private const int _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN = 5;
+        private const int _SECONDS_IMAGE_DISPLAYED = 1;
+        private const int _SECONDS_COUNTDOWN_BEFORE_IMAGE_TAKEN = 1;
         private const int _SECONDS_BEFORE_GALLERY_IS_SHOWN = 60 * 5;
         private readonly CameraDevice _device;
         private readonly OutputImageRepository _outputImageRepository;
@@ -87,8 +88,11 @@ namespace CloudCam.View
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
         [Reactive] public PictureMode PictureMode { get; set; } = PictureMode.ThreeOnBackground;
+        public ReactiveCommand<Unit,Unit> CrashEffectLayer { get; set; }
+        public ReactiveCommand<Unit,Unit> CrashCaptureLayer { get; set; }
+        public ReactiveCommand<Unit,Unit> StartGallery { get; set; }
 
-        
+
         public PhotoBoothViewModel(CameraDevice device, 
             ImageRepository frameRepository, 
             EffectImageLoader mustachesRepository, 
@@ -139,8 +143,14 @@ namespace CloudCam.View
                 LoadNextEffect(forwards);
                 return Unit.Default;
             }));
-            
-            
+
+            CrashEffectLayer = ReactiveCommand.Create(() => ForegroundLocator.GoBad());
+            CrashCaptureLayer = ReactiveCommand.Create(() => Capture.GoBad());
+            StartGallery = ReactiveCommand.Create(() =>
+            {
+                GalleryViewModel = _galleryViewModel;
+                _ = _galleryViewModel.Start();
+            });
             _transformationSettings = new TransformationSettings();
 
             TakePicture = ReactiveCommand.CreateFromTask<Unit, Unit>(TakePictureAsync);

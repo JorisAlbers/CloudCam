@@ -60,7 +60,7 @@ namespace CloudCam
             FrameSize = x.frameSize;
         }
 
-
+        private bool _goBad = false;
         public async Task CaptureAsync(CancellationToken cancellationToken)
         {
             await Task.Run(async () =>
@@ -76,13 +76,21 @@ namespace CloudCam
                     int frames = 0;
                     while (!cancellationToken.IsCancellationRequested)
                     {
+                        
                         try
                         {
-                            frame = _matBuffer.GetNextForCapture(frame);
+                            frame = _matBuffer.GetNextForCapture(frame);  //a
 
-                            if (!_videoCapture.Read(frame))
+                            if (!_goBad)
                             {
-                                throw new WebcamFailedException();
+                                if (!_videoCapture.Read(frame))
+                                {
+                                    throw new WebcamFailedException();
+                                }
+                            }
+                            else
+                            {
+                                Thread.Sleep(500);
                             }
 
                             Cv2.Flip(frame, frame, FlipMode.Y);
@@ -122,6 +130,10 @@ namespace CloudCam
             }, cancellationToken);
         }
 
+        public void GoBad()
+        {
+            _goBad = true;
+        }
         
         
         private Size SetMaxResolution(VideoCapture videoCapture)
