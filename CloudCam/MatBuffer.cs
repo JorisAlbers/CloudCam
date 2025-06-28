@@ -36,6 +36,7 @@ namespace CloudCam
                 Mat editing = Interlocked.Exchange(ref _readyForEditing, previous);
                 if (editing != null)
                 {
+                    Log.Logger.Warning($"Editing did not happen, frame returned for capture. frame id = ${editing.GetHashCode()}");
                     // was not used for editing.
                     _readyForCapture.Add(editing);
                 }
