@@ -21,7 +21,7 @@ namespace CloudCam.Printing
             IsPrinting = true;
             Task.Run(async () =>
             {
-                await Task.Delay(5000);
+                await Task.Delay(100);
                 IsPrinting = false;
             });
         }
