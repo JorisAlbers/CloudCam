@@ -60,8 +60,15 @@ namespace CloudCam.View.Gallery
                 {
                     Log.Logger.Error("Failed to load image to show in the gallery",ex);
                 }
-               
-                await Task.Delay(_period * 1000, cancellationToken.Token);
+
+                try
+                {
+                    await Task.Delay(_period * 1000, cancellationToken.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
 
                 if (image != null)
                 {
