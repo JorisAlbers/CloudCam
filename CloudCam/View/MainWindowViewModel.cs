@@ -198,7 +198,7 @@ namespace CloudCam.View
 
             if (!String.IsNullOrWhiteSpace(settings.PrinterSettings.SelectedPrinter))
             {
-#if DEBUG
+#if TRUE
                 printerManager = new NullPrinterManager();
 #else
                 printerManager = new PrinterManager(settings.PrinterSettings.SelectedPrinter);
