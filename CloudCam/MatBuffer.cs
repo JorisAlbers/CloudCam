@@ -22,18 +22,18 @@ namespace CloudCam
             _readyForCapture = new ConcurrentBag<Mat>(new Mat[] {new Mat(), new Mat(), new Mat(), new Mat()});
         }
 
-        public Mat GetNextForCapture(Mat previous)
+        public Mat GetNextForCapture(Mat matWithCapture)
         {
-            if (previous != null)
+            if (matWithCapture != null)
             {
-                if (previous.Empty())
+                if (matWithCapture.Empty())
                 {
                     // An error occurred during capturing. return the same mat for capturing.
                     Log.Logger.Error("MatBuffer:GetNextForCapture an error occured during capturing. in GetNextForCapture!");
-                    return previous;
+                    return matWithCapture;
                 }
                 
-                Mat editing = Interlocked.Exchange(ref _readyForEditing, previous);
+                Mat editing = Interlocked.Exchange(ref _readyForEditing, matWithCapture);
                 if (editing != null)
                 {
                     Log.Logger.Warning($"Editing did not happen, frame returned for capture. frame id = ${editing.GetHashCode()}");
@@ -49,15 +49,15 @@ namespace CloudCam
 
             Log.Logger.Error("MatBuffer:GetNextForCapture ran out of buffers in GetNextForCapture!");
             // TODO run error instead of return previous, we are out of buffers!
-            return previous;
+            return matWithCapture;
         }
 
-        public Mat GetNextForEditing(Mat previous)
+        public Mat GetNextForEditing(Mat matWithEffect)
         {
-            if (previous != null)
+            if (matWithEffect != null)
             {
-                Mat display = Interlocked.Exchange(ref _readyForDisplay, previous);
-                if (display != null && display != previous)
+                Mat display = Interlocked.Exchange(ref _readyForDisplay, matWithEffect);
+                if (display != null && display != matWithEffect)
                 {
                     // was not used for display.
                     _readyForCapture.Add(display);
