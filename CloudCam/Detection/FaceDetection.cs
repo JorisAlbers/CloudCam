@@ -23,7 +23,7 @@ namespace CloudCam.Detection
             _net.SetInput(inputBlob); // why use name?
             Mat detection = _net.Forward();
 
-            Mat detectionMat = new Mat(detection.Size(2), detection.Size(3), MatType.CV_32F, detection.Data);
+            Mat detectionMat = Mat.FromPixelData(detection.Size(2), detection.Size(3), MatType.CV_32F, detection.Data);
 
             List<Rect> rects = new List<Rect>();
             for (int i = 0; i < detectionMat.Rows; i++)
