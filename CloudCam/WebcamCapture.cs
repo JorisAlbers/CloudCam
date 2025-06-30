@@ -80,10 +80,17 @@ namespace CloudCam
                         {
                             frame = _matBuffer.GetNextForCapture(frame);
 
+                            var hash = FastMatHasher.ComputeFastHashUnsafe(frame);
                             if (!_videoCapture.Read(frame))
                             {
-                                throw new WebcamFailedException();
+                                throw new WebcamFailedException("capture failed");
                             }
+
+                            if (hash == FastMatHasher.ComputeFastHashUnsafe(frame))
+                            {
+                                throw new WebcamFailedException("capture did modify any pixels");
+                            }
+                            
 
                             Cv2.Flip(frame, frame, FlipMode.Y);
 
@@ -97,7 +104,7 @@ namespace CloudCam
                         }
                         catch (WebcamFailedException e)
                         {
-                            Log.Logger.Warning("Webcam failed. Attempting to reconnect");
+                            Log.Logger.Warning($"Attempting to reconnect to webcam. Webcam failed as {e.Message}");
                             _videoCapture.Dispose();
                             await Initialize();
                         }
@@ -167,5 +174,8 @@ namespace CloudCam
 
     public class WebcamFailedException : Exception
     {
+        public WebcamFailedException(string message):base(message)
+        {
+        }
     }
 }
