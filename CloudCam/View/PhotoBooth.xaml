@@ -206,8 +206,10 @@
 
 
         </Grid>
-        <Button x:Name="ExitButton1" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Button x:Name="ExitButton2" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <Button x:Name="ExitButton1" VerticalAlignment="Top" HorizontalAlignment="Left"
+                Background="Transparent" Opacity="0" />
+        <Button x:Name="ExitButton2" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                Background="Transparent" Opacity="0"/>
     </Grid>
     
 
