@@ -86,6 +86,8 @@ namespace CloudCam.View
         
         public ReactiveCommand<Unit,Unit> TakePicture { get; }
 
+        public ReactiveCommand<int,int> ExitRequested { get; }
+
         [Reactive] public PictureMode PictureMode { get; set; } = PictureMode.ThreeOnBackground;
 
         
@@ -205,6 +207,22 @@ namespace CloudCam.View
                         GalleryViewModel = _galleryViewModel;
                         _ = _galleryViewModel.Start();
                     });
+
+
+            // Exit the program when the user presses two buttons
+
+            ExitRequested = ReactiveCommand.Create<int,int>((x) => x);
+
+            ExitRequested
+                .Timestamp()
+                .Buffer(2) // take in groups of two
+                .Where(x => x[0].Value != x[1].Value) // two different buttons pressed
+                .Where(x => x[1].Timestamp - x[0].Timestamp < TimeSpan.FromSeconds(2)) // relatively quick after each other
+                .Subscribe(x =>
+                {
+                    // quit program!
+                    App.Current.Shutdown();
+                });
 
         }
 

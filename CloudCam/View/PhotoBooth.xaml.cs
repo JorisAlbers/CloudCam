@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -139,6 +140,8 @@ namespace CloudCam.View
 
             });
 
+            this.BindCommand(ViewModel, vm => vm.ExitRequested, v => v.ExitButton1, Observable.Return(1));
+            this.BindCommand(ViewModel, vm => vm.ExitRequested, v => v.ExitButton2, Observable.Return(2));
 
             // Touch events
             this.TouchDown += PhotoBooth_TouchDown;
