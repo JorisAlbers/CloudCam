@@ -22,7 +22,7 @@ namespace CloudCam.View
             _overlayAreas = overlayAreas;
         }
 
-        public async Task<Bitmap> Create(Bitmap[] foregrounds, String pickupLine, CancellationToken cancellationToken)
+        public async Task<Bitmap> Create(Bitmap[] foregrounds, string pickupLine, CancellationToken cancellationToken)
         {
             Log.Logger.Information("Creating image collage");
             if (foregrounds.Length != _overlayAreas.Length)
@@ -39,6 +39,11 @@ namespace CloudCam.View
                 for (int i = 0; i < foregrounds.Length; i++)
                 {
                     gr.DrawImage(foregrounds[i], _overlayAreas[i]);
+                }
+
+                if (string.IsNullOrEmpty(pickupLine))
+                {
+                    return; // only add text when needed
                 }
 
                 // Overlay pickup line on the bottom of the image

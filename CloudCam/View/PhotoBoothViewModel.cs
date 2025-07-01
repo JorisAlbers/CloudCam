@@ -482,7 +482,7 @@ namespace CloudCam.View
 
         private async Task<Bitmap> CreateCollageAsync(Bitmap imageAsBitmap1, Bitmap imageAsBitmap2, Bitmap imageAsBitmap3, CancellationToken cancellationToken)
         {
-            return await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, PickupLine, cancellationToken);
+            return await _imageCollageCreator.Create(new Bitmap[] { imageAsBitmap1, imageAsBitmap2, imageAsBitmap3 }, null, cancellationToken);
         }
 
         private async Task<bool> ShouldPrintImage(ElicitIfImageShouldBePrintedViewModelFactory elicitIfImageShouldBePrintedViewModelFactory)
