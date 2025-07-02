@@ -40,6 +40,8 @@ namespace CloudCam.View
                 this.OneWayBind(ViewModel, vm => vm.MultipleTakenImage2, v => v.TakenImage2.Source).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.MultipleTakenImage3, v => v.TakenImage3.Source).DisposeWith(d);
 
+                this.OneWayBind(ViewModel, vm => vm.PhotoCountdownFont, v => v.CountdownTextBlock.FontFamily)
+                    .DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.SecondsUntilPictureIsTaken, v => v.CountdownTextBlock.Text,
                     (seconds) =>
@@ -139,6 +141,8 @@ namespace CloudCam.View
                     }).DisposeWith(d);
 
             });
+
+
 
             this.BindCommand(ViewModel, vm => vm.ExitRequested, v => v.ExitButton1, Observable.Return(1));
             this.BindCommand(ViewModel, vm => vm.ExitRequested, v => v.ExitButton2, Observable.Return(2));

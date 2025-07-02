@@ -183,7 +183,8 @@ namespace CloudCam.View
                 GetPickupLines(),
                 printerManager,
                 imageCollageCreator,
-                shouldPrintImageViewModelFactory);
+                shouldPrintImageViewModelFactory,
+                settings.CustomFontFile);
 
             await viewmodel.Start();
 
@@ -342,6 +343,7 @@ namespace CloudCam.View
                 Path.Combine(rootFolder.FullName, "Hats"),
                 Path.Combine(rootFolder.FullName, "Glasses"),
                 Path.Combine(rootFolder.FullName, "Output"),
+                null,
                 null,
                 new KeyBindingSetting[]
                 {
