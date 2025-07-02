@@ -48,6 +48,7 @@ namespace CloudCam.View
             GlassesFolder = settings.GlassesFolder;
             OutputFolder = settings.OutputFolder;
             ComPortLeds = settings.ComPortLeds;
+            CustomFontFile = settings.CustomFontFile;
             KeyBindingViewModels = settings.KeyBindings.Select(x => new KeyBindingViewModel(x.Action, x.Key)).ToArray();
             PrinterSettingsViewModel = new PrinterSettingsViewModel(settings.PrinterSettings);
 
@@ -61,9 +62,9 @@ namespace CloudCam.View
             
 
 
-            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name, 
+            Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder,CustomFontFile, SelectedCameraDevice.Name, 
                 KeyBindingViewModels.Select(x=> new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds, PrinterSettingsViewModel.GetSettings()));
-            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name,
+            Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, CustomFontFile, SelectedCameraDevice.Name,
                 KeyBindingViewModels.Select(x => new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds, PrinterSettingsViewModel.GetSettings()));
         }
 
@@ -93,6 +94,7 @@ namespace CloudCam.View
         public string CameraDevice { get; }
         public string HatFolder { get; set; }
         public string GlassesFolder { get; set; }
+        public string CustomFontFile { get; set; }
 
         public int ComPortLeds { get; set; } = -1;
 
@@ -100,7 +102,7 @@ namespace CloudCam.View
 
         public PrinterSettings PrinterSettings { get; set; }
 
-        public Settings(string frameFolder, string mustacheFolder, string hatFolder,string glassesFolder, string outputFolder, string cameraDevice, KeyBindingSetting[] keyBindings, int comPortLeds, PrinterSettings printerSettings)
+        public Settings(string frameFolder, string mustacheFolder, string hatFolder,string glassesFolder, string outputFolder, string customFontFile,string cameraDevice, KeyBindingSetting[] keyBindings, int comPortLeds, PrinterSettings printerSettings)
         {
             FrameFolder = frameFolder;
             MustacheFolder = mustacheFolder;
@@ -111,6 +113,7 @@ namespace CloudCam.View
             KeyBindings = keyBindings;
             ComPortLeds = comPortLeds;
             PrinterSettings = printerSettings;
+            CustomFontFile = customFontFile;
         }
     }
 
