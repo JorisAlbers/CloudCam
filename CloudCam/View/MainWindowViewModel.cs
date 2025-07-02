@@ -183,7 +183,8 @@ namespace CloudCam.View
                 GetPickupLines(),
                 printerManager,
                 imageCollageCreator,
-                shouldPrintImageViewModelFactory);
+                shouldPrintImageViewModelFactory,
+                settings.CustomFontFile);
 
             await viewmodel.Start();
 

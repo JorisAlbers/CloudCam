@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
@@ -17,6 +18,7 @@ using OpenCvSharp.WpfExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
+using FontFamily = System.Windows.Media.FontFamily;
 
 namespace CloudCam.View
 {
@@ -48,6 +50,7 @@ namespace CloudCam.View
         [Reactive] public string PickupLine { get; set; }
 
         [Reactive] public string PhotoCountdownText { get; set; }
+        [Reactive] public FontFamily PhotoCountdownFont { get; set; }
 
         [Reactive] public ImageSource TakenImage { get; set; }
 
@@ -101,7 +104,8 @@ namespace CloudCam.View
             List<string> pickupLines,
             IPrinterManager printerManager,
             ImageCollageCreator imageCollageCreator,
-            ElicitIfImageShouldBePrintedViewModelFactory elicitShouldPrintViewModelFactory)
+            ElicitIfImageShouldBePrintedViewModelFactory elicitShouldPrintViewModelFactory,
+            string customFontPath)
         {
             Log.Logger.Information("Starting photo booth");
             _device = device;
@@ -115,6 +119,9 @@ namespace CloudCam.View
             _galleryViewModel = new GalleryViewModel(outputImageRepository, 5, _random);
 
             _frameManager = new FrameManager(frameRepository);
+
+            PhotoCountdownFont = LoadCountDownFont(customFontPath);
+
             // Next frame
             NextFrame = ReactiveCommand.CreateFromTask<bool, ImageSourceWithMat>(LoadNextFrameAsync);
             NextFrame.WhereNotNull().ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => Frame = x);
@@ -224,6 +231,28 @@ namespace CloudCam.View
                     App.Current.Shutdown();
                 });
 
+        }
+
+        private FontFamily LoadCountDownFont(string customFontPath)
+        {
+            if(string.IsNullOrEmpty(customFontPath))
+            {
+                // load the default
+                return new FontFamily(new Uri("pack://application:,,,/"), "./Resources/Fonts/#KR Cloud Nine");
+            }
+
+            // load custom font
+            PrivateFontCollection pfc = new PrivateFontCollection();
+            pfc.AddFontFile(customFontPath);
+
+            // Get the font family name
+            string familyName = pfc.Families[0].Name;
+
+            // Create a new font URI using a memory stream (WPF doesn't use GDI font collections directly)
+            var fontUri = new Uri(customFontPath, UriKind.Absolute);
+            var fontFamily = new FontFamily(fontUri, $"./#{familyName}");
+
+            return fontFamily;
         }
 
         private Unit InternalClearFramesAndEffects()
