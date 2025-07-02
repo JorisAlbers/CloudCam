@@ -292,18 +292,13 @@ namespace CloudCam.View
 
         private List<string> _requestPrintMessages = new List<string>
             {
-                "Press the red button and get ready for a steamy printout!",
                 "Want some hot and spicy prints? Press the red button, baby!",
                 "Press the red button to print out the sizzling moments captured!",
                 "Get ready for a sexy surprise! Press the red button and watch it print!",
                 "Press the red button and let the printer seductively print your image.",
-                "Press the red button and get ready for a wild and steamy ride!",
                 "Want to experience the pleasure of a hot and sensual printout? Press the red button now!",
-                "Press the red button and let the printer seduce you with its tantalizing print quality.",
-                "Press the red button and let the printer pleasure you with its smooth, sensual prints.",
-                "Looking for a printout that'll make you weak in the knees? Press the red button and experience pure ecstasy!",
-                "Press the red button and prepare to be seduced by the printer's passionate embrace.",
-                "Want a printout that will make you blush with delight? Press the red button and let the printer unleash its sensuality!",
+                "Press the red button and let the printer seduce you with its  tantalizing print quality" ,
+                "Press the red button and prepare to be seduced by the printer's passionate embrace.",
             };
 
         private List<string> _okPrintMessages = new List<string>()
