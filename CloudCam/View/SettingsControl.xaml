@@ -77,6 +77,14 @@
                                 <materialDesign:PackIcon Kind="Folder" />
                             </Button>
                         </Grid>
+
+                        <TextBlock Text="Custom font (can be empty):" />
+                        <Grid Height="32">
+                            <TextBox x:Name="CustomFontTextBox" MaxLines="1" />
+                            <Button x:Name="CustomFontFolderButton" HorizontalAlignment="Right">
+                                <materialDesign:PackIcon Kind="Folder" />
+                            </Button>
+                        </Grid>
                     </UniformGrid>
                 </GroupBox>
 

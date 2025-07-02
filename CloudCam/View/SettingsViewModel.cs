@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Windows.Forms;
 using System.Windows.Input;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -22,6 +23,7 @@ namespace CloudCam.View
         [Reactive] public string GlassesFolder { get; set; }
         [Reactive] public string OutputFolder { get; set; }
         [Reactive] public int ComPortLeds { get; set; }
+        [Reactive] public string CustomFontFile { get; set; }
 
         public KeyBindingViewModel[] KeyBindingViewModels { get; }
 
@@ -32,6 +34,7 @@ namespace CloudCam.View
         public ReactiveCommand<Action<string>, string> SelectHatFolder { get; }
         public ReactiveCommand<Action<string>, string> SelectGlassesFolder { get; }
         public ReactiveCommand<Action<string>, string> SelectOutputFolder { get; }
+        public ReactiveCommand<Action<string>, string> SelectCustomFontFile { get; }
         public ReactiveCommand<Unit, Settings> Apply { get; }
         public ReactiveCommand<Unit, Settings> Start { get; }
 
@@ -54,10 +57,21 @@ namespace CloudCam.View
             SelectGlassesFolder = ReactiveCommand.Create<Action<string>, string>((propertyName) => GlassesFolder = ShowFolderDialog(GlassesFolder));
             SelectOutputFolder = ReactiveCommand.Create<Action<string>, string>((propertyName) => OutputFolder = ShowFolderDialog(OutputFolder));
 
+            SelectCustomFontFile = ReactiveCommand.Create<Action<string>, string>((propertyName) => CustomFontFile = ShowFileDialog(CustomFontFile));
+            
+
+
             Apply = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name, 
                 KeyBindingViewModels.Select(x=> new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds, PrinterSettingsViewModel.GetSettings()));
             Start = ReactiveCommand.Create<Unit, Settings>((_) => new Settings(FrameFolder, MustacheFolder, HatFolder, GlassesFolder, OutputFolder, SelectedCameraDevice.Name,
                 KeyBindingViewModels.Select(x => new KeyBindingSetting(x.Action, x.SelectedKey)).ToArray(), ComPortLeds, PrinterSettingsViewModel.GetSettings()));
+        }
+
+        private string ShowFileDialog(string customFontFile)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.ShowDialog();
+            return dialog.FileName;
         }
 
 
